@@ -247,10 +247,17 @@ MonoBehaviour:
   _buttonText: {fileID: 438308634}
   _levelLoader: {fileID: 420745570}
   _storyLines:
-  - Testing
-  - Testing
-  - Testing
-  - Testing
+  - 'Centries ago, the High Council banished our flock of geese to the sunless, subterranean
+    depths beneath the kingdom.  '
+  - Our only crime?
+  - We were "too loud."
+  - Now, we rot in illicit gambling dens, watching the realm leaders hoard their
+    wealth while we starve underground.
+  - 'But the Council has a fatal weakness: a sick obsession with a game of deception. '
+  - If we want our place back in the kingdom, we have to beat them at their own twisted
+    game of Cheat.
+  - The path to the Swan Queen's Castle begins here, in the damp rot of the Swamp.
+    Freddy the Fox is waiting. It is time to fight back.
   _typingSpeed: 0.04
 --- !u!114 &420745570
 MonoBehaviour:
@@ -673,33 +680,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 420745568}
     m_Modifications:
     - target: {fileID: 1196635605038298052, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1196635605038298052, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1196635605038298052, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 420745569}
-    - target: {fileID: 1196635605038298052, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1196635605038298052, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnActionButtonClicked
-      objectReference: {fileID: 0}
-    - target: {fileID: 1196635605038298052, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: StoryIntroManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 1196635605038298052, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 2282925845029776186, guid: 6073d6593d423094bb0ed593a344a736, type: 3}
       propertyPath: m_Name
       value: Intro_DialogueBox
