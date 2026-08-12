@@ -97,8 +97,8 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
 
-            // Trigger standoof logic
-            ResolveChallenge(claim, targetStats);
+            // Trigger standoof logic: Player is the claimer, targetStats is the challenger
+            ResolveChallenge(claim, _playerStats, targetStats);
         }
         else
         {
@@ -129,9 +129,9 @@ public class TurnManager : MonoBehaviour
         AdvanceTurn();
     }
 
-    private void ResolveChallenge(ClaimData claim, CharacterStats targetStats)
+    private void ResolveChallenge(ClaimData claim, CharacterStats claimer, CharacterStats challenger)
     {
-        // Check if the player lied. A lie means ANY card doesn't match the claimed suit or rank
+        // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit or rank
         bool isLie = false;
         foreach (CardData card in claim.TrueCards)
         {
@@ -144,18 +144,18 @@ public class TurnManager : MonoBehaviour
 
         if (isLie)
         {
-            Debug.Log("PLAYER CAUGHT IN A LIE!!! Player takes penalty.");
+            Debug.Log("{claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
-            // Player takes thier own claimed damage
+            // The liar takes thier own claimed damage
             int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
-            _playerStats.TakeDamage(claimedDamage);
+            claimer.TakeDamage(claimedDamage);
 
-            // Enemy paranoia drops because player failed their bluff
-            targetStats.IncreaseParanoia(-20);
+            // Enemy liar paranoia drops because they failed their bluff
+            claimer.IncreaseParanoia(-20);
         }
         else
         {
-            Debug.Log("PLAYER TOLD THE TRUTH!!! Enemy takes critical penalty");
+            Debug.Log("{claimer.name.ToUpper()} TOLD THE TRUTH!!! {challenger.name} takes critical penalty");
 
             // Calculate the true value of the cards
             int trueDamage = 0;
@@ -164,8 +164,8 @@ public class TurnManager : MonoBehaviour
                 trueDamage += CombatLogic.GetCardValue(card.Rank);
             }
 
-            // Enemy takes double the tru damage
-            targetStats.TakeDamage(trueDamage * 2);
+            // Challenger takes double the tru damage
+            challenger.TakeDamage(trueDamage * 2);
 
             // (Paranoia doesn't drop here because enemy was right to be scared)
         }
@@ -232,11 +232,9 @@ public class TurnManager : MonoBehaviour
             
             enemyDeck.DiscardCards(trueCards);
 
-            // The enemy formulates their claim
-            // TODO: Write actual AI logic for lying. For now, they always tell the truth
-            CardSuit claimedSuit = trueCards[0].Suit;
-            CardRank claimedRank = trueCards[0].Rank;
-            ClaimData enemyClaim = new ClaimData(trueCards, claimedSuit, claimedRank, TurnSeat.Player);
+            // The enemy uses their AI profile to formulate a claim
+            EnemyAI activeEnemyAI = enemyStats.GetComponent<EnemyAI>();
+            ClaimData enemyClaim = activeEnemyAI.FormulateClaim(trueCards);
 
             // Pause the turn and show the UI to the player
             _isWaitingForPlayerDecision = true;
@@ -256,7 +254,7 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("PLAYER CALLED CHEAT ON THE ENEMY!");
 
                 // Reverse the stats as the enemy is the one making a claim
-                ResolveChallenge(enemyClaim, enemyStats);
+                ResolveChallenge(enemyClaim, enemyStats, _playerStats);
             }
             else
             {

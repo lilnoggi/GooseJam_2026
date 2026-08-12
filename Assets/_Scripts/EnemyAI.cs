@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -75,6 +76,41 @@ public class EnemyAI : MonoBehaviour
         // Generate a random value between 0.0 and 1.0
         // If the nuymber is lower than the final chance, call cheat
         return Random.value < finalCheatChance;
+    }
+
+    /// <summary>
+    /// Looks at the true cards and decides whether to tell the truth or bluff
+    /// </summary>
+    public ClaimData FormulateClaim(List<CardData> trueCards)
+    {
+        // Default to the truth
+        CardSuit claimedSuit = trueCards[0].Suit;
+        CardRank claimedRank = trueCards[0].Rank;
+
+        // Base 25% chance to lie (adjust in profiles)
+        float bluffChance = 0.25f;
+
+        // If the enemy has 0 paranoia, they become overconfident and are much more likely to bluff
+        if (_stats != null && _stats.CurrentParanoia <= 0)
+        {
+            bluffChance = 0.50f;
+        }
+
+        // Random value to see if they lie
+        if (Random.value < bluffChance)
+        {
+            Debug.Log($"{name} decideed to BLUFF");
+
+            // THE LIE: Claim a random scary suit (Blood or Rot)
+            claimedSuit = (Random.value > 0.5f) ? CardSuit.Blood : CardSuit.Rot;
+
+            // THE LIE: Claim a random high value (Jack - Ace)
+            CardRank[] highRanks = { CardRank.Jack, CardRank.Queen, CardRank.King, CardRank.Ace };
+            claimedRank = highRanks[Random.Range(0, highRanks.Length)];
+        }
+
+        // Always target the player
+        return new ClaimData(trueCards, claimedSuit, claimedRank, TurnSeat.Player);
     }
 
     private bool FreddyFoxLogic(CardSuit suit, int value)
