@@ -80,12 +80,24 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
+        // Start coroutine
+        StartCoroutine(PlayerClaimRoutine(claim));
+    }
+
+    private IEnumerator PlayerClaimRoutine(ClaimData claim)
+    {
         // Discard the true cards from the player's hand so they leave the screen
         playerDeck.DiscardCards(claim.TrueCards);
 
-        // Grab the target's stats
+        // Grab the target's stats & AI
         CharacterStats targetStats = GetStatsForTurn(claim.TargetEnemy);
         EnemyAI targetAI = targetStats.GetComponent<EnemyAI>();
+
+        // Enemy reacts to being targeted
+        targetStats.GetComponent<EnemyDialogue>()?.TriggerTargeted();
+
+        // Wait 1.5s while the speech bubble is on screen
+        yield return new WaitForSeconds(1.5f);
 
         // Convert claimed Enum rank into an integer value for the AI
         int claimedValue = CombatLogic.GetCardValue(claim.ClaimedRank);
@@ -96,6 +108,9 @@ public class TurnManager : MonoBehaviour
         if (isChallenging)
         {
             Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
+
+            // Trigger Calling cheat dialogue
+            targetStats.GetComponent<EnemyDialogue>()?.TriggerCallCheat();
 
             // Trigger standoof logic: Player is the claimer, targetStats is the challenger
             ResolveChallenge(claim, _playerStats, targetStats);
@@ -120,6 +135,9 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("Player successfully bluffed! Enemy paranoia increases.");
                 targetStats.IncreaseParanoia(25);
             }
+
+            // Give the UI a tiny moment to breathe before moving to next turn
+            yield return new WaitForSeconds(1f);
 
             // The AI believed the player, apply the cards actually played
             CombatLogic.ProcessTurn(claim.TrueCards, _playerStats, targetStats);
@@ -146,6 +164,9 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log($"{claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
+            // If caught lying, trigger caught dialogue
+            claimer.GetComponent<EnemyDialogue>()?.TriggerCaughtLying();
+
             // The liar takes thier own claimed damage
             int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
             claimer.TakeDamage(claimedDamage);
@@ -156,6 +177,9 @@ public class TurnManager : MonoBehaviour
         else
         {
             Debug.Log($"{claimer.name.ToUpper()} TOLD THE TRUTH!!! {challenger.name} takes critical penalty");
+
+            // Told the truth, trigger successfull dialogue
+            claimer.GetComponent<EnemyDialogue>()?.TriggerSuccessfull();
 
             // Calculate the true value of the cards
             int trueDamage = 0;
@@ -192,6 +216,9 @@ public class TurnManager : MonoBehaviour
         if (activeStats != null)
         {
             activeStats.ProcessTurnStartStatusEffects();
+
+            // Trigger turn start dialogue
+            activeStats.GetComponent<EnemyDialogue>()?.TriggerTurnStart();
         }
 
         // Draw cards for the active deck
