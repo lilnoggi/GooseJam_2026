@@ -15,6 +15,11 @@ public class CharacterStats : MonoBehaviour
     private int _maxParanoia;
     private int _currentShield;
 
+    [Header("Runtime Effects")]
+    private int _poisonStacks; // Tracks active rot stacks
+
+    public int PoisonStacks => _poisonStacks; // public getter
+
     // Component references
     private EnemyAI _enemyAI;
 
@@ -114,6 +119,32 @@ public class CharacterStats : MonoBehaviour
         else
         {
             // Update player health ui
+        }
+    }
+
+    /// <summary>
+    /// Called when a Rot card successfully resolves against a target
+    /// </summary>
+    public void ApplyPoison(int stacks)
+    {
+        _poisonStacks += stacks;
+        Debug.Log($"{name} was afflicted with {stacks} stacks of poison. Total stacks: {_poisonStacks}");
+    }
+
+    /// <summary>
+    /// Called at the very start of this character's turn to process poison damage
+    /// </summary>
+    public void ProcessTurnStartStatusEffects()
+    {
+        if (_poisonStacks > 0)
+        {
+            Debug.Log($"[Status Effects] {_poisonStacks} Poison Stacks ticking on {name}");
+
+            // Poison deals direct damage equal to the stack count at the start of the turn
+            TakeDamage(_poisonStacks);
+
+            // Decay poison stacks by 1 each turn
+            _poisonStacks--;
         }
     }
 
