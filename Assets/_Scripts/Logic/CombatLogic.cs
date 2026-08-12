@@ -21,6 +21,7 @@ public static class CombatLogic
         int totalDamage = 0;
         int totalShield = 0;
         int totalPoison = 0;
+        int totalDodge = 0;
 
         // Loop through the hand to calculate the total values
         foreach (CardData card in playedCards)
@@ -38,6 +39,18 @@ public static class CombatLogic
             {
                 totalPoison += GetCardValue(card.Rank); // Rot applies poison stacks
             }
+            else if (card.Suit == CardSuit.Feather)
+            {
+                // Feather dodge chance is Rank x 10
+                totalDodge += (GetCardValue(card.Rank) * 10);
+            }
+        }
+
+        // Apply Dodge chance to the character who played the cards
+        if (totalDodge > 0 &&  attacker != null)
+        {
+            Debug.Log($"[CombatLogic] Adding {totalDodge}% dodge chance to the attacker");
+            attacker.AddDodgeChance(totalDodge);
         }
 
         // Apply shield to the character who played the cards
