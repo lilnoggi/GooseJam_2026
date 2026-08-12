@@ -129,9 +129,9 @@ public class TurnManager : MonoBehaviour
         AdvanceTurn();
     }
 
-    private void ResolveChallenge(ClaimData claim, CharacterStats targetStats)
+    private void ResolveChallenge(ClaimData claim, CharacterStats claimer, CharacterStats challenger)
     {
-        // Check if the player lied. A lie means ANY card doesn't match the claimed suit or rank
+        // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit or rank
         bool isLie = false;
         foreach (CardData card in claim.TrueCards)
         {
@@ -144,18 +144,18 @@ public class TurnManager : MonoBehaviour
 
         if (isLie)
         {
-            Debug.Log("PLAYER CAUGHT IN A LIE!!! Player takes penalty.");
+            Debug.Log("{claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
-            // Player takes thier own claimed damage
+            // The liar takes thier own claimed damage
             int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
-            _playerStats.TakeDamage(claimedDamage);
+            claimer.TakeDamage(claimedDamage);
 
-            // Enemy paranoia drops because player failed their bluff
-            targetStats.IncreaseParanoia(-20);
+            // Enemy liar paranoia drops because they failed their bluff
+            claimer.IncreaseParanoia(-20);
         }
         else
         {
-            Debug.Log("PLAYER TOLD THE TRUTH!!! Enemy takes critical penalty");
+            Debug.Log("{claimer.name.ToUpper()} TOLD THE TRUTH!!! {challenger.name} takes critical penalty");
 
             // Calculate the true value of the cards
             int trueDamage = 0;
@@ -164,8 +164,8 @@ public class TurnManager : MonoBehaviour
                 trueDamage += CombatLogic.GetCardValue(card.Rank);
             }
 
-            // Enemy takes double the tru damage
-            targetStats.TakeDamage(trueDamage * 2);
+            // Challenger takes double the tru damage
+            challenger.TakeDamage(trueDamage * 2);
 
             // (Paranoia doesn't drop here because enemy was right to be scared)
         }
