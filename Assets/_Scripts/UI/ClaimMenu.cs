@@ -50,7 +50,7 @@ public class ClaimMenu : MonoBehaviour
         // Log to check it works
         Debug.Log($"CLAIM MADE! Real Cards: {_trueCards.Count} | Claimed: {claimedRank} of {claimedSuit} | Target: {target}");
 
-        // TODO: _turnManager.ProcessPlayerClaim(newClaim);
+        _turnManager.ProcessPlayerClaim(newClaim);
 
         // Hide the menu and reset for the next turn
         _claimContainer.SetActive(false);

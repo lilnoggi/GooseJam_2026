@@ -68,6 +68,27 @@ public class TurnManager : MonoBehaviour
 
     }
 
+    public void ProcessPlayerClaim(ClaimData claim)
+    {
+        if (!IsPlayerTurn)
+        {
+            return;
+        }
+
+        // Discard the true cards from the player's hand so they leave the screen
+        playerDeck.DiscardCards(claim.TrueCards);
+
+        // Grab the target's stats
+        CharacterStats targetStats = GetStatsForTurn(claim.TargetEnemy);
+
+        // TODO: Pass this claim to EnemyAI so they can decide to call "Cheat"
+        // For now, accept the claim
+        Debug.Log($"Enemy accepted the claim! Processing combat...");
+
+        // End the player's turn
+        AdvanceTurn();
+    }
+
     private void InitDecks()
     {
         DeckManager[] decks = { playerDeck, leftEnemyDeck, centreEnemyDeck, rightEnemyDeck };
