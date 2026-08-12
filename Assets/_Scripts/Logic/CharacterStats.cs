@@ -13,6 +13,7 @@ public class CharacterStats : MonoBehaviour
     private int _maxHealth;
     private int _currentParanoia;
     private int _maxParanoia;
+    private int _currentShield;
 
     // Component references
     private EnemyAI _enemyAI;
@@ -85,6 +86,17 @@ public class CharacterStats : MonoBehaviour
         {
             // Update player health ui
         }
+    }
+
+    /// <summary>
+    /// Called when a character successfully resolves a Bone card
+    /// </summary>
+    public void AddShield(int shieldAmount)
+    {
+        _currentShield += shieldAmount;
+        Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
+
+        // TODO: Connect to UIManager later
     }
 
     /// <summary>
