@@ -66,7 +66,7 @@ public class UIManager : MonoBehaviour
             // TODO: Add animation trigger later to make text fade
         }
 
-        Debug.Log($"[UIManager] UI updated for: {currentTurn}");
+        // Debug.Log($"[UIManager] UI updated for: {currentTurn}");
     }
 
     /// <summary>
