@@ -13,6 +13,14 @@ public class CharacterStats : MonoBehaviour
     private int _maxHealth;
     private int _currentParanoia;
     private int _maxParanoia;
+    private int _currentShield;
+
+    [Header("Runtime Effects")]
+    private int _poisonStacks; // Tracks active rot stacks
+    private int _dodgeChance; // Tracks the percentage chance (0-100) to dodge the next attack
+
+    public int PoisonStacks => _poisonStacks; // public getter
+    public int DodgeChance => _dodgeChance;
 
     // Component references
     private EnemyAI _enemyAI;
@@ -31,11 +39,35 @@ public class CharacterStats : MonoBehaviour
 
     private void Update()
     {
-        // TEMPORARY TEST: Press spacebar to deal 15 damage and add 20 paranoia
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        // TEMPORARY TEST
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        // Standard test (15 damage, 20 paranoia)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             TakeDamage(15);
             IncreaseParanoia(20);
+        }
+
+        // Key '1': Test Bone Shield (adds 25 shield points)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            AddShield(25);
+        }
+
+        // Key '2' Test Rot
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            ApplyPoison(10);
+        }
+
+        // Key '3' Test feather
+        if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        {
+            AddDodgeChance(100);
         }
     }
 
@@ -67,8 +99,55 @@ public class CharacterStats : MonoBehaviour
         _currentHealth = _maxHealth;
     }
 
+    /// <summary>
+    /// Called when a character successfully resolves a Bone card
+    /// </summary>
+    public void AddShield(int shieldAmount)
+    {
+        _currentShield += shieldAmount;
+        Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
+
+        // TODO: Connect to UIManager later
+    }
+
     public void TakeDamage(int damageAmount)
     {
+        // Check for a dodge before anything else
+        if (_dodgeChance > 0)
+        {
+            // Random number between 0 and 99
+            int roll = Random.Range(0, 100);
+
+            if (roll < _dodgeChance)
+            {
+                Debug.Log($"{name} DODGED the attack. (Rolled {roll} vs {_dodgeChance}% chance)");
+                _dodgeChance = 0;
+                return;
+            }
+            else
+            {
+                Debug.Log($"{name} failed to dodge. (Rolled {roll} vs {_dodgeChance}% chance)");
+                _dodgeChance = 0;
+            }
+        }
+        // If character has shield, let is absorb the damage 
+        if (_currentShield > 0)
+        {
+            if (_currentShield >= damageAmount)
+            {
+                // Shield fully absorbs the hit
+                _currentShield -= damageAmount;
+                damageAmount = 0;
+            }
+            else
+            {
+                // Shield breaks, remaining damage carries over
+                damageAmount -= _currentShield;
+                _currentShield = 0;
+            }
+        }
+
+        // Any leftover damage hits the health pool
         _currentHealth -= damageAmount;
 
         // Prevent health from going below 0
@@ -85,6 +164,48 @@ public class CharacterStats : MonoBehaviour
         {
             // Update player health ui
         }
+    }
+
+    /// <summary>
+    /// Called when a Rot card successfully resolves against a target
+    /// </summary>
+    public void ApplyPoison(int stacks)
+    {
+        _poisonStacks += stacks;
+        Debug.Log($"{name} was afflicted with {stacks} stacks of poison. Total stacks: {_poisonStacks}");
+    }
+
+    /// <summary>
+    /// Called at the very start of this character's turn to process poison damage
+    /// </summary>
+    public void ProcessTurnStartStatusEffects()
+    {
+        if (_poisonStacks > 0)
+        {
+            Debug.Log($"[Status Effects] {_poisonStacks} Poison Stacks ticking on {name}");
+
+            // Poison deals direct damage equal to the stack count at the start of the turn
+            TakeDamage(_poisonStacks);
+
+            // Decay poison stacks by 1 each turn
+            _poisonStacks--;
+        }
+    }
+
+    /// <summary>
+    /// Called when a Feather card successfully resolves
+    /// </summary>
+    public void AddDodgeChance(int chance)
+    {
+        _dodgeChance += chance;
+
+        // Cap the dodge chance at 100%
+        if (_dodgeChance > 100)
+        {
+            _dodgeChance = 100;
+        }
+
+        Debug.Log($"{name} gained {_dodgeChance}% dodge chance for the next attack");
     }
 
     /// <summary>
