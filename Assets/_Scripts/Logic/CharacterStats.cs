@@ -17,8 +17,10 @@ public class CharacterStats : MonoBehaviour
 
     [Header("Runtime Effects")]
     private int _poisonStacks; // Tracks active rot stacks
+    private int _dodgeChance; // Tracks the percentage chance (0-100) to dodge the next attack
 
     public int PoisonStacks => _poisonStacks; // public getter
+    public int DodgeChance => _dodgeChance;
 
     // Component references
     private EnemyAI _enemyAI;
@@ -86,7 +88,25 @@ public class CharacterStats : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
-        // If character has shield, let is absorb the damage first
+        // Check for a dodge before anything else
+        if (_dodgeChance > 0)
+        {
+            // Random number between 0 and 99
+            int roll = Random.Range(0, 100);
+
+            if (roll < _dodgeChance)
+            {
+                Debug.Log($"{name} DODGED the attack. (Rolled {roll} vs {_dodgeChance}% chance)");
+                _dodgeChance = 0;
+                return;
+            }
+            else
+            {
+                Debug.Log($"{name} failed to dodge. (Rolled {roll} vs {_dodgeChance}% chance)");
+                _dodgeChance = 0;
+            }
+        }
+        // If character has shield, let is absorb the damage 
         if (_currentShield > 0)
         {
             if (_currentShield >= damageAmount)
@@ -146,6 +166,22 @@ public class CharacterStats : MonoBehaviour
             // Decay poison stacks by 1 each turn
             _poisonStacks--;
         }
+    }
+
+    /// <summary>
+    /// Called when a Feather card successfully resolves
+    /// </summary>
+    public void AddDodgeChance(int chance)
+    {
+        _dodgeChance += chance;
+
+        // Cap the dodge chance at 100%
+        if (_dodgeChance > 100)
+        {
+            _dodgeChance = 100;
+        }
+
+        Debug.Log($"{name} gained {_dodgeChance}% dodge chance for the next attack");
     }
 
     /// <summary>
