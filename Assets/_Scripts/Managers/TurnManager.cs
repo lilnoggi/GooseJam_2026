@@ -97,8 +97,8 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
 
-            // Trigger standoof logic
-            ResolveChallenge(claim, targetStats);
+            // Trigger standoof logic: Player is the claimer, targetStats is the challenger
+            ResolveChallenge(claim, _playerStats, targetStats);
         }
         else
         {
