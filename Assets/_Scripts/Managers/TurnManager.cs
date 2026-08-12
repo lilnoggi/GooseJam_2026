@@ -106,6 +106,48 @@ public class TurnManager : MonoBehaviour
         AdvanceTurn();
     }
 
+    private void ResolveChallenge(ClaimData claim, CharacterStats targetStats)
+    {
+        // Check if the player lied. A lie means ANY card doesn't match the claimed suit or rank
+        bool isLie = false;
+        foreach (CardData card in claim.TrueCards)
+        {
+            if (card.Suit != claim.ClaimedSuit || card.Rank != claim.ClaimedRank)
+            {
+                isLie = true;
+                break; // Caught, no need to check the rest of the cards
+            }
+        }
+
+        if (isLie)
+        {
+            Debug.Log("PLAYER CAUGHT IN A LIE!!! Player takes penalty.");
+
+            // Player takes thier own claimed damage
+            int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
+            _playerStats.TakeDamage(claimedDamage);
+
+            // Enemy paranoia drops because player failed their bluff
+            targetStats.IncreaseParanoia(-20);
+        }
+        else
+        {
+            Debug.Log("PLAYER TOLD THE TRUTH!!! Enemy takes critical penalty");
+
+            // Calculate the true value of the cards
+            int trueDamage = 0;
+            foreach (CardData card in claim.TrueCards)
+            {
+                trueDamage += CombatLogic.GetCardValue(card.Rank);
+            }
+
+            // Enemy takes double the tru damage
+            targetStats.TakeDamage(trueDamage * 2);
+
+            // (Paranoia doesn't drop here because enemy was right to be scared)
+        }
+    }
+
     private void InitDecks()
     {
         DeckManager[] decks = { playerDeck, leftEnemyDeck, centreEnemyDeck, rightEnemyDeck };

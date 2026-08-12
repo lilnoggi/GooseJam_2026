@@ -222,6 +222,12 @@ public class CharacterStats : MonoBehaviour
             _currentParanoia = _maxParanoia;
         }
 
+        // Prevent from dropping below 0
+        else if (_currentParanoia < 0)
+        {
+            _currentParanoia = 0;
+        }
+
         if (!_isPlayer)
         {
             UIManager.Instance.UpdateEnemyParanoia(_enemySeatIndex, _currentParanoia, _maxParanoia);
