@@ -254,7 +254,7 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("PLAYER CALLED CHEAT ON THE ENEMY!");
 
                 // Reverse the stats as the enemy is the one making a claim
-                ResolveChallenge(enemyClaim, enemyStats);
+                ResolveChallenge(enemyClaim, enemyStats, _playerStats);
             }
             else
             {
