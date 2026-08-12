@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public enum TurnSeat
 {
@@ -26,6 +25,12 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private CharacterStats _leftEnemyStats;
     [SerializeField] private CharacterStats _centerEnemyStats;
     [SerializeField] private CharacterStats _rightEnemyStats;
+
+    [Header("UI References")]
+    [SerializeField] private PlayerDecisionMenu _playerDecisionMenu;
+
+    private bool _isWaitingForPlayerDecision;
+    private bool _playerCalledCheat;
 
     private TurnSeat currentTurn;
     private bool hasStarted;
@@ -210,14 +215,54 @@ public class TurnManager : MonoBehaviour
         if (currentTurn != enemyTurn) yield break;
 
         DeckManager enemyDeck = GetDeckForTurn(enemyTurn);
-
+        CharacterStats enemyStats = GetStatsForTurn(enemyTurn);
 
         if (enemyDeck.HandCount > 0)
         {
+            // Enemy chooses their cards
             int maxCards = Mathf.Min(3, enemyDeck.HandCount);
-            int cardsToPlay = UnityEngine.Random.Range(1, maxCards + 1);
+            int cardsToPlayCount = UnityEngine.Random.Range(1, maxCards + 1);
+
+            // Get the actual CardData objects before discarding them
+            List<CardData> trueCards = new List<CardData>();
+            for (int i = 0; i < cardsToPlayCount; i++)
+            {
+                trueCards.Add(enemyDeck.Hand[i]);
+            }
             
-            enemyDeck.DiscardRandomCards(cardsToPlay);
+            enemyDeck.DiscardCards(trueCards);
+
+            // The enemy formulates their claim
+            // TODO: Write actual AI logic for lying. For now, they always tell the truth
+            CardSuit claimedSuit = trueCards[0].Suit;
+            CardRank claimedRank = trueCards[0].Rank;
+            ClaimData enemyClaim = new ClaimData(trueCards, claimedSuit, claimedRank, TurnSeat.Player);
+
+            // Pause the turn and show the UI to the player
+            _isWaitingForPlayerDecision = true;
+
+            _playerDecisionMenu.ShowMenu(enemyTurn.ToString(), enemyClaim, (bool calledCheat) =>
+            {
+                _playerCalledCheat = calledCheat;
+                _isWaitingForPlayerDecision = false; // Unfreeze the Coroutine
+            });
+
+            // Coroutine stops here until the player decision has been made
+            yield return new WaitUntil(() => !_isWaitingForPlayerDecision);
+
+            // Resolve the Standoff based on the player's button click
+            if (_playerCalledCheat)
+            {
+                Debug.Log("PLAYER CALLED CHEAT ON THE ENEMY!");
+
+                // Reverse the stats as the enemy is the one making a claim
+                ResolveChallenge(enemyClaim, enemyStats);
+            }
+            else
+            {
+                Debug.Log("Player passed. Enemy claim accepted.");
+                CombatLogic.ProcessTurn(enemyClaim.TrueCards, enemyStats, _playerStats);
+            }
         }
 
         yield return new WaitForSeconds(thinkTime);
