@@ -4,6 +4,9 @@ public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private EnemyProfile _activeProfile;
 
+    // Getter for TurnManager
+    public EnemyProfile Profile => _activeProfile;
+
     // This method will be called by TurnManager.cs during Phase 2
     public bool DecideToChallenge(CardSuit claimedSuit, int claimedValue)
     {
@@ -33,9 +36,20 @@ public class EnemyAI : MonoBehaviour
     private bool RunStandardProbability(CardSuit suit, int value)
     {
         // Standard logic goes here, multipled by _activeProfile.SkepticismMultipler
-        return false; // PLACEHOLDER
 
         // TODO: Probability logic
+        // Establish a base 20% chance to challenge any claim
+        float baseChance = 0.20f;
+
+        // The higher the claimed card value, the more suspicious the enemy gets
+        float valueFactor = value * 0.02f;
+
+        // Add together & multiply by the specific enemy's skepticism modifier
+        float finalCheatChance = (baseChance + valueFactor) * _activeProfile.SkepticismMultiplier;
+
+        // Generate a random value between 0.0 and 1.0
+        // If the nuymber is lower than the final chance, call cheat
+        return Random.value < finalCheatChance;
     }
 
     private bool FreddyFoxLogic(CardSuit suit, int value)
