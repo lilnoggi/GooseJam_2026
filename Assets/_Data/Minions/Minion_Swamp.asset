@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b05d1c7fc44bc04ebe039b530fa8a9a, type: 3}
   m_Name: Minion_Swamp
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProfile
-  _enemyName: Swamp Goon
+  _enemyName: Swamp Thug
   _isBoss: 0
   _bossType: 0
   _maxHealth: 75

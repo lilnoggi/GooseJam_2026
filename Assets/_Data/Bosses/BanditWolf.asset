@@ -19,4 +19,4 @@ MonoBehaviour:
   _baseParanoiaLevel: 0
   _customBossDeck: {fileID: 0}
   _skepticismMultiplier: 1
-  _aggressionMultiplier: 1
+  _aggressionMultiplier: 2

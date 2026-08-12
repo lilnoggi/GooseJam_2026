@@ -18,5 +18,5 @@ MonoBehaviour:
   _maxHealth: 150
   _baseParanoiaLevel: 0
   _customBossDeck: {fileID: 0}
-  _skepticismMultiplier: 1
+  _skepticismMultiplier: 2
   _aggressionMultiplier: 1
