@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2367502975857270105}
   - component: {fileID: 4605726475045896016}
   - component: {fileID: 6187961048523186169}
+  - component: {fileID: -5991510021365703428}
   m_Layer: 0
   m_Name: Enemy_SwampMinion_Prefab
   m_TagString: Untagged
@@ -128,3 +129,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   _activeProfile: {fileID: 11400000, guid: 62c42da0e26b3b043b059b0cf00ea720, type: 2}
+--- !u!114 &-5991510021365703428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455121224292098218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95309d9dd1848e1448af83730522c7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  _isPlayer: 0
+  _enemySeatIndex: 0

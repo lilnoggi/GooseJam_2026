@@ -27,6 +27,7 @@ public class EnemyProfile : ScriptableObject
 
     [Tooltip("The starting integer for the meter (0-100)")]
     [SerializeField] private int _baseParanoiaLevel = 0;
+    [SerializeField] private int _maxParanoia = 100;
 
     [Header("Deck & AI")]
     [Tooltip("Leave empty if this enemy uses the standard deck")]
@@ -42,6 +43,7 @@ public class EnemyProfile : ScriptableObject
     public BossType TypeOfBoss => _bossType;
     public int MaxHealth => _maxHealth;
     public int BaseParanoiaLevel => _baseParanoiaLevel;
+    public int MaxParanoia => _maxParanoia;
     public CardDatabase CustomBossDeck => _customBossDeck;
     public float SkepticismMultiplier => _skepticismMultiplier;
     public float AggressionMultiplier => _aggressionMultiplier;

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7956709874444311905}
   - component: {fileID: 1925830518271297483}
   - component: {fileID: 1313858081236690501}
+  - component: {fileID: 4848525415612204012}
   m_Layer: 0
   m_Name: Enemy_BanditWolf_Prefab
   m_TagString: Untagged
@@ -128,3 +129,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   _activeProfile: {fileID: 11400000, guid: 6f5379e08a960514d943bc8f270ef1f2, type: 2}
+--- !u!114 &4848525415612204012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5556067929621111749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95309d9dd1848e1448af83730522c7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  _isPlayer: 0
+  _enemySeatIndex: 0

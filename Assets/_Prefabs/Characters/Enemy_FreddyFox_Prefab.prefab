@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8399680404327448444}
   - component: {fileID: 1098378120936597566}
   - component: {fileID: 2797390893775706955}
+  - component: {fileID: 4234689598637434409}
   m_Layer: 0
   m_Name: Enemy_FreddyFox_Prefab
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6529866965607300066}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.39999998, z: 0}
   m_LocalScale: {x: 0.45, y: 0.85, z: 0.39999998}
   m_ConstrainProportionsScale: 0
@@ -128,3 +129,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   _activeProfile: {fileID: 11400000, guid: cecff0d6e6a34c342ab181b7b46c7e75, type: 2}
+--- !u!114 &4234689598637434409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6529866965607300066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95309d9dd1848e1448af83730522c7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  _isPlayer: 0
+  _enemySeatIndex: 2
