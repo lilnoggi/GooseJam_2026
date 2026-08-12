@@ -20,8 +20,9 @@ public static class CombatLogic
 
         int totalDamage = 0;
         int totalShield = 0;
+        int totalPoison = 0;
 
-        // Loop through the hand to calculate the total attack value
+        // Loop through the hand to calculate the total values
         foreach (CardData card in playedCards)
         {
             // Only Blood cards deal direct offensice damage
@@ -33,6 +34,10 @@ public static class CombatLogic
             {
                 totalShield += GetCardValue(card.Rank);
             }
+            else if (card.Suit == CardSuit.Rot)
+            {
+                totalPoison += GetCardValue(card.Rank); // Rot applies poison stacks
+            }
         }
 
         // Apply shield to the character who played the cards
@@ -40,6 +45,13 @@ public static class CombatLogic
         {
             Debug.Log($"[CombatLogic] Adding {totalShield} Bone shield to the attcker");
             attacker.AddShield(totalShield);
+        }
+
+        // Apply Poison stacks to the target
+        if (totalPoison > 0 && target != null)
+        {
+            Debug.Log($"[CombatLogic] Applying {totalPoison} Poison stacks to the target");
+            target.ApplyPoison(totalPoison);
         }
 
         // Apply the final calculated damage to the target
