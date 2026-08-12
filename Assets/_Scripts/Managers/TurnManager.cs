@@ -144,7 +144,7 @@ public class TurnManager : MonoBehaviour
 
         if (isLie)
         {
-            Debug.Log("{claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
+            Debug.Log($"{claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
             // The liar takes thier own claimed damage
             int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
@@ -155,7 +155,7 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("{claimer.name.ToUpper()} TOLD THE TRUTH!!! {challenger.name} takes critical penalty");
+            Debug.Log($"{claimer.name.ToUpper()} TOLD THE TRUTH!!! {challenger.name} takes critical penalty");
 
             // Calculate the true value of the cards
             int trueDamage = 0;
