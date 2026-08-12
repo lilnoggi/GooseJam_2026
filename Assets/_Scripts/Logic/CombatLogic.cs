@@ -78,7 +78,7 @@ public static class CombatLogic
     /// <summary>
     /// Converts the CardRank enum into integer values dictated by the GDD
     /// </summary>
-    private static int GetCardValue(CardRank rank)
+    public static int GetCardValue(CardRank rank)
     {
         switch (rank)
         {

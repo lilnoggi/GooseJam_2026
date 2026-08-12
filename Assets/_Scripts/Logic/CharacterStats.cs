@@ -21,6 +21,7 @@ public class CharacterStats : MonoBehaviour
 
     public int PoisonStacks => _poisonStacks; // public getter
     public int DodgeChance => _dodgeChance;
+    public int CurrentParanoia => _currentParanoia;
 
     // Component references
     private EnemyAI _enemyAI;

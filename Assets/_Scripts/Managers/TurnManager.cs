@@ -80,10 +80,27 @@ public class TurnManager : MonoBehaviour
 
         // Grab the target's stats
         CharacterStats targetStats = GetStatsForTurn(claim.TargetEnemy);
+        EnemyAI targetAI = targetStats.GetComponent<EnemyAI>();
 
-        // TODO: Pass this claim to EnemyAI so they can decide to call "Cheat"
-        // For now, accept the claim
-        Debug.Log($"Enemy accepted the claim! Processing combat...");
+        // Convert claimed Enum rank into an integer value for the AI
+        int claimedValue = CombatLogic.GetCardValue(claim.ClaimedRank);
+
+        // Ask AI if they think player is lying
+        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, claimedValue);
+
+        if (isChallenging)
+        {
+            Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
+
+            // TODO: Resolution phase
+        }
+        else
+        {
+            Debug.Log($"[Standoff] The {claim.TargetEnemy} accepted the player's claim.");
+
+            // The AI believed the player, apply the cards actually played
+            CombatLogic.ProcessTurn(claim.TrueCards, _playerStats, targetStats);
+        }
 
         // End the player's turn
         AdvanceTurn();
