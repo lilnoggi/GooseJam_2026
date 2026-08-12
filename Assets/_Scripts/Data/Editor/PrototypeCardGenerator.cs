@@ -19,7 +19,7 @@ public static class PrototypeCardGenerator
     public static void GenerateCards()
     {
 
-        if (!AssetDatabase.IsValidFolder(CardFolder)) //saftey check for if the folder has been created
+        if (!AssetDatabase.IsValidFolder(CardFolder)) //makes sure the folder has been created
         {
             Debug.LogError("Could not find Assets/_Data/Cards. Please create the _Data folder and Cards folder first. Or if moved PLZ MOVE BACK PLZ PLZ PLZ!!!");
             return;
