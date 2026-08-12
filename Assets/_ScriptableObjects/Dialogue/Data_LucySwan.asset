@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7554a09a804574db0bfb6f42ac1cc4, type: 3}
+  m_Name: Data_LucySwan
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDialogueData
+  TurnStartDialogue:
+  - The pond rippes...
+  - Let us dance.
+  - I already know what you'll do.
+  ThinkingDialogue:
+  - Your pulse betrays you.
+  - I see your hesitation...
+  - Such transparent thoughts.
+  BluffingDialogue:
+  - A beautiful play, wouldn't you agree?
+  - Don't think too hard, darling.
+  - A graceful strike.
+  CallCheatDialogue:
+  - Your mind is so loud. Cheat.
+  - A clumsy lie, little bird.
+  - Did you really think I wouldn't see?
+  CaughtLyingDialogue:
+  - A ripple in the water...
+  - How... unexpected.
+  - You learn quickly. Good.
+  - Disappointing.
+  SuccessfullDialogue:
+  - Just as I foresaw.
+  - You are delightfully predictable.
+  - A flawless performance.

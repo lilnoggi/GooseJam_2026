@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7554a09a804574db0bfb6f42ac1cc4, type: 3}
+  m_Name: Data_BanditWolf
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDialogueData
+  TurnStartDialogue:
+  - Enough waiting. My Turn!
+  - Time to crack some skulls!
+  - Let's break things!
+  ThinkingDialogue:
+  - Logic is for nerds. I smash.
+  - Grrr... just let me play!
+  - Which of these hurts most?!
+  BluffingDialogue:
+  - Try and block THIS!
+  - Nothing but pure damage!
+  - I'm going all in!
+  CallCheatDialogue:
+  - YOU'RE LYING!
+  - I call bull!
+  - Show 'em or I'll break 'em.
+  CaughtLyingDialogue:
+  - GRAAAH! Whatever!
+  - Who cares about the rules?!
+  - Next time, I'm just biting you.
+  SuccessfullDialogue:
+  - Haha! Weak!
+  - Too easy to crush you!
+  - Is that all you got?!

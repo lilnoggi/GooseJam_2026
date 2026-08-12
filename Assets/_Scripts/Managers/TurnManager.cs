@@ -97,6 +97,9 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
 
+            // Trigger Calling cheat dialogue
+            targetStats.GetComponent<EnemyDialogue>()?.TriggerCallCheat();
+
             // Trigger standoof logic: Player is the claimer, targetStats is the challenger
             ResolveChallenge(claim, _playerStats, targetStats);
         }
@@ -146,6 +149,9 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log($"{claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
+            // If caught lying, trigger caught dialogue
+            claimer.GetComponent<EnemyDialogue>()?.TriggerCaughtLying();
+
             // The liar takes thier own claimed damage
             int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
             claimer.TakeDamage(claimedDamage);
@@ -156,6 +162,9 @@ public class TurnManager : MonoBehaviour
         else
         {
             Debug.Log($"{claimer.name.ToUpper()} TOLD THE TRUTH!!! {challenger.name} takes critical penalty");
+
+            // Told the truth, trigger successfull dialogue
+            claimer.GetComponent<EnemyDialogue>()?.TriggerSuccessfull();
 
             // Calculate the true value of the cards
             int trueDamage = 0;
@@ -192,6 +201,9 @@ public class TurnManager : MonoBehaviour
         if (activeStats != null)
         {
             activeStats.ProcessTurnStartStatusEffects();
+
+            // Trigger turn start dialogue
+            activeStats.GetComponent<EnemyDialogue>()?.TriggerTurnStart();
         }
 
         // Draw cards for the active deck

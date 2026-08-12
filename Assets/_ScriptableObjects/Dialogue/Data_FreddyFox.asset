@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7554a09a804574db0bfb6f42ac1cc4, type: 3}
+  m_Name: Data_FreddyFox
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDialogueData
+  TurnStartDialogue:
+  - My turn to spin the wheel...
+  - Let's see what traps we can set.
+  ThinkingDialogue:
+  - Every card is a variable...
+  - Calculating the odds...
+  - What are you hiding?
+  BluffingDialogue:
+  - I wouldn't challenge this if I were you.
+  - Care to step into the snare?
+  - A harmless little play...
+  CallCheatDialogue:
+  - I smell a rat! CHEAT!
+  - You walked right into my trap!
+  - Too obvious. Show the cards.
+  CaughtLyingDialogue:
+  - A minor miscalculation...
+  - You're sharper than you look.
+  - Tch. A tactical retreat.
+  SuccessfullDialogue:
+  - Hook, line, and sinker.
+  - Outsmarted again.
+  - 'Right into the snare. '
