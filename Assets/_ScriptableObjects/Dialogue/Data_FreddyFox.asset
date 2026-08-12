@@ -19,6 +19,10 @@ MonoBehaviour:
   - Every card is a variable...
   - Calculating the odds...
   - What are you hiding?
+  TargetedDialogue:
+  - Targeting me? How predictable.
+  - A bold move...
+  - Let's see what you've got.
   BluffingDialogue:
   - I wouldn't challenge this if I were you.
   - Care to step into the snare?

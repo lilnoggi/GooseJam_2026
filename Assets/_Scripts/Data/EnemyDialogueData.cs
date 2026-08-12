@@ -8,6 +8,9 @@ public class EnemyDialogueData : ScriptableObject
     public List<string> TurnStartDialogue;
     public List<string> ThinkingDialogue;
 
+    [Header("Player Interaction")]
+    public List<string> TargetedDialogue;
+
     [Header("Standoff Reactions")]
     public List<string> BluffingDialogue;
     public List<string> CallCheatDialogue;

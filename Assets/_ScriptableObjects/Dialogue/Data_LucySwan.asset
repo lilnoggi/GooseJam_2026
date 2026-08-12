@@ -20,6 +20,10 @@ MonoBehaviour:
   - Your pulse betrays you.
   - I see your hesitation...
   - Such transparent thoughts.
+  TargetedDialogue:
+  - You gaze into the abyss...
+  - I felt your eyes on me.
+  - Are you sure?
   BluffingDialogue:
   - A beautiful play, wouldn't you agree?
   - Don't think too hard, darling.

@@ -22,6 +22,10 @@ MonoBehaviour:
   - Don't rush me.
   - Hold your feathers.
   - Which one...
+  TargetedDialogue:
+  - You looking at me?
+  - Big mistake.
+  - Bring it.
   BluffingDialogue:
   - Read 'em and weep.
   - You can't beat this.

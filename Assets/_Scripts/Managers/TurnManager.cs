@@ -80,12 +80,24 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
+        // Start coroutine
+        StartCoroutine(PlayerClaimRoutine(claim));
+    }
+
+    private IEnumerator PlayerClaimRoutine(ClaimData claim)
+    {
         // Discard the true cards from the player's hand so they leave the screen
         playerDeck.DiscardCards(claim.TrueCards);
 
-        // Grab the target's stats
+        // Grab the target's stats & AI
         CharacterStats targetStats = GetStatsForTurn(claim.TargetEnemy);
         EnemyAI targetAI = targetStats.GetComponent<EnemyAI>();
+
+        // Enemy reacts to being targeted
+        targetStats.GetComponent<EnemyDialogue>()?.TriggerTargeted();
+
+        // Wait 1.5s while the speech bubble is on screen
+        yield return new WaitForSeconds(1.5f);
 
         // Convert claimed Enum rank into an integer value for the AI
         int claimedValue = CombatLogic.GetCardValue(claim.ClaimedRank);
@@ -123,6 +135,9 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("Player successfully bluffed! Enemy paranoia increases.");
                 targetStats.IncreaseParanoia(25);
             }
+
+            // Give the UI a tiny moment to breathe before moving to next turn
+            yield return new WaitForSeconds(1f);
 
             // The AI believed the player, apply the cards actually played
             CombatLogic.ProcessTurn(claim.TrueCards, _playerStats, targetStats);

@@ -20,6 +20,10 @@ MonoBehaviour:
   - Logic is for nerds. I smash.
   - Grrr... just let me play!
   - Which of these hurts most?!
+  TargetedDialogue:
+  - YEAH! COME ON!
+  - FINALLY!
+  - Hit me!
   BluffingDialogue:
   - Try and block THIS!
   - Nothing but pure damage!

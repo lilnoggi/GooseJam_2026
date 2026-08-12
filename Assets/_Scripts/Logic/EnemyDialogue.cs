@@ -72,11 +72,15 @@ public class EnemyDialogue : MonoBehaviour
         _genericDialogue != null ? _genericDialogue.TurnStartDialogue : null,
         _uniqueDialogue != null ? _uniqueDialogue.TurnStartDialogue : null
     );
-        public void TriggerThinking() => Speak(
+    public void TriggerThinking() => Speak(
         _genericDialogue != null ? _genericDialogue.ThinkingDialogue : null,
         _uniqueDialogue != null ? _uniqueDialogue.ThinkingDialogue : null
     );
-        public void TriggerBluffing() => Speak(
+    public void TriggerTargeted() => Speak(
+        _genericDialogue != null ? _genericDialogue.TargetedDialogue : null,
+        _uniqueDialogue != null ? _uniqueDialogue.TargetedDialogue : null
+    );
+    public void TriggerBluffing() => Speak(
             _genericDialogue != null ? _genericDialogue.BluffingDialogue : null,
             _uniqueDialogue != null ? _uniqueDialogue.BluffingDialogue : null
         );
