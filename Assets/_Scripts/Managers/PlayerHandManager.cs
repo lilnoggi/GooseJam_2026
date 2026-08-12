@@ -27,6 +27,8 @@ public class PlayerHandManager : MonoBehaviour
     {
         _playerDeck.HandChanged += RefreshHand; //lsiten for player hand changes
 
+        _turnManager.OnTurnChanged += TurnChanged; //update buttons when the turn changes
+
         //listen for buttons
         _playButton.onClick.AddListener(PlaySelectedCards);
         _skipButton.onClick.AddListener(SkipTurn);
@@ -35,6 +37,12 @@ public class PlayerHandManager : MonoBehaviour
         RefreshHand();//show players starting cards
     }
 
+
+
+    private void TurnChanged(TurnSeat turn)
+    {
+        UpdateButtons(); //update buttons when turn changes
+    }
 
     private void RefreshHand()
     {
