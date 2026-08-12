@@ -92,11 +92,29 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
 
-            // TODO: Resolution phase
+            // Trigger standoof logic
+            ResolveChallenge(claim, targetStats);
         }
         else
         {
             Debug.Log($"[Standoff] The {claim.TargetEnemy} accepted the player's claim.");
+
+            // Did the player successfully lie?
+            bool isLie = false;
+            foreach (CardData card in claim.TrueCards)
+            {
+                if (card.Suit != claim.ClaimedSuit || card.Rank != claim.ClaimedRank)
+                {
+                    isLie = true;
+                }
+            }
+
+            // If the player got away with a lie, the enemy gets more paranoid
+            if (isLie)
+            {
+                Debug.Log("Player successfully bluffed! Enemy paranoia increases.");
+                targetStats.IncreaseParanoia(25);
+            }
 
             // The AI believed the player, apply the cards actually played
             CombatLogic.ProcessTurn(claim.TrueCards, _playerStats, targetStats);
