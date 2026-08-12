@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5761232730105933008}
   - component: {fileID: 7450049972174170628}
   - component: {fileID: 2978956648583901023}
+  - component: {fileID: 8211453029148900608}
   m_Layer: 0
   m_Name: Enemy_CastleMinion_Prefab
   m_TagString: Untagged
@@ -128,3 +129,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   _activeProfile: {fileID: 11400000, guid: 0ccfbe621e7eff949845e2f05d30e08f, type: 2}
+--- !u!114 &8211453029148900608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285749876073880724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95309d9dd1848e1448af83730522c7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
+  _isPlayer: 0
+  _enemySeatIndex: 0
