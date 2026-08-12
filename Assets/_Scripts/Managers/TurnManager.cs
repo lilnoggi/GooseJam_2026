@@ -232,11 +232,9 @@ public class TurnManager : MonoBehaviour
             
             enemyDeck.DiscardCards(trueCards);
 
-            // The enemy formulates their claim
-            // TODO: Write actual AI logic for lying. For now, they always tell the truth
-            CardSuit claimedSuit = trueCards[0].Suit;
-            CardRank claimedRank = trueCards[0].Rank;
-            ClaimData enemyClaim = new ClaimData(trueCards, claimedSuit, claimedRank, TurnSeat.Player);
+            // The enemy uses their AI profile to formulate a claim
+            EnemyAI activeEnemyAI = enemyStats.GetComponent<EnemyAI>();
+            ClaimData enemyClaim = activeEnemyAI.FormulateClaim(trueCards);
 
             // Pause the turn and show the UI to the player
             _isWaitingForPlayerDecision = true;
