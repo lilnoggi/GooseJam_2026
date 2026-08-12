@@ -39,11 +39,35 @@ public class CharacterStats : MonoBehaviour
 
     private void Update()
     {
-        // TEMPORARY TEST: Press spacebar to deal 15 damage and add 20 paranoia
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        // TEMPORARY TEST
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        // Standard test (15 damage, 20 paranoia)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             TakeDamage(15);
             IncreaseParanoia(20);
+        }
+
+        // Key '1': Test Bone Shield (adds 25 shield points)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            AddShield(25);
+        }
+
+        // Key '2' Test Rot
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            ApplyPoison(10);
+        }
+
+        // Key '3' Test feather
+        if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        {
+            AddDodgeChance(100);
         }
     }
 

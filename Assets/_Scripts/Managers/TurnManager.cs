@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public enum TurnSeat
 {
@@ -19,6 +20,12 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private DeckManager rightEnemyDeck; //the player on the right deck
 
     [SerializeField] private float thinkTime = 0.75f; //amount of time that the other players will think before playing a card
+
+    [Header("Character Stats References")]
+    [SerializeField] private CharacterStats _playerStats;
+    [SerializeField] private CharacterStats _leftEnemyStats;
+    [SerializeField] private CharacterStats _centerEnemyStats;
+    [SerializeField] private CharacterStats _rightEnemyStats;
 
     private TurnSeat currentTurn;
     private bool hasStarted;
@@ -77,6 +84,14 @@ public class TurnManager : MonoBehaviour
         hasStarted = true;
         currentTurn = turn;
 
+        // Get the active character's stats and process turn-start effects
+        CharacterStats activeStats = GetStatsForTurn(turn);
+        if (activeStats != null)
+        {
+            activeStats.ProcessTurnStartStatusEffects();
+        }
+
+        // Draw cards for the active deck
         DeckManager activeDeck = GetDeckForTurn(turn);
 
         activeDeck.DrawToFullHand();
@@ -136,6 +151,26 @@ public class TurnManager : MonoBehaviour
             case TurnSeat.RightEnemy:  return rightEnemyDeck;
 
             default:                   return playerDeck;
+        }
+    }
+
+    /// <summary>
+    /// Gets the CharacterStats component associated with the specified turn seat
+    /// </summary>
+    private CharacterStats GetStatsForTurn(TurnSeat turn)
+    {
+        switch (turn)
+        {
+            case TurnSeat.Player:
+                return _playerStats;
+            case TurnSeat.LeftEnemy:
+                return _leftEnemyStats;
+            case TurnSeat.CentreEnemy:
+                return _centerEnemyStats;
+            case TurnSeat.RightEnemy:
+                return _rightEnemyStats;
+            default:
+                return null; // Fallback return value
         }
     }
 }
