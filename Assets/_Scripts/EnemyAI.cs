@@ -4,12 +4,37 @@ public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private EnemyProfile _activeProfile;
 
+    private CharacterStats _stats;
+
     // Getter for TurnManager
     public EnemyProfile Profile => _activeProfile;
+
+    private void Awake()
+    {
+        // Get the stats component sitting on this current enemy GameObject
+        _stats = GetComponent<CharacterStats>();
+    }
 
     // This method will be called by TurnManager.cs during Phase 2
     public bool DecideToChallenge(CardSuit claimedSuit, int claimedValue)
     {
+        // Check Paranoia Overrides first
+        if (_stats != null)
+        {
+            if (_stats.CurrentParanoia >= _activeProfile.MaxParanoia)
+            {
+                Debug.Log($"{name} is HYPER-VIGILANT! Auto-Challenging!");
+                return true;
+            }
+
+            if (_stats.CurrentParanoia <= 0)
+            {
+                Debug.Log($"{name} is OVERCONFIDENT! Auto-Accepting");
+                return false;
+            }
+        }
+
+        // If no overrides, execute standard logic
         // If a standard minion, execute standard logic
         if (!_activeProfile.IsBoss)
         {

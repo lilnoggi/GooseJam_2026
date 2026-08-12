@@ -68,6 +68,104 @@ public class TurnManager : MonoBehaviour
 
     }
 
+    public void ProcessPlayerClaim(ClaimData claim)
+    {
+        if (!IsPlayerTurn)
+        {
+            return;
+        }
+
+        // Discard the true cards from the player's hand so they leave the screen
+        playerDeck.DiscardCards(claim.TrueCards);
+
+        // Grab the target's stats
+        CharacterStats targetStats = GetStatsForTurn(claim.TargetEnemy);
+        EnemyAI targetAI = targetStats.GetComponent<EnemyAI>();
+
+        // Convert claimed Enum rank into an integer value for the AI
+        int claimedValue = CombatLogic.GetCardValue(claim.ClaimedRank);
+
+        // Ask AI if they think player is lying
+        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, claimedValue);
+
+        if (isChallenging)
+        {
+            Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
+
+            // Trigger standoof logic
+            ResolveChallenge(claim, targetStats);
+        }
+        else
+        {
+            Debug.Log($"[Standoff] The {claim.TargetEnemy} accepted the player's claim.");
+
+            // Did the player successfully lie?
+            bool isLie = false;
+            foreach (CardData card in claim.TrueCards)
+            {
+                if (card.Suit != claim.ClaimedSuit || card.Rank != claim.ClaimedRank)
+                {
+                    isLie = true;
+                }
+            }
+
+            // If the player got away with a lie, the enemy gets more paranoid
+            if (isLie)
+            {
+                Debug.Log("Player successfully bluffed! Enemy paranoia increases.");
+                targetStats.IncreaseParanoia(25);
+            }
+
+            // The AI believed the player, apply the cards actually played
+            CombatLogic.ProcessTurn(claim.TrueCards, _playerStats, targetStats);
+        }
+
+        // End the player's turn
+        AdvanceTurn();
+    }
+
+    private void ResolveChallenge(ClaimData claim, CharacterStats targetStats)
+    {
+        // Check if the player lied. A lie means ANY card doesn't match the claimed suit or rank
+        bool isLie = false;
+        foreach (CardData card in claim.TrueCards)
+        {
+            if (card.Suit != claim.ClaimedSuit || card.Rank != claim.ClaimedRank)
+            {
+                isLie = true;
+                break; // Caught, no need to check the rest of the cards
+            }
+        }
+
+        if (isLie)
+        {
+            Debug.Log("PLAYER CAUGHT IN A LIE!!! Player takes penalty.");
+
+            // Player takes thier own claimed damage
+            int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
+            _playerStats.TakeDamage(claimedDamage);
+
+            // Enemy paranoia drops because player failed their bluff
+            targetStats.IncreaseParanoia(-20);
+        }
+        else
+        {
+            Debug.Log("PLAYER TOLD THE TRUTH!!! Enemy takes critical penalty");
+
+            // Calculate the true value of the cards
+            int trueDamage = 0;
+            foreach (CardData card in claim.TrueCards)
+            {
+                trueDamage += CombatLogic.GetCardValue(card.Rank);
+            }
+
+            // Enemy takes double the tru damage
+            targetStats.TakeDamage(trueDamage * 2);
+
+            // (Paranoia doesn't drop here because enemy was right to be scared)
+        }
+    }
+
     private void InitDecks()
     {
         DeckManager[] decks = { playerDeck, leftEnemyDeck, centreEnemyDeck, rightEnemyDeck };

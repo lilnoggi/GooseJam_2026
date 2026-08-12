@@ -18,6 +18,8 @@ public class PlayerHandManager : MonoBehaviour
 
     [SerializeField] private int _maximumSelectedCards =3; //the amount of cards that can be selected
 
+    [SerializeField] private ClaimMenu _claimMenu; // Reference to the claim menu
+
     private List<PlayerCardView> _cardViews = new List<PlayerCardView>(); //stores cards that are on screen
 
     private List<PlayerCardView> _selectedCards = new List<PlayerCardView>(); //stores selected cards
@@ -121,7 +123,10 @@ public class PlayerHandManager : MonoBehaviour
                 _selectedCards[i].CardData);
         }
 
-        _turnManager.PlayPlayerCards(cardsToPlay); //send the selected cards to the TurnManager script
+        // _turnManager.PlayPlayerCards(cardsToPlay); //send the selected cards to the TurnManager script
+
+        // Instead of engind the turn, open the Claim Menu and pass the real cards
+        _claimMenu.ShowMenu(cardsToPlay);
     }
 
 

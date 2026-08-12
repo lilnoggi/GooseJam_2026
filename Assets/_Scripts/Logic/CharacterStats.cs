@@ -21,6 +21,7 @@ public class CharacterStats : MonoBehaviour
 
     public int PoisonStacks => _poisonStacks; // public getter
     public int DodgeChance => _dodgeChance;
+    public int CurrentParanoia => _currentParanoia;
 
     // Component references
     private EnemyAI _enemyAI;
@@ -219,6 +220,12 @@ public class CharacterStats : MonoBehaviour
         if (_currentParanoia > _maxParanoia)
         {
             _currentParanoia = _maxParanoia;
+        }
+
+        // Prevent from dropping below 0
+        else if (_currentParanoia < 0)
+        {
+            _currentParanoia = 0;
         }
 
         if (!_isPlayer)
