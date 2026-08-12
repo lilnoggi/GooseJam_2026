@@ -31,7 +31,7 @@ public class ClaimMenu : MonoBehaviour
     public void ShowMenu(List<CardData> selectedCards)
     {
         _trueCards = selectedCards;
-        _claimContainer.SetActive(false);
+        _claimContainer.SetActive(true);
     }
 
     private void SubmitClaim()
