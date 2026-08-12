@@ -10,15 +10,16 @@ public static class CombatLogic
     /// <summary>
     /// Evaluates a list of played cards and applies the resulting damage to the target
     /// </summary>
-    public static void ProcessAttack(List<CardData> playedCards, CharacterStats target)
+    public static void ProcessTurn(List<CardData> playedCards, CharacterStats attacker, CharacterStats target)
     {
         // Check to ensure there actually is a target and cards to process
-        if (target == null || playedCards == null || playedCards.Count == 0)
+        if (attacker == null || target == null || playedCards == null || playedCards.Count == 0)
         {
             return;
         }
 
         int totalDamage = 0;
+        int totalShield = 0;
 
         // Loop through the hand to calculate the total attack value
         foreach (CardData card in playedCards)
@@ -28,10 +29,21 @@ public static class CombatLogic
             {
                 totalDamage += GetCardValue(card.Rank);
             }
+            else if (card.Suit == CardSuit.Bone)
+            {
+                totalShield += GetCardValue(card.Rank);
+            }
+        }
+
+        // Apply shield to the character who played the cards
+        if (totalShield > 0 && attacker != null)
+        {
+            Debug.Log($"[CombatLogic] Adding {totalShield} Bone shield to the attcker");
+            attacker.AddShield(totalShield);
         }
 
         // Apply the final calculated damage to the target
-        if (totalDamage > 0)
+        if (totalDamage > 0 && target != null)
         {
             Debug.Log($"[CombatLogic] Dealing {totalDamage} Blood damage to the target!");
             target.TakeDamage(totalDamage);
