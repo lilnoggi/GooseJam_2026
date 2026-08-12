@@ -358,6 +358,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 46.979, y: -78.125, z: -134.343}
+--- !u!114 &384239634 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5261425362854529787, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+  m_PrefabInstance: {fileID: 875492266800657564}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &397441739
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,6 +1038,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5014946166773697453, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: EnemyHealthBar_Right_Slider
+      objectReference: {fileID: 0}
+    - target: {fileID: 5214902463419262429, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: Enemy_Name_Right_Text
+      objectReference: {fileID: 0}
     - target: {fileID: 6578825004725383098, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1122,6 +1141,10 @@ PrefabInstance:
     - target: {fileID: 8203519390662324705, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341654719834399834, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: EnemyParanoiaBar_Right_Slider
       objectReference: {fileID: 0}
     - target: {fileID: 9048423682135449453, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1168,6 +1191,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!114 &502388512 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 731168910308295978, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+  m_PrefabInstance: {fileID: 502388509}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!114 &502388513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5261425362854529787, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+  m_PrefabInstance: {fileID: 502388509}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &524564076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1364,6 +1409,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5014946166773697453, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: EnemyHealthBar_Center_Slider
+      objectReference: {fileID: 0}
+    - target: {fileID: 5214902463419262429, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: Enemy_Name_Center_Text
+      objectReference: {fileID: 0}
     - target: {fileID: 6578825004725383098, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1459,6 +1512,10 @@ PrefabInstance:
     - target: {fileID: 8203519390662324705, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341654719834399834, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: EnemyParanoiaBar_Center_Slider
       objectReference: {fileID: 0}
     - target: {fileID: 9048423682135449453, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1505,6 +1562,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!114 &524564079 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 731168910308295978, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+  m_PrefabInstance: {fileID: 524564076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!114 &524564080 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5261425362854529787, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+  m_PrefabInstance: {fileID: 524564076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &549187683
 GameObject:
   m_ObjectHideFlags: 0
@@ -2513,6 +2592,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1841472357}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1359979442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 731168910308295978, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+  m_PrefabInstance: {fileID: 875492266800657564}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1371365441
 GameObject:
   m_ObjectHideFlags: 0
@@ -3357,6 +3447,14 @@ MonoBehaviour:
   - {fileID: 417654859}
   - {fileID: 524564078}
   - {fileID: 502388511}
+  _enemyParanoiaBars:
+  - {fileID: 1359979442}
+  - {fileID: 524564079}
+  - {fileID: 502388512}
+  _enemyNames:
+  - {fileID: 384239634}
+  - {fileID: 524564080}
+  - {fileID: 502388513}
 --- !u!4 &2110336028
 Transform:
   m_ObjectHideFlags: 0
@@ -3679,6 +3777,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5014946166773697453, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: EnemyHealthBar_Left_Slider
+      objectReference: {fileID: 0}
+    - target: {fileID: 5214902463419262429, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: Enemy_Name_Left_Text
+      objectReference: {fileID: 0}
     - target: {fileID: 6578825004725383098, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3774,6 +3880,10 @@ PrefabInstance:
     - target: {fileID: 8203519390662324705, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341654719834399834, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
+      propertyPath: m_Name
+      value: EnemyParanoiaBar_Left_Slider
       objectReference: {fileID: 0}
     - target: {fileID: 9048423682135449453, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
       propertyPath: m_AnchorMax.y
