@@ -68,8 +68,37 @@ public class CharacterStats : MonoBehaviour
         _currentHealth = _maxHealth;
     }
 
+    /// <summary>
+    /// Called when a character successfully resolves a Bone card
+    /// </summary>
+    public void AddShield(int shieldAmount)
+    {
+        _currentShield += shieldAmount;
+        Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
+
+        // TODO: Connect to UIManager later
+    }
+
     public void TakeDamage(int damageAmount)
     {
+        // If character has shield, let is absorb the damage first
+        if (_currentShield > 0)
+        {
+            if (_currentShield >= damageAmount)
+            {
+                // Shield fully absorbs the hit
+                _currentShield -= damageAmount;
+                damageAmount = 0;
+            }
+            else
+            {
+                // Shield breaks, remaining damage carries over
+                damageAmount -= _currentShield;
+                _currentShield = 0;
+            }
+        }
+
+        // Any leftover damage hits the health pool
         _currentHealth -= damageAmount;
 
         // Prevent health from going below 0
@@ -86,17 +115,6 @@ public class CharacterStats : MonoBehaviour
         {
             // Update player health ui
         }
-    }
-
-    /// <summary>
-    /// Called when a character successfully resolves a Bone card
-    /// </summary>
-    public void AddShield(int shieldAmount)
-    {
-        _currentShield += shieldAmount;
-        Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
-
-        // TODO: Connect to UIManager later
     }
 
     /// <summary>
