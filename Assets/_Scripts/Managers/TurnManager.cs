@@ -228,7 +228,7 @@ public class TurnManager : MonoBehaviour
 
         // Apply base damage
         // Because player passed no one is penalised, play just happens normally
-        CombatLogic.ProcessTurn(claim.TrueCards, claimer, target);
+        CombatLogic.ProcessTurn(claim.TrueCards, claim.ClaimedSuit, claimer, target);
 
         // Let reveal happen, then swoop back
         yield return new WaitForSeconds(2.0f);
