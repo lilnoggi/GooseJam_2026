@@ -39,7 +39,7 @@ public class PlayerDecisionMenu : MonoBehaviour
         _onDecisionMade = callback;
 
         // Display what the enemy is claiming
-        _claimText.text =$"{enemyName} claims they played {claim.TrueCards.Count} cards as the {claim.ClaimedRank} of {claim.ClaimedSuit}";
+        _claimText.text =$"{enemyName} claims they played {claim.TrueCards.Count} {claim.ClaimedSuit} cards.";
 
         _decisionMenuContainer.SetActive(true);
 
