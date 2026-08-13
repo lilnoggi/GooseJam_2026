@@ -10,7 +10,7 @@ public static class CombatLogic
     /// <summary>
     /// Evaluates a list of played cards and applies the resulting damage to the target
     /// </summary>
-    public static void ProcessTurn(List<CardData> playedCards, CharacterStats attacker, CharacterStats target)
+    public static void ProcessTurn(List<CardData> playedCards, CardSuit effectiveSuit, CharacterStats attacker, CharacterStats target)
     {
         // Check to ensure there actually is a target and cards to process
         if (attacker == null || target == null || playedCards == null || playedCards.Count == 0)
@@ -26,20 +26,21 @@ public static class CombatLogic
         // Loop through the hand to calculate the total values
         foreach (CardData card in playedCards)
         {
+            // Check the EFFECTIVE suit (the claim), ignoring the true physical suit
             // Only Blood cards deal direct offensice damage
-            if (card.Suit == CardSuit.Blood)
+            if (effectiveSuit == CardSuit.Blood)
             {
                 totalDamage += GetCardValue(card.Rank);
             }
-            else if (card.Suit == CardSuit.Bone)
+            else if (effectiveSuit == CardSuit.Bone)
             {
                 totalShield += GetCardValue(card.Rank);
             }
-            else if (card.Suit == CardSuit.Rot)
+            else if (effectiveSuit == CardSuit.Rot)
             {
                 totalPoison += GetCardValue(card.Rank); // Rot applies poison stacks
             }
-            else if (card.Suit == CardSuit.Feather)
+            else if (effectiveSuit == CardSuit.Feather)
             {
                 // Feather dodge chance is Rank x 10
                 totalDodge += (GetCardValue(card.Rank) * 10);
