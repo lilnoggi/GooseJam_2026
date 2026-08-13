@@ -207,6 +207,9 @@ public class TurnManager : MonoBehaviour
             // Challenger takes double the tru damage
             challenger.TakeDamage(trueDamage * 2);
 
+            // Apply the actual card effects to the character who told the truth
+            CombatLogic.ProcessTurn(claim.TrueCards, claim.ClaimedSuit, claimer, challenger);
+
             // (Paranoia doesn't drop here because enemy was right to be scared)
         }
 
