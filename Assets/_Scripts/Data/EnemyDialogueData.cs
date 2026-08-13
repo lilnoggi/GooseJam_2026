@@ -16,4 +16,7 @@ public class EnemyDialogueData : ScriptableObject
     public List<string> CallCheatDialogue;
     public List<string> CaughtLyingDialogue;
     public List<string> SuccessfullDialogue;
+
+    [Header("Defeat Reactions")]
+    public List<string> DefeatedDialogue;
 }

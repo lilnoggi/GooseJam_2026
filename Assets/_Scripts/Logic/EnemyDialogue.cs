@@ -96,4 +96,8 @@ public class EnemyDialogue : MonoBehaviour
         _genericDialogue != null ? _genericDialogue.SuccessfullDialogue : null,
         _uniqueDialogue != null ? _uniqueDialogue.SuccessfullDialogue : null
     );
+    public void TriggerDefeated() => Speak(
+        _genericDialogue != null ? _genericDialogue.DefeatedDialogue : null,
+        _uniqueDialogue != null ? _uniqueDialogue.DefeatedDialogue : null
+    );
 }
