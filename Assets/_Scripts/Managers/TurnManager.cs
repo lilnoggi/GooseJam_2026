@@ -100,11 +100,15 @@ public class TurnManager : MonoBehaviour
         // Wait 1.5s while the speech bubble is on screen
         yield return new WaitForSeconds(1.5f);
 
-        // Convert claimed Enum rank into an integer value for the AI
-        int claimedValue = CombatLogic.GetCardValue(claim.ClaimedRank);
+        // Calculate the actual threat value since the player no longer claims a rank
+        int totalThreatValue = 0;
+        foreach (CardData card in claim.TrueCards)
+        {
+            totalThreatValue += CombatLogic.GetCardValue(card.Rank);
+        }
 
         // Ask AI if they think player is lying
-        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, claimedValue);
+        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, totalThreatValue);
 
         if (isChallenging)
         {
@@ -124,9 +128,10 @@ public class TurnManager : MonoBehaviour
             bool isLie = false;
             foreach (CardData card in claim.TrueCards)
             {
-                if (card.Suit != claim.ClaimedSuit || card.Rank != claim.ClaimedRank)
+                if (card.Suit != claim.ClaimedSuit)
                 {
                     isLie = true;
+                    break;
                 }
             }
 
@@ -156,11 +161,11 @@ public class TurnManager : MonoBehaviour
         // TODO: Play the card flip animation
         yield return new WaitForSeconds(1.0f);
 
-        // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit or rank
+        // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit
         bool isLie = false;
         foreach (CardData card in claim.TrueCards)
         {
-            if (card.Suit != claim.ClaimedSuit || card.Rank != claim.ClaimedRank)
+            if (card.Suit != claim.ClaimedSuit)
             {
                 isLie = true;
                 break; // Caught, no need to check the rest of the cards
@@ -169,14 +174,18 @@ public class TurnManager : MonoBehaviour
 
         if (isLie)
         {
-            Debug.Log($"{claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
+            Debug.Log($"Caught {claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
             // If caught lying, trigger caught dialogue
             claimer.GetComponent<EnemyDialogue>()?.TriggerCaughtLying();
 
-            // The liar takes thier own claimed damage
-            int claimedDamage = claim.TrueCards.Count * CombatLogic.GetCardValue(claim.ClaimedRank);
-            claimer.TakeDamage(claimedDamage);
+            // The liar takes a penalty equal to the sum of the cards they physically placed
+            int trueValue = 0;
+            foreach (CardData card in claim.TrueCards)
+            {
+                trueValue += CombatLogic.GetCardValue(card.Rank);
+            }
+            claimer.TakeDamage(trueValue);
 
             // Enemy liar paranoia drops because they failed their bluff
             claimer.IncreaseParanoia(-20);
