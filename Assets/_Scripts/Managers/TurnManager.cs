@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using UnityEngine;
 
 public enum TurnSeat
@@ -113,7 +114,7 @@ public class TurnManager : MonoBehaviour
             targetStats.GetComponent<EnemyDialogue>()?.TriggerCallCheat();
 
             // Trigger standoof logic: Player is the claimer, targetStats is the challenger
-            ResolveChallenge(claim, _playerStats, targetStats);
+            yield return StartCoroutine(ResolveChallenge(claim, _playerStats, targetStats));
         }
         else
         {
@@ -136,19 +137,25 @@ public class TurnManager : MonoBehaviour
                 targetStats.IncreaseParanoia(25);
             }
 
-            // Give the UI a tiny moment to breathe before moving to next turn
-            yield return new WaitForSeconds(1f);
-
-            // The AI believed the player, apply the cards actually played
-            CombatLogic.ProcessTurn(claim.TrueCards, _playerStats, targetStats);
+            // Trigger cinematic reveal
+            yield return StartCoroutine(ResolvePassRoutine(claim, _playerStats, targetStats));
         }
 
         // End the player's turn
         AdvanceTurn();
     }
 
-    private void ResolveChallenge(ClaimData claim, CharacterStats claimer, CharacterStats challenger)
+    private IEnumerator ResolveChallenge(ClaimData claim, CharacterStats claimer, CharacterStats challenger)
     {
+        // Swoop Camera down
+        yield return CameraController.Instance.SwoopToTable();
+
+        // TODO: Spawn the physical 3D cards face down on the tbale
+        yield return new WaitForSeconds(0.5f);
+
+        // TODO: Play the card flip animation
+        yield return new WaitForSeconds(1.0f);
+
         // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit or rank
         bool isLie = false;
         foreach (CardData card in claim.TrueCards)
@@ -193,6 +200,30 @@ public class TurnManager : MonoBehaviour
 
             // (Paranoia doesn't drop here because enemy was right to be scared)
         }
+
+        // Let damage sink in, then swoop back
+        yield return new WaitForSeconds(2.0f);
+        yield return CameraController.Instance.SwoopToDefault();
+    }
+
+    private IEnumerator ResolvePassRoutine(ClaimData claim, CharacterStats claimer, CharacterStats target)
+    {
+        // Swoop camera down
+        yield return CameraController.Instance.SwoopToTable();
+
+        // TODO: Spawn physical 3D cards face down on table
+        yield return new WaitForSeconds(0.5f);
+
+        // TODO: Play card flip animation
+        yield return new WaitForSeconds(1.0f);
+
+        // Apply base damage
+        // Because player passed no one is penalised, play just happens normally
+        CombatLogic.ProcessTurn(claim.TrueCards, claimer, target);
+
+        // Let reveal happen, then swoop back
+        yield return new WaitForSeconds(2.0f);
+        yield return CameraController.Instance.SwoopToDefault();
     }
 
     private void InitDecks()
@@ -308,12 +339,12 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("PLAYER CALLED CHEAT ON THE ENEMY!");
 
                 // Reverse the stats as the enemy is the one making a claim
-                ResolveChallenge(enemyClaim, enemyStats, _playerStats);
+                yield return StartCoroutine(ResolveChallenge(enemyClaim, enemyStats, _playerStats));
             }
             else
             {
                 Debug.Log("Player passed. Enemy claim accepted.");
-                CombatLogic.ProcessTurn(enemyClaim.TrueCards, enemyStats, _playerStats);
+                yield return StartCoroutine(ResolvePassRoutine(enemyClaim, enemyStats, _playerStats));
             }
         }
 
