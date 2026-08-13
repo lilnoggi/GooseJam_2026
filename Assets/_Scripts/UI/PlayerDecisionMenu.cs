@@ -86,7 +86,10 @@ public class PlayerDecisionMenu : MonoBehaviour
             StopCoroutine(_timerRoutine);
         }
         
+        // Turn off UI
         _decisionMenuContainer.SetActive(false);
+
+        _claimText.gameObject.SetActive(false);
 
         // Push the result back to the turnmanager
         _onDecisionMade?.Invoke(calledCheat);

@@ -5578,6 +5578,10 @@ PrefabInstance:
       propertyPath: _claimText
       value: 
       objectReference: {fileID: 505520391}
+    - target: {fileID: 983593631952258887, guid: 757a5d9558af292468417ae34be54724, type: 3}
+      propertyPath: _decisionTimeLimit
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1339535951577517314, guid: 757a5d9558af292468417ae34be54724, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
