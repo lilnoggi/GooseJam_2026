@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 2797390893775706955}
   - component: {fileID: 4234689598637434409}
   - component: {fileID: 5598442147007053409}
+  - component: {fileID: 5273571533517192548}
   m_Layer: 0
   m_Name: Enemy_FreddyFox_Prefab
   m_TagString: Untagged
@@ -401,6 +402,20 @@ MonoBehaviour:
   _uniqueDialogue: {fileID: 11400000, guid: 6344c8ce6c554904d86f0658807ca7d0, type: 2}
   _speechBubbleContainer: {fileID: 7902023193859109071}
   _dialogueText: {fileID: 8794167881301279483}
+--- !u!114 &5273571533517192548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6529866965607300066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed1bdd851560ece40a9ff2b9586fe902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyTarget
+  _enemySeat: 3
+  _spotLight: {fileID: 0}
 --- !u!1 &7902023193859109071
 GameObject:
   m_ObjectHideFlags: 0

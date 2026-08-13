@@ -5,21 +5,25 @@ using System.Collections.Generic;
 
 public class ClaimMenu : MonoBehaviour
 {
+    // Singleton so the 3D enemies can easily find this menu!!!
+    public static ClaimMenu Instance { get; private set; }
+
     [Header("UI References")]
     [SerializeField] private GameObject _claimContainer;
     [SerializeField] private TMP_Dropdown _suitDropdown;
     [SerializeField] private TMP_Dropdown _rankDropdown;
-    [SerializeField] private TMP_Dropdown _targetDropdown;
-    [SerializeField] private Button _submitClaimButton;
 
     [Header("System References")]
     [SerializeField] private TurnManager _turnManager;
 
     private List<CardData> _trueCards;
 
+    // Public getter so enemies know if they should light up or ignore the mouse
+    public bool IsActive => _claimContainer.activeInHierarchy;
+
     private void Awake()
     {
-        _submitClaimButton.onClick.AddListener(SubmitClaim);
+        Instance = this;
 
         // Ensure the menu is hidden when the game starts
         _claimContainer.SetActive(false);
@@ -34,21 +38,15 @@ public class ClaimMenu : MonoBehaviour
         _claimContainer.SetActive(true);
     }
 
-    private void SubmitClaim()
+    // Now called directly by the 3D enemy when clicked
+    public void SubmitClaimWithTarget(TurnSeat targetEnemy)
     {
         // Read the dropdown values (Casting the integer index directly to the Enums)
         CardSuit claimedSuit = (CardSuit)_suitDropdown.value;
         CardRank claimedRank = (CardRank)_rankDropdown.value;
 
-        // Target dropdown options should be 0=Left, 1=Center, 2=Right
-        // In TurnSeat enum, Player is 0, Left is 1, so add 1 to the dropdown
-        TurnSeat target = (TurnSeat)(_targetDropdown.value + 1);
-
-        // Put this data into the container
-        ClaimData newClaim = new ClaimData(_trueCards, claimedSuit, claimedRank, target);
-
-        // Log to check it works
-        Debug.Log($"CLAIM MADE! Real Cards: {_trueCards.Count} | Claimed: {claimedRank} of {claimedSuit} | Target: {target}");
+        // Put this data into the container using the seat passed by the clicked enemy
+        ClaimData newClaim = new ClaimData(_trueCards, claimedSuit, claimedRank, targetEnemy);
 
         _turnManager.ProcessPlayerClaim(newClaim);
 
