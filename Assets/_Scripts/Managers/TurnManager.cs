@@ -18,7 +18,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private DeckManager centreEnemyDeck; //the player on the centir deck
     [SerializeField] private DeckManager rightEnemyDeck; //the player on the right deck
 
-    [SerializeField] private float thinkTime = 0.75f; //amount of time that the other players will think before playing a card
+    [SerializeField] private float thinkTime = 1.5f; //amount of time that the other players will think before playing a card
 
     [Header("Character Stats References")]
     [SerializeField] private CharacterStats _playerStats;
@@ -236,18 +236,29 @@ public class TurnManager : MonoBehaviour
 
     private IEnumerator EnemyTurnRoutine(TurnSeat enemyTurn)
     {
-        yield return new WaitForSeconds(thinkTime);
+        // Phase 1: Opening
+        // The turn banner is fading and the enemy just said their turn start line
+        // Give the player 1.5s to register who's turn it is
+        yield return new WaitForSeconds(1.5f);
 
         // safety check incase turn changed during the delay
         if (currentTurn != enemyTurn) yield break;
 
         DeckManager enemyDeck = GetDeckForTurn(enemyTurn);
         CharacterStats enemyStats = GetStatsForTurn(enemyTurn);
+        EnemyAI activeEnemyAI = enemyStats.GetComponent<EnemyAI>();
 
         if (enemyDeck.HandCount > 0)
         {
-            // Get the AI profile to check their aggression
-            EnemyAI activeEnemyAI = enemyStats.GetComponent<EnemyAI>();
+            // Phase 2: Thinking
+            // Trigger thinking dialogue
+            enemyStats.GetComponent<EnemyDialogue>()?.TriggerThinking();
+
+            // Wait another 1.5s while they "decide" what cards to play
+            yield return new WaitForSeconds(thinkTime);
+
+            // Phase 3: Make the claim
+            // check their aggression
             float aggression = activeEnemyAI.Profile.AggressionMultiplier;
 
             // Determine the maximum cards they can physically play
@@ -278,7 +289,8 @@ public class TurnManager : MonoBehaviour
             // The enemy uses their AI profile to formulate a claim
             ClaimData enemyClaim = activeEnemyAI.FormulateClaim(trueCards);
 
-            // Pause the turn and show the UI to the player
+            // Phase 4: Standoff
+            // Pause the turn and show the massive UI menu to the player
             _isWaitingForPlayerDecision = true;
 
             _playerDecisionMenu.ShowMenu(enemyTurn.ToString(), enemyClaim, (bool calledCheat) =>
@@ -305,7 +317,9 @@ public class TurnManager : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(thinkTime);
+        // Phase 5: End Turn
+        // Give the UI one final second to show the damage/status effects before next turn
+        yield return new WaitForSeconds(1.0f);
 
         if (currentTurn == enemyTurn)
         {

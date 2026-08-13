@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
-using Unity.VisualScripting;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -21,7 +20,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider[] _enemyParanoiaBars;
     [SerializeField] private TextMeshProUGUI[] _enemyNames;
 
-    // TODO: Add Health Bars, Paranoia Meters here later
+    // fade coroutine tracker
+    private Coroutine _bannerFadeRoutine;
 
     private void Awake()
     {
@@ -63,10 +63,15 @@ public class UIManager : MonoBehaviour
         {
             _turnBannerText.text = $"{currentTurn}'s Turn!";
 
-            // TODO: Add animation trigger later to make text fade
-        }
+            // Stop the current fade if a new turn starts before the old text finishes
+            if (_bannerFadeRoutine != null)
+            {
+                StopCoroutine(_bannerFadeRoutine);
+            }
 
-        // Debug.Log($"[UIManager] UI updated for: {currentTurn}");
+            // Start the new fade sequence
+            _bannerFadeRoutine = StartCoroutine(FadeBannerRoutine());
+        }
     }
 
     /// <summary>
@@ -106,5 +111,39 @@ public class UIManager : MonoBehaviour
             _enemyParanoiaBars[enemySeatIndex].maxValue = maxParanoia;
             _enemyParanoiaBars[enemySeatIndex].value = currentParanoia;
         }
+    }
+
+    private IEnumerator FadeBannerRoutine()
+    {
+        // Reset the text colour so it is 100% visible
+        Color originalColour = _turnBannerText.color;
+        originalColour.a = 1f;
+        _turnBannerText.color = originalColour;
+
+        // Wait for 2 seconds
+        yield return new WaitForSeconds(2f);
+
+        // Smoothly fade the text out over 1 second
+        float fadeDuration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            // Calculate the exact alpha value between 1 an 0
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+
+            Color newColour = _turnBannerText.color;
+            newColour.a = alpha;
+            _turnBannerText.color = newColour;
+
+            yield return null; // Wait for next frame before looping again
+        }
+
+        // Ensure it is completely invisible at the very end
+        Color finalColour = _turnBannerText.color;
+        finalColour.a = 0f;
+        _turnBannerText.color = finalColour;
     }
 }

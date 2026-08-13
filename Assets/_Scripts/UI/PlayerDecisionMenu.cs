@@ -27,6 +27,7 @@ public class PlayerDecisionMenu : MonoBehaviour
         _cheatButton.onClick.AddListener(() => MakeDecision(true));
 
         _decisionMenuContainer.SetActive(false);
+        _claimText.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -34,6 +35,7 @@ public class PlayerDecisionMenu : MonoBehaviour
     /// </summary>
     public void ShowMenu(string enemyName, ClaimData claim, Action<bool> callback)
     {
+        _claimText.gameObject.SetActive(true);
         _onDecisionMade = callback;
 
         // Display what the enemy is claiming
@@ -84,7 +86,10 @@ public class PlayerDecisionMenu : MonoBehaviour
             StopCoroutine(_timerRoutine);
         }
         
+        // Turn off UI
         _decisionMenuContainer.SetActive(false);
+
+        _claimText.gameObject.SetActive(false);
 
         // Push the result back to the turnmanager
         _onDecisionMade?.Invoke(calledCheat);
