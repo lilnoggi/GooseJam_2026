@@ -134,6 +134,26 @@ public class EnemyAI : MonoBehaviour
                         break;
                 }
             }
+
+            // Lie --> Truth Bug Preventer (when the AI tries to lie but accidentally tells the truth)
+            bool isActuallyLying = false;
+            foreach (CardData card in trueCards)
+            {
+                if (card.Suit != claimedSuit)
+                {
+                    isActuallyLying = true;
+                    break;
+                }
+            }
+
+            // If an AI accidentally told the truth, force an actual lie
+            if (!isActuallyLying)
+            {
+                Debug.Log($"{name} accidentally told the truth! Forcing a real lie...");
+                
+                // Swap the suit to guarantee it is a lie
+                claimedSuit = (claimedSuit == CardSuit.Blood) ? CardSuit.Bone : CardSuit.Blood;
+            }
         }
 
         // Always target the player
