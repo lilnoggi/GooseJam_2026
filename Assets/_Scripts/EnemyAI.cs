@@ -22,8 +22,9 @@ public class EnemyAI : MonoBehaviour
         _stats = GetComponent<CharacterStats>();
     }
 
-    // This method will be called by TurnManager.cs during Phase 2
-    public bool DecideToChallenge(CardSuit claimedSuit, int claimedValue)
+    // This method will be called by TurnManager.cs during Phase 2 
+    // NOTE: claimedValue now represents the true total mathematical threat of the cards
+    public bool DecideToChallenge(CardSuit claimedSuit, int totalThreatValue)
     {
         // Check Paranoia Overrides first
         if (_stats != null)
@@ -45,33 +46,33 @@ public class EnemyAI : MonoBehaviour
         // If a standard minion, execute standard logic
         if (!_activeProfile.IsBoss)
         {
-            return RunStandardProbability(claimedSuit, claimedValue);
+            return RunStandardProbability(claimedSuit, totalThreatValue);
         }
 
         // If a boss, execute their unique logic
         switch (_activeProfile.TypeOfBoss)
         {
             case BossType.FreddyFox:
-                return FreddyFoxLogic(claimedSuit, claimedValue);
+                return FreddyFoxLogic(claimedSuit, totalThreatValue);
 
             case BossType.BanditWolf:
-                return BanditWolfLogic(claimedSuit, claimedValue);
+                return BanditWolfLogic(claimedSuit, totalThreatValue);
 
             case BossType.LucySwan:
-                return LucySwanLogic(claimedSuit, claimedValue);
+                return LucySwanLogic(claimedSuit, totalThreatValue);
 
             default:
-                return RunStandardProbability(claimedSuit, claimedValue);
+                return RunStandardProbability(claimedSuit, totalThreatValue);
         }
     }   
 
-    private bool RunStandardProbability(CardSuit suit, int value)
+    private bool RunStandardProbability(CardSuit suit, int threatValue)
     {
         // Establish a base 20% chance to challenge any claim
         float baseChance = 0.20f;
 
-        // The higher the claimed card value, the more suspicious the enemy gets
-        float valueFactor = value * 0.02f;
+        // The higher the total threat value, the more suspicious the enemy gets
+        float valueFactor = threatValue * 0.02f;
 
         // Add together & multiply by the specific enemy's skepticism modifier
         float finalCheatChance = (baseChance + valueFactor) * _activeProfile.SkepticismMultiplier;
@@ -88,7 +89,9 @@ public class EnemyAI : MonoBehaviour
     {
         // Default to the truth
         CardSuit claimedSuit = trueCards[0].Suit;
-        CardRank claimedRank = trueCards[0].Rank;
+
+        // Placeholder for the rank for the ClaimData constructor so it doesn't break
+        CardRank placeholderRank = trueCards[0].Rank;
 
         // Base 25% chance to lie (adjust in profiles)
         float bluffChance = 0.25f;
@@ -109,10 +112,6 @@ public class EnemyAI : MonoBehaviour
             // STANDARD MINION LIE
             // THE LIE: Claim a random scary suit (Blood or Rot)
             claimedSuit = (Random.value > 0.5f) ? CardSuit.Blood : CardSuit.Rot;
-
-            // THE LIE: Claim a random high value (Jack - Ace)
-            CardRank[] highRanks = { CardRank.Jack, CardRank.Queen, CardRank.King, CardRank.Ace };
-            claimedRank = highRanks[Random.Range(0, highRanks.Length)];
             }
             else
             {
@@ -122,58 +121,53 @@ public class EnemyAI : MonoBehaviour
                     case BossType.FreddyFox:
                         // Freddy lies about playing Traps/Rot to make the player paranoid
                         claimedSuit = CardSuit.Rot;
-                        claimedRank = CardRank.Ace;
                         break;
                     
                     case BossType.BanditWolf:
                         // Bandit always lies about massive brute force
                         claimedSuit = CardSuit.Blood;
-                        claimedRank = CardRank.Ace;
                         break;
 
                     case BossType.LucySwan:
                         // Lucy tells unpredictable, weird lies to mess with your head
                         claimedSuit = (CardSuit)Random.Range(0, 4);
-                        claimedRank = CardRank.Ace;
                         break;
                 }
             }
         }
 
         // Always target the player
-        return new ClaimData(trueCards, claimedSuit, claimedRank, TurnSeat.Player);
+        return new ClaimData(trueCards, claimedSuit, placeholderRank, TurnSeat.Player);
     }
 
-    private bool FreddyFoxLogic(CardSuit suit, int value)
+    private bool FreddyFoxLogic(CardSuit suit, int threatValue)
     {
         // Freddy is cunning and untrusting.
-
         // Heavily weights towards calling bluff on high-damage Blood cards
-        if (suit == CardSuit.Blood && value > 10)
+        if (suit == CardSuit.Blood && threatValue > 10)
         {
             return true; // Almost always challenges this
         }
         
-        return RunStandardProbability(suit, value);
+        return RunStandardProbability(suit, threatValue);
     }
 
-    private bool BanditWolfLogic(CardSuit suit, int value)
+    private bool BanditWolfLogic(CardSuit suit, int threatValue)
     {
         // Bandit uses brute force, ignores bone because he just want to attack
-
         // Almost always accepts Bone claims to keep attacking
         if (suit == CardSuit.Bone)
         {
             return false; // Accept without checking
         }
 
-        return RunStandardProbability(suit, value);
+        return RunStandardProbability(suit, threatValue);
     }
 
-    private bool LucySwanLogic(CardSuit suit, int value)
+    private bool LucySwanLogic(CardSuit suit, int threatValue)
     {
         // Dynamic AI. Remembers past bluffs and adapts her probability per suit
-        float standardChance = 0.20f + (value * 0.02f);
+        float standardChance = 0.20f + (threatValue * 0.02f);
 
         // Add her specific suspicion memory for this suit
         float finalChance = (standardChance + _swanSuspicion[suit]) * _activeProfile.SkepticismMultiplier;
