@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 2206673109630022789}
   - component: {fileID: 5885858191345084748}
   - component: {fileID: 3650394883103591299}
+  - component: {fileID: 7253706150184687325}
   m_Layer: 0
   m_Name: Enemy_LucySwan_Prefab
   m_TagString: Untagged
@@ -401,6 +402,20 @@ MonoBehaviour:
   _uniqueDialogue: {fileID: 11400000, guid: d86db1ecb662df7458d3c06fa7b86e0a, type: 2}
   _speechBubbleContainer: {fileID: 8133331633236200256}
   _dialogueText: {fileID: 5924581241106322865}
+--- !u!114 &7253706150184687325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6191150304874899216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed1bdd851560ece40a9ff2b9586fe902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyTarget
+  _enemySeat: 2
+  _spotLight: {fileID: 0}
 --- !u!1 &8133331633236200256
 GameObject:
   m_ObjectHideFlags: 0

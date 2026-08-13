@@ -331,6 +331,7 @@ GameObject:
   - component: {fileID: 1313858081236690501}
   - component: {fileID: 4848525415612204012}
   - component: {fileID: 7456244411311289596}
+  - component: {fileID: 8868574781718850090}
   m_Layer: 0
   m_Name: Enemy_BanditWolf_Prefab
   m_TagString: Untagged
@@ -477,3 +478,17 @@ MonoBehaviour:
   _uniqueDialogue: {fileID: 11400000, guid: f1e51e7690d73d344bf08536a9b88428, type: 2}
   _speechBubbleContainer: {fileID: 675543775517786371}
   _dialogueText: {fileID: 3125521682555561207}
+--- !u!114 &8868574781718850090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5556067929621111749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed1bdd851560ece40a9ff2b9586fe902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyTarget
+  _enemySeat: 1
+  _spotLight: {fileID: 0}
