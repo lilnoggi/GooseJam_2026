@@ -18,15 +18,13 @@ public class ClaimMenu : MonoBehaviour
 
     private List<CardData> _trueCards;
     private CardSuit _selectedSuit;
-    private CardRank _selectedRank;
 
     // Track what step of the lie the player is currently on
-    private enum ClaimPhase { Inactive, SuitPhase, RankPhase, TargetPhase }
+    private enum ClaimPhase { Inactive, SuitPhase, TargetPhase }
     private ClaimPhase _currentPhase = ClaimPhase.Inactive;
 
     // Store Enums as arrays to easily cycle through
     private Array _suits = Enum.GetValues(typeof(CardSuit));
-    private Array _ranks = Enum.GetValues(typeof(CardRank));
     private int _currentIndex = 0;
 
     // Public getter | 3D spotlight will only turn on during the final target phase
@@ -68,13 +66,8 @@ public class ClaimMenu : MonoBehaviour
         if (_currentPhase == ClaimPhase.SuitPhase)
         {
             _currentIndex = (_currentIndex + 1) % _suits.Length;
+            UpdateDisplay();
         }
-        else if (_currentPhase == ClaimPhase.RankPhase)
-        {
-            _currentIndex = (_currentIndex + 1) % _ranks.Length;
-        }
-
-        UpdateDisplay();
     }
 
     // Attatched to a <-- button on the UI
@@ -87,17 +80,9 @@ public class ClaimMenu : MonoBehaviour
             {
                _currentIndex = _suits.Length - 1; 
             }
-        }
-        else if (_currentPhase == ClaimPhase.RankPhase)
-        {
-            _currentIndex--;
-            if (_currentIndex < 0)
-            {
-                _currentIndex = _ranks.Length - 1;
-            }
-        }
 
-        UpdateDisplay();
+            UpdateDisplay();
+        }
     }
 
     // Attatched to a "Confirm" button
@@ -105,17 +90,8 @@ public class ClaimMenu : MonoBehaviour
     {
         if (_currentPhase == ClaimPhase.SuitPhase)
         {
-            // Save the suit and move to ranks
+            // Save the suit and move to target phase
             _selectedSuit = (CardSuit)_suits.GetValue(_currentIndex);
-            _currentPhase = ClaimPhase.RankPhase;
-            _currentIndex = 0; // Reset index to start of ranks array
-
-            UpdateDisplay();
-        }
-        else if (_currentPhase == ClaimPhase.RankPhase)
-        {
-            // Save the rank
-            _selectedRank = (CardRank)_ranks.GetValue(_currentIndex);
 
             // Hide the blank card UI and activate Target Phase
             _claimContainer.SetActive(false);
@@ -137,8 +113,12 @@ public class ClaimMenu : MonoBehaviour
             return;
         }
 
+        // Pass the true rank of the very first card selected as a hidden placeholder
+        // so the ClaimData and damage calculations don't break
+        CardRank placeholderRank = _trueCards.Count > 0 ? _trueCards[0].Rank : CardRank.Two;
+
         // Build the final claim and send it to the turnmanager
-        ClaimData newClaim = new ClaimData(_trueCards, _selectedSuit, _selectedRank, targetEnemy);
+        ClaimData newClaim = new ClaimData(_trueCards, _selectedSuit, placeholderRank, targetEnemy);
 
         _turnManager.ProcessPlayerClaim(newClaim);
 
@@ -160,13 +140,5 @@ public class ClaimMenu : MonoBehaviour
                 _cardDisplayText.text = _suits.GetValue(_currentIndex).ToString();
             }
         }
-        else if (_currentPhase == ClaimPhase.RankPhase)
-            {
-                if (_instructionText != null)
-                {
-                    _instructionText.text = "CHOOSE A VALUE";
-                    _cardDisplayText.text = _ranks.GetValue(_currentIndex).ToString();
-                }
-            }
     }
 }
