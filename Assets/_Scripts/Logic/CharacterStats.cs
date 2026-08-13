@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // FOR TESTING
 
 public class CharacterStats : MonoBehaviour
 {
@@ -22,6 +21,8 @@ public class CharacterStats : MonoBehaviour
     public int PoisonStacks => _poisonStacks; // public getter
     public int DodgeChance => _dodgeChance;
     public int CurrentParanoia => _currentParanoia;
+    
+    public bool IsEliminated { get; private set; } // Public flag to check if this character is out of the game
 
     // Component references
     private EnemyAI _enemyAI;
@@ -35,40 +36,6 @@ public class CharacterStats : MonoBehaviour
         else
         {
             InitialisePlayerStats();
-        }
-    }
-
-    private void Update()
-    {
-        // TEMPORARY TEST
-        if (Keyboard.current == null)
-        {
-            return;
-        }
-
-        // Standard test (15 damage, 20 paranoia)
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            TakeDamage(15);
-            IncreaseParanoia(20);
-        }
-
-        // Key '1': Test Bone Shield (adds 25 shield points)
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)
-        {
-            AddShield(25);
-        }
-
-        // Key '2' Test Rot
-        if (Keyboard.current.digit2Key.wasPressedThisFrame)
-        {
-            ApplyPoison(10);
-        }
-
-        // Key '3' Test feather
-        if (Keyboard.current.digit3Key.wasPressedThisFrame)
-        {
-            AddDodgeChance(100);
         }
     }
 
@@ -105,6 +72,12 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public void AddShield(int shieldAmount)
     {
+        // Don't shield dead characters
+        if (IsEliminated)
+        {
+            return;
+        }
+
         _currentShield += shieldAmount;
         Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
 
@@ -113,6 +86,12 @@ public class CharacterStats : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
+        // Don't damage characters that are dead
+        if (IsEliminated)
+        {
+            return;
+        }
+
         // Check for a dodge before anything else
         if (_dodgeChance > 0)
         {
@@ -172,6 +151,11 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public void ApplyPoison(int stacks)
     {
+        // Don't apply to dead characters
+        if (IsEliminated)
+        {
+            return;
+        }
         _poisonStacks += stacks;
         Debug.Log($"{name} was afflicted with {stacks} stacks of poison. Total stacks: {_poisonStacks}");
     }
@@ -181,6 +165,12 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public void ProcessTurnStartStatusEffects()
     {
+        // Don't process effects for dead characters
+        if (IsEliminated)
+        {
+            return;
+        }
+
         if (_poisonStacks > 0)
         {
             Debug.Log($"[Status Effects] {_poisonStacks} Poison Stacks ticking on {name}");
@@ -198,6 +188,12 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public void AddDodgeChance(int chance)
     {
+        // Not for dead character
+        if (IsEliminated)
+        {
+            return;
+        }
+
         _dodgeChance += chance;
 
         // Cap the dodge chance at 100%
@@ -214,6 +210,12 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public void IncreaseParanoia(int amount)
     {
+        // NO DEAD CHARACTERS!!!
+        if (IsEliminated)
+        {
+            return;
+        }
+
         _currentParanoia += amount;
 
         // Prevent paranoia from exceeding max limit
@@ -231,6 +233,28 @@ public class CharacterStats : MonoBehaviour
         if (!_isPlayer)
         {
             UIManager.Instance.UpdateEnemyParanoia(_enemySeatIndex, _currentParanoia, _maxParanoia);
+        }
+    }
+
+    /// <summary>
+    /// Handles logic for when a character's HP reaches 0
+    /// </summary>
+    private void Die()
+    {
+        IsEliminated = true;
+        Debug.Log($"{name} HAS BEEN ELIMINATED FROM THE GAME!");
+
+        if (!_isPlayer)
+        {
+            // Dialogue for final angry line before folding
+            GetComponent<EnemyDialogue>()?.TriggerDefeated();
+
+            // TODO: Play animation tossing cards onto table
+        }
+        else
+        {
+            // TODO: Trigger game over ui
+            Debug.Log("PLAYER HAS DIED! GAME OVER!");
         }
     }
 }
