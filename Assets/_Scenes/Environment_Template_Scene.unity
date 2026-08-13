@@ -5197,25 +5197,13 @@ PrefabInstance:
       propertyPath: _turnManager
       value: 
       objectReference: {fileID: 2126633318}
+    - target: {fileID: 1829135425594704342, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: _instructionText
+      value: 
+      objectReference: {fileID: 1804332360}
     - target: {fileID: 3049414732025146925, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
       propertyPath: m_Name
-      value: ClaimMenu_Panel
-      objectReference: {fileID: 0}
-    - target: {fileID: 3842437912863754977, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3842437912863754977, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3842437912863754977, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3842437912863754977, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: Claim_Container
       objectReference: {fileID: 0}
     - target: {fileID: 6265231416901848257, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
       propertyPath: m_Pivot.x
@@ -5243,11 +5231,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6265231416901848257, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 627.02344
+      value: 468.7192
       objectReference: {fileID: 0}
     - target: {fileID: 6265231416901848257, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 316.8589
+      value: 613.6794
       objectReference: {fileID: 0}
     - target: {fileID: 6265231416901848257, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5297,21 +5285,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9136694178379390072, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
+    - target: {fileID: 9050607150776758818, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9136694178379390072, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
+    - target: {fileID: 9050607150776758818, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9136694178379390072, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
+    - target: {fileID: 9050607150776758818, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1762558163}
+    - target: {fileID: 9050607150776758818, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 9136694178379390072, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
+    - target: {fileID: 9050607150776758818, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ConfirmSelection
+      objectReference: {fileID: 0}
+    - target: {fileID: 9050607150776758818, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ClaimMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 9050607150776758818, guid: 97fafdcad1b8df541aee1580691a1383, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
