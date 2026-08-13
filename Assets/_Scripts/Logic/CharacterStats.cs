@@ -130,10 +130,11 @@ public class CharacterStats : MonoBehaviour
         // Any leftover damage hits the health pool
         _currentHealth -= damageAmount;
 
-        // Prevent health from going below 0
+        // Prevent health from going below 0 and trigger elimination
         if (_currentHealth < 0)
         {
             _currentHealth = 0;
+            Die();
         }
 
         if (!_isPlayer)

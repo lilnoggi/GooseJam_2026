@@ -112,7 +112,7 @@ public class TurnManager : MonoBehaviour
 
         if (isChallenging)
         {
-            Debug.Log($"[Standoff] The {claim.TargetEnemy} called CHEAT!");
+            Debug.Log($"<color=pink>[Standoff] The {claim.TargetEnemy} called CHEAT!</color>");
 
             // Trigger Calling cheat dialogue
             targetStats.GetComponent<EnemyDialogue>()?.TriggerCallCheat();
@@ -122,7 +122,7 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"[Standoff] The {claim.TargetEnemy} accepted the player's claim.");
+            Debug.Log($"<color=purple>[Standoff] The {claim.TargetEnemy} accepted the player's claim.</color>");
 
             // Did the player successfully lie?
             bool isLie = false;
@@ -138,7 +138,7 @@ public class TurnManager : MonoBehaviour
             // If the player got away with a lie, the enemy gets more paranoid
             if (isLie)
             {
-                Debug.Log("Player successfully bluffed! Enemy paranoia increases.");
+                Debug.Log("<color=brown>Player successfully bluffed! Enemy paranoia increases.</color>");
                 targetStats.IncreaseParanoia(25);
             }
 
@@ -369,10 +369,41 @@ public class TurnManager : MonoBehaviour
 
     private void AdvanceTurn()
     {
+        // Check for Victory Condition (All 3 enemies are eliminated)
+        if (_leftEnemyStats.IsEliminated && _centerEnemyStats.IsEliminated && _rightEnemyStats.IsEliminated)
+        {
+            Debug.Log("VICTORY! All enemies have been defeated!");
+            // TODO: Trigger Victory UI / Transition to next room
+            return; // Stop the turn loop completely
+        }
+
+        // Check for Defeat Condition (Player is eliminated)
+        if (_playerStats.IsEliminated)
+        {
+            Debug.Log("GAME OVER! The Goose has been cooked!");
+            // TODO: Trigger Game Over UI
+            return; // Stop turn loop completely
+        }
+
+        // Find the next living character to take a turn
+        int nextTurnIndex = (int)currentTurn;
+
         // cycles clockwise through 0-3 layout indices
 
-        int nextTurn = ((int)currentTurn + 1) % 4;
-        StartTurn((TurnSeat)nextTurn);
+        // Loop up to 4 times to find the next alive seat
+        for (int i = 0; i < 4; i++)
+        {
+            nextTurnIndex = (nextTurnIndex + 1) % 4;
+            TurnSeat nextSeat = (TurnSeat)nextTurnIndex;
+            CharacterStats nextStats = GetStatsForTurn(nextSeat);
+
+            // If the character in this seat exists and is NOT eliminated, start their turn
+            if (nextStats != null && !nextStats.IsEliminated)
+            {
+                StartTurn(nextSeat);
+                return;
+            }
+        }
     }
 
     private DeckManager GetDeckForTurn(TurnSeat turn)

@@ -49,28 +49,28 @@ public static class CombatLogic
         // Apply Dodge chance to the character who played the cards
         if (totalDodge > 0 &&  attacker != null)
         {
-            Debug.Log($"[CombatLogic] Adding {totalDodge}% dodge chance to the attacker");
+            Debug.Log($"<color=cyan>[CombatLogic] Adding {totalDodge}% dodge chance to the attacker</color>");
             attacker.AddDodgeChance(totalDodge);
         }
 
         // Apply shield to the character who played the cards
         if (totalShield > 0 && attacker != null)
         {
-            Debug.Log($"[CombatLogic] Adding {totalShield} Bone shield to the attcker");
+            Debug.Log($"<color=yellow>[CombatLogic] Adding {totalShield} Bone shield to the attcker</color>");
             attacker.AddShield(totalShield);
         }
 
         // Apply Poison stacks to the target
         if (totalPoison > 0 && target != null)
         {
-            Debug.Log($"[CombatLogic] Applying {totalPoison} Poison stacks to the target");
+            Debug.Log($"<color=green>[CombatLogic] Applying {totalPoison} Poison stacks to the target</color>");
             target.ApplyPoison(totalPoison);
         }
 
         // Apply the final calculated damage to the target
         if (totalDamage > 0 && target != null)
         {
-            Debug.Log($"[CombatLogic] Dealing {totalDamage} Blood damage to the target!");
+            Debug.Log($"<color=red>[CombatLogic] Dealing {totalDamage} Blood damage to the target!</color>");
             target.TakeDamage(totalDamage);
         }
     }
