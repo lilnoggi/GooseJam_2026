@@ -52,7 +52,12 @@ public class TableManager : MonoBehaviour
             // Rotate exactly 180 degrees on the Z axis so the back of the card faces up
             newCard.transform.localRotation = Quaternion.Euler(0, 0, 180f);
 
-            // TODO: Link up CardVisuals so the card knows what suit/rank to display
+            // Get the CardVisuals and tell it what card to represent
+            CardVisuals visuals = newCard.GetComponent<CardVisuals>();
+            if (visuals != null)
+            {
+                visuals.Setup(cardsToReveal[i]);
+            }
 
             _spawnedTableCards.Add(newCard);
         }
