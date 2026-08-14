@@ -155,8 +155,8 @@ public class TurnManager : MonoBehaviour
         // Swoop Camera down
         yield return CameraController.Instance.SwoopToTable();
 
-        // TODO: Spawn the physical 3D cards face down on the tbale
-        yield return new WaitForSeconds(0.5f);
+        // Let TableManager handle the reveal
+        yield return StartCoroutine(TableManager.Instance.SpawnAndFlipTableCards(claim.TrueCards));
 
         // TODO: Play the card flip animation
         yield return new WaitForSeconds(1.0f);
@@ -219,6 +219,9 @@ public class TurnManager : MonoBehaviour
 
         // Let damage sink in, then swoop back
         yield return new WaitForSeconds(2.0f);
+
+        // TableManager cleanup cards
+        TableManager.Instance.ClearTableCards();
         yield return CameraController.Instance.SwoopToDefault();
     }
 
@@ -227,8 +230,8 @@ public class TurnManager : MonoBehaviour
         // Swoop camera down
         yield return CameraController.Instance.SwoopToTable();
 
-        // TODO: Spawn physical 3D cards face down on table
-        yield return new WaitForSeconds(0.5f);
+        // Let TableManager handle the reveal
+        yield return StartCoroutine(TableManager.Instance.SpawnAndFlipTableCards(claim.TrueCards));
 
         // TODO: Play card flip animation
         yield return new WaitForSeconds(1.0f);
@@ -239,7 +242,11 @@ public class TurnManager : MonoBehaviour
 
         // Let reveal happen, then swoop back
         yield return new WaitForSeconds(2.0f);
+
+        // Clean up the cards 
+        TableManager.Instance.ClearTableCards();
         yield return CameraController.Instance.SwoopToDefault();
+
     }
 
     private void InitDecks()
