@@ -42,7 +42,8 @@ public static class CombatLogic
             }
             else if (effectiveSuit == CardSuit.Feather)
             {
-                totalDodge += GetCardValue(card.Rank);
+                // 1 Card = 1 Token
+                totalDodge += 1;
             }
         }
 
@@ -50,7 +51,7 @@ public static class CombatLogic
         if (totalDodge > 0 &&  attacker != null)
         {
             Debug.Log($"<color=cyan>[CombatLogic] Adding {totalDodge}% dodge chance to the attacker</color>");
-            attacker.AddDodgeChance(totalDodge);
+            attacker.AddDodgeTokens(totalDodge);
         }
 
         // Apply shield to the character who played the cards

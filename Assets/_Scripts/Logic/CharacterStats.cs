@@ -179,7 +179,7 @@ public class CharacterStats : MonoBehaviour
     /// <summary>
     /// Called when a Feather card successfully resolves
     /// </summary>
-    public void AddDodgeChance(int powerValue)
+    public void AddDodgeTokens(int tokenAmount)
     {
         // Not for dead character
         if (IsEliminated)
@@ -187,11 +187,9 @@ public class CharacterStats : MonoBehaviour
             return;
         }
 
-        // Every 10 points of Feather = 1 Guaranteed Dodge Token
-        int tokensGained = Mathf.Max(1, powerValue / 10);
-        _dodgeTokens += tokensGained;
+        _dodgeTokens += tokenAmount;
 
-        Debug.Log($"{name} gained {tokensGained} dodge tokens! Total: {_dodgeTokens}");
+        Debug.Log($"{name} gained {tokenAmount} dodge tokens! Total: {_dodgeTokens}");
     }
 
     /// <summary>
