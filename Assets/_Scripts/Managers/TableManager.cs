@@ -42,6 +42,9 @@ public class TableManager : MonoBehaviour
         {
             GameObject newCard = Instantiate(_tableCardPrefab, _tableCenterTransform);
 
+            // Force the card prefab to keep its intended prefab scale
+            newCard.transform.localScale = _tableCardPrefab.transform.localScale;
+
             // Calculate spacing so the group of cards centers perfectly on the table
             float offset = (i - (cardCount - 1) / 2f) * _cardSpacing;
             newCard.transform.localPosition = new Vector3(offset, 0, 0);
