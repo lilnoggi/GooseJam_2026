@@ -57,6 +57,7 @@ public class CharacterStats : MonoBehaviour
             UIManager.Instance.UpdateEnemyName(_enemySeatIndex, _enemyAI.Profile.EnemyName);
             UIManager.Instance.UpdateEnemyHealth(_enemySeatIndex, _currentHealth, _maxHealth);
             UIManager.Instance.UpdateEnemyParanoia(_enemySeatIndex, _currentParanoia, _maxParanoia);
+            UpdateStatusUI(); 
         }
     }
 
@@ -69,7 +70,7 @@ public class CharacterStats : MonoBehaviour
         UIManager.Instance.UpdatePlayerHealth(_currentHealth, _maxHealth);
         
         // Ensure all icons start turned off
-        UpdatePlayerStatusUI(); 
+        UpdateStatusUI(); 
     }
 
     /// <summary>
@@ -87,10 +88,7 @@ public class CharacterStats : MonoBehaviour
         Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
 
         // Connect to UI Manager
-        if (_isPlayer)
-        {
-            UpdatePlayerStatusUI();
-        }
+        UpdateStatusUI(); 
     }
 
     public void TakeDamage(int damageAmount)
@@ -105,12 +103,7 @@ public class CharacterStats : MonoBehaviour
         if (_dodgeTokens > 0)
         {
             _dodgeTokens--;
-            
-            // Update UI because a token was spent
-            if (_isPlayer)
-            {
-                UpdatePlayerStatusUI();
-            }
+            UpdateStatusUI(); 
             return;
         }
         // If character has shield, let is absorb the damage 
@@ -130,10 +123,7 @@ public class CharacterStats : MonoBehaviour
             }
 
             // Update UI because shield was broken
-            if (_isPlayer)
-            {
-                UpdatePlayerStatusUI();
-            }
+                UpdateStatusUI(); 
         }
 
         // Any leftover damage hits the health pool
@@ -171,10 +161,7 @@ public class CharacterStats : MonoBehaviour
         Debug.Log($"{name} was afflicted with {stacks} stacks of poison. Total stacks: {_poisonStacks}");
 
         // Connect to UI Manager
-        if (_isPlayer)
-        {
-            UpdatePlayerStatusUI();
-        }
+        UpdateStatusUI(); 
     }
 
     /// <summary>
@@ -204,10 +191,7 @@ public class CharacterStats : MonoBehaviour
         }
 
         // Update UI because Shields, Dodges, and Poison just changed
-        if (_isPlayer)
-        {
-            UpdatePlayerStatusUI();
-        }
+        UpdateStatusUI(); 
     }
 
     /// <summary>
@@ -226,10 +210,7 @@ public class CharacterStats : MonoBehaviour
         Debug.Log($"{name} gained {tokenAmount} dodge tokens! Total: {_dodgeTokens}");
 
         // Connect to UI Manager
-        if (_isPlayer)
-        {
-            UpdatePlayerStatusUI();
-        }
+        UpdateStatusUI(); 
     }
 
     /// <summary>
@@ -285,13 +266,20 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    // Helper method for UIManager to evaluate bools
-    private void UpdatePlayerStatusUI()
+    // Helper method for UIManager to evaluate bools for ANY character
+    private void UpdateStatusUI()
     {
         bool hasShield = _currentShield > 0;
         bool hasDodge = _dodgeTokens > 0;
         bool hasPoison = _poisonStacks > 0;
 
-        UIManager.Instance.UpdatePlayerStatusIcon(hasShield, hasDodge, hasPoison);
+        if (_isPlayer)
+        {
+            UIManager.Instance.UpdatePlayerStatusIcon(hasShield, hasDodge, hasPoison);
+        }
+        else
+        {
+            UIManager.Instance.UpdateEnemyStatusIcons(_enemySeatIndex, hasShield, hasDodge, hasPoison);
+        }
     }
 }

@@ -19,6 +19,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider[] _enemyHealthBars;
     [SerializeField] private Slider[] _enemyParanoiaBars;
     [SerializeField] private TextMeshProUGUI[] _enemyNames;
+    [SerializeField] private GameObject[] _enemyShieldIcons;
+    [SerializeField] private GameObject[] _enemyDodgeIcons;
+    [SerializeField] private GameObject[] _enemyPoisonIcons;
 
     [Header("Player UI")]
     [SerializeField] private Slider _playerHealthBar;
@@ -115,6 +118,31 @@ public class UIManager : MonoBehaviour
         {
             _enemyParanoiaBars[enemySeatIndex].maxValue = maxParanoia;
             _enemyParanoiaBars[enemySeatIndex].value = currentParanoia;
+        }
+    }
+
+    /// <summary>
+    /// Toggles the status icons for a specific enemy on the HUD
+    /// </summary>
+    public void UpdateEnemyStatusIcons(int enemySeatIndex, bool hasShield, bool hasDodge, bool hasPoison)
+    {
+        // Check to make sure the seat index is valid and the arrays are set
+        if (enemySeatIndex >= 0 && enemySeatIndex < _enemyShieldIcons.Length)
+        {
+            if (_enemyShieldIcons[enemySeatIndex] != null)
+            {
+                _enemyShieldIcons[enemySeatIndex].SetActive(hasShield);
+            }
+
+            if (_enemyDodgeIcons[enemySeatIndex] != null)
+            {
+                _enemyDodgeIcons[enemySeatIndex].SetActive(hasDodge);
+            }
+
+            if (_enemyPoisonIcons[enemySeatIndex] != null)
+            {
+                _enemyPoisonIcons[enemySeatIndex].SetActive(hasPoison);
+            }
         }
     }
 
