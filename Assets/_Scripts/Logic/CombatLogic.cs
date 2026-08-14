@@ -126,4 +126,62 @@ public static class CombatLogic
                 return 0;       // Fallback for Ace or unassigned ranks 
         }
     }
+
+    // Dynamic Paranoia Logic
+    public static int CalculateParanoiaShift(bool isPlayerClaim, bool isLie, bool wasChallenged, int threatValue, CardSuit suit)
+    {
+        float rawShift = 0;
+
+        if (isPlayerClaim)
+        {
+            // Player making the claim
+            if (isLie && !wasChallenged)
+            {
+                rawShift = 10 + threatValue; // Player successful lie
+            }
+            else if (!isLie && wasChallenged)
+            {
+                rawShift = 15 + threatValue; // Player Truth, AI Wrong
+            }
+            else if (isLie && wasChallenged)
+            {
+                rawShift = -10 - threatValue; // Player Caught Lying
+            }
+        }
+        else
+        {
+            // AI making the claim
+            if (isLie && wasChallenged)
+            {
+                rawShift = 20 + threatValue; // AI Caught Lying
+            }
+            else if (isLie && !wasChallenged)
+            {
+                rawShift = -15; // AI successful lie
+            }
+            else if (!isLie && wasChallenged)
+            {
+                rawShift = -20; // AI Truth, Player Wrong
+            }
+        }
+
+        // If it was an honest play that was accepted, paranoia does not change
+        if (rawShift == 0)
+        {
+            return 0;
+        }
+
+        // Apply suit multipliers
+        float multiplier = 1.0f;
+        if (suit == CardSuit.Blood || suit == CardSuit.Rot)
+        {
+            multiplier = 1.5f;
+        } 
+        else if (suit == CardSuit.Bone || suit == CardSuit.Feather)
+        {
+            multiplier = 0.75f;
+        }
+
+        return Mathf.RoundToInt(rawShift * multiplier);
+    }
 }
