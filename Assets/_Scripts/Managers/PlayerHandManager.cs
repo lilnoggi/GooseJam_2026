@@ -44,6 +44,18 @@ public class PlayerHandManager : MonoBehaviour
     private void TurnChanged(TurnSeat turn)
     {
         UpdateButtons(); //update buttons when turn changes
+
+        UpdateCardInteraction();
+    }
+
+    private void UpdateCardInteraction()
+    {
+        bool canInteract = _turnManager.IsPlayerTurn; //card can only be played during turn
+
+        for (int i = 0; i < _cardViews.Count; i++)
+        {
+            _cardViews[i].SetInteractable(canInteract);
+        }
     }
 
     private void RefreshHand()
@@ -59,6 +71,8 @@ public class PlayerHandManager : MonoBehaviour
             PlayerCardView newCard =Instantiate( _cardPrefab,_handContainer);
 
             newCard.Setup(cardData, CardClicked); //give card data and call method when clicked
+
+            newCard.SetInteractable(_turnManager.IsPlayerTurn);
 
             _cardViews.Add(newCard); //store new card
         }
