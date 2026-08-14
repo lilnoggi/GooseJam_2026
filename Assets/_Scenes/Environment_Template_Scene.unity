@@ -3659,6 +3659,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TableManager
   _tableCardPrefab: {fileID: 8391018870359853155, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
   _tableCenterTransform: {fileID: 681898606}
+  _revealSpotlight: {fileID: 1903671099}
   _cardSpacing: 0.25
   _flipDuration: 0.5
 --- !u!1 &1321496281

@@ -10,6 +10,7 @@ public class TableManager : MonoBehaviour
     [Header("Table Reveal Setup")]
     [SerializeField] private GameObject _tableCardPrefab;
     [SerializeField] private Transform _tableCenterTransform;
+    [SerializeField] private Light _revealSpotlight;
     [SerializeField] private float _cardSpacing = 1.2f;
     [SerializeField] private float _flipDuration = 0.5f;
 
@@ -25,6 +26,12 @@ public class TableManager : MonoBehaviour
         }
 
         Instance = this;
+
+        // Ensure spotlight is off when scene starts
+        if (_revealSpotlight != null)
+        {
+            _revealSpotlight.enabled = false;
+        }
     }
 
     /// <summary>
@@ -34,6 +41,12 @@ public class TableManager : MonoBehaviour
     {
         // Wipe any old cards
         ClearTableCards();
+
+        // Turn on the spotlight
+        if (_revealSpotlight != null)
+        {
+            _revealSpotlight.enabled = true;
+        }
 
         int cardCount = cardsToReveal.Count;
 
@@ -116,5 +129,11 @@ public class TableManager : MonoBehaviour
         }
 
         _spawnedTableCards.Clear();
+
+        // Turn off the spotlight
+        if (_revealSpotlight != null)
+        {
+            _revealSpotlight.enabled = false;
+        }
     }
 }
