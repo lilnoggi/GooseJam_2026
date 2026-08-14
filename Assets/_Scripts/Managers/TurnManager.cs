@@ -124,24 +124,6 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log($"<color=purple>[Standoff] The {claim.TargetEnemy} accepted the player's claim.</color>");
 
-            // Did the player successfully lie?
-            bool isLie = false;
-            foreach (CardData card in claim.TrueCards)
-            {
-                if (card.Suit != claim.ClaimedSuit)
-                {
-                    isLie = true;
-                    break;
-                }
-            }
-
-            // If the player got away with a lie, the enemy gets more paranoid
-            if (isLie)
-            {
-                Debug.Log("<color=brown>Player successfully bluffed! Enemy paranoia increases.</color>");
-                targetStats.IncreaseParanoia(25);
-            }
-
             // Trigger cinematic reveal
             yield return StartCoroutine(ResolvePassRoutine(claim, _playerStats, targetStats));
         }
@@ -163,12 +145,13 @@ public class TurnManager : MonoBehaviour
 
         // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit
         bool isLie = false;
+        int threatValue = 0;
         foreach (CardData card in claim.TrueCards)
         {
             if (card.Suit != claim.ClaimedSuit)
             {
                 isLie = true;
-                break; // Caught, no need to check the rest of the cards
+                threatValue += CombatLogic.GetCardValue(card.Rank);
             }
         }
 
@@ -179,16 +162,8 @@ public class TurnManager : MonoBehaviour
             // If caught lying, trigger caught dialogue
             claimer.GetComponent<EnemyDialogue>()?.TriggerCaughtLying();
 
-            // The liar takes a penalty equal to the sum of the cards they physically placed
-            int trueValue = 0;
-            foreach (CardData card in claim.TrueCards)
-            {
-                trueValue += CombatLogic.GetCardValue(card.Rank);
-            }
-            claimer.TakeDamage(trueValue);
-
-            // Enemy liar paranoia drops because they failed their bluff
-            claimer.IncreaseParanoia(-20);
+            // The liar takes a penalty equal to the sum of the cards they physically  placed
+            claimer.TakeDamage(threatValue);
         }
         else
         {
@@ -197,15 +172,8 @@ public class TurnManager : MonoBehaviour
             // Told the truth, trigger successfull dialogue
             claimer.GetComponent<EnemyDialogue>()?.TriggerSuccessfull();
 
-            // Calculate the true value of the cards
-            int trueDamage = 0;
-            foreach (CardData card in claim.TrueCards)
-            {
-                trueDamage += CombatLogic.GetCardValue(card.Rank);
-            }
-
-            // Challenger takes double the tru damage
-            challenger.TakeDamage(trueDamage * 2);
+            // Challenger takes double the true damage
+            challenger.TakeDamage(threatValue * 2);
 
             // Only apply the card effects if it was a utility / defensive suit
             // Otherwise Blood and Rot would effect the claimer
@@ -215,6 +183,18 @@ public class TurnManager : MonoBehaviour
             }
 
             // (Paranoia doesn't drop here because enemy was right to be scared)
+        }
+
+        // Dyamic Paranoia Logic
+        bool isPlayerClaim = claimer == _playerStats;
+        CharacterStats enemyStats = isPlayerClaim ? challenger : claimer;
+
+        // Get CombatLogic to calculate the paranoia shift
+        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, isLie, true, threatValue, claim.ClaimedSuit);
+
+        if (paranoiaShift != 0)
+        {
+            enemyStats.IncreaseParanoia(paranoiaShift);
         }
 
         // Let damage sink in, then swoop back
@@ -236,9 +216,34 @@ public class TurnManager : MonoBehaviour
         // TODO: Play card flip animation
         yield return new WaitForSeconds(1.0f);
 
+        // Calculate Threat and check for lies for the Paranoia Logic
+        bool isLie = false;
+        int threatValue = 0;
+        foreach (CardData card in claim.TrueCards)
+        {
+            if (card.Suit != claim.ClaimedSuit)
+            {
+                isLie = true;
+            }
+
+            threatValue += CombatLogic.GetCardValue(card.Rank);
+        }
+
         // Apply base damage
         // Because player passed no one is penalised, play just happens normally
         CombatLogic.ProcessTurn(claim.TrueCards, claim.ClaimedSuit, claimer, target);
+
+        // paranoia 
+        bool isPlayerClaim = claimer == _playerStats;
+        CharacterStats enemyStats = isPlayerClaim ? target : claimer;
+
+        // Calcualte shift
+        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, isLie, false, threatValue, claim.ClaimedSuit);
+
+        if (paranoiaShift != 0)
+        {
+            enemyStats.IncreaseParanoia(paranoiaShift);
+        }
 
         // Let reveal happen, then swoop back
         yield return new WaitForSeconds(2.0f);
