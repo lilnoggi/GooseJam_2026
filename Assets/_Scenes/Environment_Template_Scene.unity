@@ -2600,8 +2600,9 @@ MonoBehaviour:
   _deckManager: {fileID: 673105383}
   _handRoot: {fileID: 340183552}
   _cardPrefab: {fileID: 7325064538322386041, guid: 598462d378d0fa941b4588a1e981579d, type: 3}
-  _cardSpacing: 0.2
-  _fanAngle: 8
+  _arcRadius: 0.5
+  _arcAngle: 60
+  _cardsShouldFloat: 1
 --- !u!1 &552436685
 GameObject:
   m_ObjectHideFlags: 0
@@ -3005,8 +3006,9 @@ MonoBehaviour:
   _deckManager: {fileID: 474741493}
   _handRoot: {fileID: 1321496282}
   _cardPrefab: {fileID: 7325064538322386041, guid: 598462d378d0fa941b4588a1e981579d, type: 3}
-  _cardSpacing: 0.2
-  _fanAngle: 8
+  _arcRadius: 0.5
+  _arcAngle: 60
+  _cardsShouldFloat: 1
 --- !u!1 &711679173
 GameObject:
   m_ObjectHideFlags: 0
@@ -3841,12 +3843,69 @@ Transform:
   m_GameObject: {fileID: 1015413578}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 3.5, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 777125319}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1001 &1077944174
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.87730724
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.0419998
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.46581283
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 884035641344981697, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8391018870359853155, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
+      propertyPath: m_Name
+      value: TableCard_Prefab
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9353d2a64b7d7de47b65628446ca550a, type: 3}
 --- !u!1 &1126882244
 GameObject:
   m_ObjectHideFlags: 0
@@ -5685,8 +5744,9 @@ MonoBehaviour:
   _deckManager: {fileID: 1356841450}
   _handRoot: {fileID: 75863315}
   _cardPrefab: {fileID: 7325064538322386041, guid: 598462d378d0fa941b4588a1e981579d, type: 3}
-  _cardSpacing: 0.2
-  _fanAngle: 8
+  _arcRadius: 0.5
+  _arcAngle: 60
+  _cardsShouldFloat: 1
 --- !u!1 &2037599235 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3640661249827243294, guid: 08530e7cb73c26a4796bff9befa70e2e, type: 3}
@@ -7236,3 +7296,4 @@ SceneRoots:
   - {fileID: 1347649923}
   - {fileID: 1222372966}
   - {fileID: 1700466541}
+  - {fileID: 1077944174}
