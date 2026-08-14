@@ -241,9 +241,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCardView
   _button: {fileID: 6434541249445833016}
   _visualRoot: {fileID: 6050317913962504935}
+  _selectedOutline: {fileID: 3584990697264842802}
   _rankText: {fileID: 7885105680642511899}
   _suitText: {fileID: 3710569324838387408}
+  _hoverHight: 25
   _selectedHeight: 35
+  _moveSpeed: 12
 --- !u!1 &7419384906705376332
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,6 +260,7 @@ GameObject:
   - component: {fileID: 6434541249445833016}
   - component: {fileID: 7261499434985543075}
   - component: {fileID: 7953303181276455680}
+  - component: {fileID: 3584990697264842802}
   m_Layer: 5
   m_Name: VisualRoot
   m_TagString: Untagged
@@ -374,7 +378,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 7953303181276455680}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -416,6 +420,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3584990697264842802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7419384906705376332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 0.61043286, b: 0.36320752, a: 1}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &9219409025371608064
 GameObject:
   m_ObjectHideFlags: 0

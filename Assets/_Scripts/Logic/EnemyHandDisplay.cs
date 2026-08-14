@@ -10,9 +10,11 @@ public class EnemyHandDisplay : MonoBehaviour
 
     [SerializeField] private GameObject _cardPrefab; //card back prefab
 
-    [SerializeField] private float _cardSpacing = 0.2f; //distance between cards
+    [SerializeField] private float _arcRadius = 0.5f; //how far the cards are from the centre
 
-    [SerializeField] private float _fanAngle = 8f; //how much the cards rotate to make c/fan shape
+    [SerializeField] private float _arcAngle = 60f; //how much of the circle the cards use that goes around the enemy
+
+    [SerializeField] private bool _cardsShouldFloat = true; 
 
     private List<GameObject> _cardObjects = new List<GameObject>(); //stores the card objects that are showed
 
@@ -26,22 +28,39 @@ public class EnemyHandDisplay : MonoBehaviour
 
     private void UpdateHand()
     {
-        ClearHand(); //remove old cards
+        ClearHand(); //remove the old cards
 
         int cardCount = _deckManager.HandCount; //how many cards enemy has
 
-        for (int i = 0; i < cardCount; i++) //create a card back from every card enemy has in hand
+        for (int i = 0; i < cardCount; i++)
         {
             GameObject newCard = Instantiate(_cardPrefab, _handRoot);
 
-            float cardPosition = i - ((cardCount - 1) / 2f); //center the cards
+            float angle = 0f;
 
-            newCard.transform.localPosition =new Vector3( cardPosition * _cardSpacing, 0f, 0f); //move cards left/right
+            
+            if (cardCount > 1) //works out where this current card should sit on the arc
+            {
+                angle = Mathf.Lerp( - _arcAngle / 2f, _arcAngle / 2f, (float) i / (cardCount - 1));
+            }
 
-            newCard.transform.localRotation =Quaternion.Euler( 0f, 0f, -cardPosition * _fanAngle); //rotate cards to create c/fan shape
+            
+            float angleInRadians = angle * Mathf.Deg2Rad; //converts the angle into sin and cos
 
+            //positions the card around a curved arc
+            float xPosition = Mathf.Sin(angleInRadians) * _arcRadius;
+            float zPosition = Mathf.Cos(angleInRadians) * _arcRadius;
 
-            _cardObjects.Add(newCard); //save card
+            newCard.transform.localPosition =new Vector3( xPosition, 0f, zPosition);
+           
+            newCard.transform.localRotation =Quaternion.Euler( 0f, angle, 0f); //makes each card follow the curve
+
+            if (_cardsShouldFloat)
+            {
+                newCard.AddComponent<FloatingCards>();
+            }
+
+            _cardObjects.Add(newCard);
         }
     }
 
