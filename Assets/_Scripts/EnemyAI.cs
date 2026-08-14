@@ -197,4 +197,32 @@ public class EnemyAI : MonoBehaviour
 
         return Random.value < finalChance;
     }
+
+    /// <summary>
+    /// Looks at the current hand and decides how many cards to play based on aggression
+    /// </summary>
+    public List<CardData> SelectCardsToPlay(DeckManager enemyDeck)
+    {
+        float aggression = _activeProfile.AggressionMultiplier;
+        int maxCards = Mathf.Min(3, enemyDeck.HandCount);
+        int cardsToPlayCount;
+
+        // Apply aggression logic
+        if (aggression >= 2.0f && maxCards >= 2)
+        {
+            cardsToPlayCount = Random.Range(2, maxCards + 1); // Highly aggressive
+        }
+        else
+        {
+            cardsToPlayCount = Random.Range(1, maxCards + 1); // Standard
+        }
+
+        List<CardData> selectedCards = new List<CardData>();
+        for (int i = 0; i < cardsToPlayCount; i++)
+        {
+            selectedCards.Add(enemyDeck.Hand[i]);
+        }
+
+        return selectedCards;
+    }
 }

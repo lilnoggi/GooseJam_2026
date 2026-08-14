@@ -294,32 +294,10 @@ public class TurnManager : MonoBehaviour
             yield return new WaitForSeconds(thinkTime);
 
             // Phase 3: Make the claim
-            // check their aggression
-            float aggression = activeEnemyAI.Profile.AggressionMultiplier;
-
-            // Determine the maximum cards they can physically play
-            int maxCards = Mathf.Min(3, enemyDeck.HandCount);
-            int cardsToPlayCount = UnityEngine.Random.Range(1, maxCards + 1);
-
-            // Apply aggression logic
-            if (aggression >= 2.0f && maxCards >= 2)
-            {
-                // Highly aggresive
-                cardsToPlayCount = UnityEngine.Random.Range(2, maxCards + 1);
-            }
-            else
-            {
-                // Standard Aggression
-                cardsToPlayCount = UnityEngine.Random.Range(1, maxCards + 1);
-            }
 
             // Get the actual CardData objects before discarding them
-            List<CardData> trueCards = new List<CardData>();
-            for (int i = 0; i < cardsToPlayCount; i++)
-            {
-                trueCards.Add(enemyDeck.Hand[i]);
-            }
-            
+            // Get the AI to pick its own cards
+            List<CardData> trueCards = activeEnemyAI.SelectCardsToPlay(enemyDeck);
             enemyDeck.DiscardCards(trueCards);
 
             // The enemy uses their AI profile to formulate a claim
