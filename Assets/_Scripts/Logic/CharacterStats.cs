@@ -16,10 +16,10 @@ public class CharacterStats : MonoBehaviour
 
     [Header("Runtime Effects")]
     private int _poisonStacks; // Tracks active rot stacks
-    private int _dodgeChance; // Tracks the percentage chance (0-100) to dodge the next attack
+    private int _dodgeTokens; // Guaranteed dodge tokens
 
     public int PoisonStacks => _poisonStacks; // public getter
-    public int DodgeChance => _dodgeChance;
+    public int DodgeTokens => _dodgeTokens;
     public int CurrentParanoia => _currentParanoia;
     
     public bool IsEliminated { get; private set; } // Public flag to check if this character is out of the game
@@ -92,23 +92,11 @@ public class CharacterStats : MonoBehaviour
             return;
         }
 
-        // Check for a dodge before anything else
-        if (_dodgeChance > 0)
+        // Check for a dodge tokens
+        if (_dodgeTokens > 0)
         {
-            // Random number between 0 and 99
-            int roll = Random.Range(0, 100);
-
-            if (roll < _dodgeChance)
-            {
-                Debug.Log($"{name} DODGED the attack. (Rolled {roll} vs {_dodgeChance}% chance)");
-                _dodgeChance = 0;
-                return;
-            }
-            else
-            {
-                Debug.Log($"{name} failed to dodge. (Rolled {roll} vs {_dodgeChance}% chance)");
-                _dodgeChance = 0;
-            }
+            _dodgeTokens--;
+            return;
         }
         // If character has shield, let is absorb the damage 
         if (_currentShield > 0)
@@ -131,7 +119,7 @@ public class CharacterStats : MonoBehaviour
         _currentHealth -= damageAmount;
 
         // Prevent health from going below 0 and trigger elimination
-        if (_currentHealth < 0)
+        if (_currentHealth <= 0)
         {
             _currentHealth = 0;
             Die();
@@ -172,6 +160,10 @@ public class CharacterStats : MonoBehaviour
             return;
         }
 
+        // Shields AND dodge expire at the start of the turn
+        _currentShield = 0;
+        _dodgeTokens = 0;
+
         if (_poisonStacks > 0)
         {
             Debug.Log($"[Status Effects] {_poisonStacks} Poison Stacks ticking on {name}");
@@ -187,7 +179,7 @@ public class CharacterStats : MonoBehaviour
     /// <summary>
     /// Called when a Feather card successfully resolves
     /// </summary>
-    public void AddDodgeChance(int chance)
+    public void AddDodgeChance(int powerValue)
     {
         // Not for dead character
         if (IsEliminated)
@@ -195,15 +187,11 @@ public class CharacterStats : MonoBehaviour
             return;
         }
 
-        _dodgeChance += chance;
+        // Every 10 points of Feather = 1 Guaranteed Dodge Token
+        int tokensGained = Mathf.Max(1, powerValue / 10);
+        _dodgeTokens += tokensGained;
 
-        // Cap the dodge chance at 100%
-        if (_dodgeChance > 100)
-        {
-            _dodgeChance = 100;
-        }
-
-        Debug.Log($"{name} gained {_dodgeChance}% dodge chance for the next attack");
+        Debug.Log($"{name} gained {tokensGained} dodge tokens! Total: {_dodgeTokens}");
     }
 
     /// <summary>

@@ -42,8 +42,7 @@ public static class CombatLogic
             }
             else if (effectiveSuit == CardSuit.Feather)
             {
-                // Feather dodge chance is Rank x 10
-                totalDodge += (GetCardValue(card.Rank) * 10);
+                totalDodge += GetCardValue(card.Rank);
             }
         }
 
