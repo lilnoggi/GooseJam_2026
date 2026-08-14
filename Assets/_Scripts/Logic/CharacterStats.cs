@@ -62,9 +62,14 @@ public class CharacterStats : MonoBehaviour
 
     private void InitialisePlayerStats()
     {
-        // TODO: Finish this when Player UI is finished
         _maxHealth = 100;
         _currentHealth = _maxHealth;
+
+        // Push starting health to UI
+        UIManager.Instance.UpdatePlayerHealth(_currentHealth, _maxHealth);
+        
+        // Ensure all icons start turned off
+        UpdatePlayerStatusUI(); 
     }
 
     /// <summary>
@@ -81,7 +86,11 @@ public class CharacterStats : MonoBehaviour
         _currentShield += shieldAmount;
         Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
 
-        // TODO: Connect to UIManager later
+        // Connect to UI Manager
+        if (_isPlayer)
+        {
+            UpdatePlayerStatusUI();
+        }
     }
 
     public void TakeDamage(int damageAmount)
@@ -96,6 +105,12 @@ public class CharacterStats : MonoBehaviour
         if (_dodgeTokens > 0)
         {
             _dodgeTokens--;
+            
+            // Update UI because a token was spent
+            if (_isPlayer)
+            {
+                UpdatePlayerStatusUI();
+            }
             return;
         }
         // If character has shield, let is absorb the damage 
@@ -113,6 +128,12 @@ public class CharacterStats : MonoBehaviour
                 damageAmount -= _currentShield;
                 _currentShield = 0;
             }
+
+            // Update UI because shield was broken
+            if (_isPlayer)
+            {
+                UpdatePlayerStatusUI();
+            }
         }
 
         // Any leftover damage hits the health pool
@@ -124,14 +145,15 @@ public class CharacterStats : MonoBehaviour
             _currentHealth = 0;
             Die();
         }
-
+        
+        // Tell UI exactly WHO took damage
         if (!_isPlayer)
         {
             UIManager.Instance.UpdateEnemyHealth(_enemySeatIndex, _currentHealth, _maxHealth);
         }
         else
         {
-            // Update player health ui
+            UIManager.Instance.UpdatePlayerHealth(_currentHealth, _maxHealth);
         }
     }
 
@@ -147,6 +169,12 @@ public class CharacterStats : MonoBehaviour
         }
         _poisonStacks += stacks;
         Debug.Log($"{name} was afflicted with {stacks} stacks of poison. Total stacks: {_poisonStacks}");
+
+        // Connect to UI Manager
+        if (_isPlayer)
+        {
+            UpdatePlayerStatusUI();
+        }
     }
 
     /// <summary>
@@ -174,6 +202,12 @@ public class CharacterStats : MonoBehaviour
             // Decay poison stacks by 1 each turn
             _poisonStacks--;
         }
+
+        // Update UI because Shields, Dodges, and Poison just changed
+        if (_isPlayer)
+        {
+            UpdatePlayerStatusUI();
+        }
     }
 
     /// <summary>
@@ -190,6 +224,12 @@ public class CharacterStats : MonoBehaviour
         _dodgeTokens += tokenAmount;
 
         Debug.Log($"{name} gained {tokenAmount} dodge tokens! Total: {_dodgeTokens}");
+
+        // Connect to UI Manager
+        if (_isPlayer)
+        {
+            UpdatePlayerStatusUI();
+        }
     }
 
     /// <summary>
@@ -243,5 +283,15 @@ public class CharacterStats : MonoBehaviour
             // TODO: Trigger game over ui
             Debug.Log("PLAYER HAS DIED! GAME OVER!");
         }
+    }
+
+    // Helper method for UIManager to evaluate bools
+    private void UpdatePlayerStatusUI()
+    {
+        bool hasShield = _currentShield > 0;
+        bool hasDodge = _dodgeTokens > 0;
+        bool hasPoison = _poisonStacks > 0;
+
+        UIManager.Instance.UpdatePlayerStatusIcon(hasShield, hasDodge, hasPoison);
     }
 }

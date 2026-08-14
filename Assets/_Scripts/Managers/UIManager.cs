@@ -20,6 +20,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider[] _enemyParanoiaBars;
     [SerializeField] private TextMeshProUGUI[] _enemyNames;
 
+    [Header("Player UI")]
+    [SerializeField] private Slider _playerHealthBar;
+    [SerializeField] private GameObject _playerShieldIcon;
+    [SerializeField] private GameObject _playerDodgeIcon;
+    [SerializeField] private GameObject _playerPoisonIcon;
     // fade coroutine tracker
     private Coroutine _bannerFadeRoutine;
 
@@ -110,6 +115,33 @@ public class UIManager : MonoBehaviour
         {
             _enemyParanoiaBars[enemySeatIndex].maxValue = maxParanoia;
             _enemyParanoiaBars[enemySeatIndex].value = currentParanoia;
+        }
+    }
+
+    public void UpdatePlayerHealth(int currentHealth, int maxHealth)
+    {
+        if (_playerHealthBar != null)
+        {
+            _playerHealthBar.maxValue = maxHealth;
+            _playerHealthBar.value = currentHealth;
+        }
+    }
+
+    public void UpdatePlayerStatusIcon(bool hasShield, bool hasDodge, bool hasPoison)
+    {
+        if (_playerShieldIcon != null)
+        {
+            _playerShieldIcon.SetActive(hasShield);
+        }
+
+        if (_playerDodgeIcon != null)
+        {
+            _playerDodgeIcon.SetActive(hasDodge);
+        }
+
+        if (_playerPoisonIcon != null)
+        {
+            _playerPoisonIcon.SetActive(hasPoison);
         }
     }
 
