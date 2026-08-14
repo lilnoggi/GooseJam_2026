@@ -44,7 +44,8 @@ public static class PrototypeCardGenerator
 
                 }
              
-                card.EditorSetData (suit,rank);//give card correct rank and suit
+                // Pass null for the sprite during prototype generation
+                card.EditorSetData (suit, null, rank);//give card correct rank and suit
                 EditorUtility.SetDirty(card);//tell Unity that a asset has changed
                 generatedCards.Add(card);//add this card to the database list
 

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Card_Feather_Jack
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   _suit: 3
+  _suitSprite: {fileID: 21300000, guid: 2550f7d0085e7ef46aa4301db91bcb42, type: 3}
   _rank: 10

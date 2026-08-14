@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Card_Blood_Seven
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   _suit: 1
+  _suitSprite: {fileID: 21300000, guid: 3923a6d9d32b7cf409793c2c5d27f2cb, type: 3}
   _rank: 6

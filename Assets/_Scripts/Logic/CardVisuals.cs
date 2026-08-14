@@ -12,12 +12,6 @@ public class CardVisuals : MonoBehaviour
     [Header("Image References")]
     [SerializeField] private Image _suitImage;
 
-    [Header("Suit Sprites")]
-    [SerializeField] private Sprite _bloodSprite;
-    [SerializeField] private Sprite _boneSprite;
-    [SerializeField] private Sprite _featherSprite;
-    [SerializeField] private Sprite _rotSprite; 
-
     /// <summary>
     /// Reads the CardData and updates the 3D text meshes on the prefab
     /// </summary>
@@ -42,31 +36,7 @@ public class CardVisuals : MonoBehaviour
         // Dynamically assign the correct sprite
         if (_suitImage != null)
         {
-            _suitImage.sprite = GetSuitSprite(cardData.Suit);
-        }
-    }
-
-    /// <summary>
-    /// Returns the correct sprite based on the suit eneum
-    /// </summary>
-    private Sprite GetSuitSprite(CardSuit suit)
-    {
-        switch (suit)
-        {
-            case CardSuit.Blood: 
-                return _bloodSprite;
-            
-            case CardSuit.Bone:
-                return _boneSprite;
-
-            case CardSuit.Rot:
-                return _rotSprite;
-
-            case CardSuit.Feather:
-                return _featherSprite;
-
-            default:
-                return null; 
+            _suitImage.sprite = cardData.SuitSprite;
         }
     }
 }

@@ -394,7 +394,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 32, y: 64}
+  m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1768432062725306448
 CanvasRenderer:
@@ -426,7 +426,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 3923a6d9d32b7cf409793c2c5d27f2cb, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -870,7 +870,3 @@ MonoBehaviour:
   _rankTextUpper: {fileID: 6632002308740095836}
   _rankTextLower: {fileID: 24107466501717996}
   _suitImage: {fileID: 3017352268782698344}
-  _bloodSprite: {fileID: 21300000, guid: 3923a6d9d32b7cf409793c2c5d27f2cb, type: 3}
-  _boneSprite: {fileID: 21300000, guid: c4f7d73c9b0180c4d9e442850450d78f, type: 3}
-  _featherSprite: {fileID: 21300000, guid: 2550f7d0085e7ef46aa4301db91bcb42, type: 3}
-  _rotSprite: {fileID: 21300000, guid: 318243a288d3a8d458eeb04498cdcd46, type: 3}

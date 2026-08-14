@@ -13,9 +13,10 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     [SerializeField] private Outline _selectedOutline; //border of card
 
-    //the text for rank and suite
-    [SerializeField] private TMP_Text _rankText;
-    [SerializeField] private TMP_Text _suitText;
+    [Header("Card Visuals")]
+    [SerializeField] private TMP_Text _rankTextUpper;
+    [SerializeField] private TMP_Text _rankTextLower;
+    [SerializeField] private Image _suitImage;
 
     [SerializeField] private float _hoverHight =25f; //height when hovered
     [SerializeField] private float _selectedHeight = 35f; //the height that the card will move upwards when it is selected
@@ -38,8 +39,23 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         CardData = cardData;
         _onCardClicked = onCardClicked;
-        _rankText.text = cardData.RankDisplayName; //show rank
-        _suitText.text = cardData.Suit.ToString().ToUpper();//show suit
+
+        // Apply Data
+        if (_rankTextUpper != null)
+        {
+            _rankTextUpper.text = cardData.RankDisplayName;
+        }
+
+        if (_rankTextLower != null)
+        {
+            _rankTextLower.text = cardData.RankDisplayName;
+        }
+
+        if (_suitImage != null)
+        {
+            _suitImage.sprite = cardData.SuitSprite;
+        }
+
         _button.onClick.RemoveAllListeners(); //cant trigger click event twice
         _button.onClick.AddListener(CardClicked); //runs method when button pressed
 

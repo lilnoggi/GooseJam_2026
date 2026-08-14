@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Card_Rot_Jack
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   _suit: 2
+  _suitSprite: {fileID: 21300000, guid: 318243a288d3a8d458eeb04498cdcd46, type: 3}
   _rank: 10
