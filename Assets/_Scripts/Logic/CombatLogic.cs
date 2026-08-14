@@ -184,4 +184,28 @@ public static class CombatLogic
 
         return Mathf.RoundToInt(rawShift * multiplier);
     }
+
+    // Standoff Evaluation
+    /// <summary>
+    /// Scans a hand of cards, determines if it is a lie, and calcualtes the total threa value
+    /// </summary>
+    public static (bool isLie, int threatValue) EvaluateClaim(ClaimData claim)
+    {
+        bool isLie = false;
+        int threatValue = 0;
+
+        foreach (CardData card in claim.TrueCards)
+        {
+            // If any card doesn't match the claimed suit, it is a lie
+            if (card.Suit != claim.ClaimedSuit)
+            {
+                isLie = true;
+            }
+
+            // Threat value is ALWAYS calcualted, regardless of truth or lie
+            threatValue += GetCardValue(card.Rank);
+        }
+
+        return (isLie, threatValue);
+    }
 }

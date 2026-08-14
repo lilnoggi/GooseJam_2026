@@ -100,15 +100,11 @@ public class TurnManager : MonoBehaviour
         // Wait 1.5s while the speech bubble is on screen
         yield return new WaitForSeconds(1.5f);
 
-        // Calculate the actual threat value since the player no longer claims a rank
-        int totalThreatValue = 0;
-        foreach (CardData card in claim.TrueCards)
-        {
-            totalThreatValue += CombatLogic.GetCardValue(card.Rank);
-        }
+        // CombatLogic evaluates the claim
+        var evaluation = CombatLogic.EvaluateClaim(claim);
 
         // Ask AI if they think player is lying
-        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, totalThreatValue);
+        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, evaluation.threatValue);
 
         if (isChallenging)
         {
@@ -143,19 +139,10 @@ public class TurnManager : MonoBehaviour
         // TODO: Play the card flip animation
         yield return new WaitForSeconds(1.0f);
 
-        // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit
-        bool isLie = false;
-        int threatValue = 0;
-        foreach (CardData card in claim.TrueCards)
-        {
-            if (card.Suit != claim.ClaimedSuit)
-            {
-                isLie = true;
-                threatValue += CombatLogic.GetCardValue(card.Rank);
-            }
-        }
+        // Combat Logic evaluates claim
+        var evaluation = CombatLogic.EvaluateClaim(claim);
 
-        if (isLie)
+        if (evaluation.isLie)
         {
             Debug.Log($"Caught {claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
@@ -163,7 +150,7 @@ public class TurnManager : MonoBehaviour
             claimer.GetComponent<EnemyDialogue>()?.TriggerCaughtLying();
 
             // The liar takes a penalty equal to the sum of the cards they physically  placed
-            claimer.TakeDamage(threatValue);
+            claimer.TakeDamage(evaluation.threatValue);
         }
         else
         {
@@ -173,7 +160,7 @@ public class TurnManager : MonoBehaviour
             claimer.GetComponent<EnemyDialogue>()?.TriggerSuccessfull();
 
             // Challenger takes double the true damage
-            challenger.TakeDamage(threatValue * 2);
+            challenger.TakeDamage(evaluation.threatValue * 2);
 
             // Only apply the card effects if it was a utility / defensive suit
             // Otherwise Blood and Rot would effect the claimer
@@ -190,7 +177,7 @@ public class TurnManager : MonoBehaviour
         CharacterStats enemyStats = isPlayerClaim ? challenger : claimer;
 
         // Get CombatLogic to calculate the paranoia shift
-        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, isLie, true, threatValue, claim.ClaimedSuit);
+        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, evaluation.isLie, true, evaluation.threatValue, claim.ClaimedSuit);
 
         if (paranoiaShift != 0)
         {
@@ -216,18 +203,8 @@ public class TurnManager : MonoBehaviour
         // TODO: Play card flip animation
         yield return new WaitForSeconds(1.0f);
 
-        // Calculate Threat and check for lies for the Paranoia Logic
-        bool isLie = false;
-        int threatValue = 0;
-        foreach (CardData card in claim.TrueCards)
-        {
-            if (card.Suit != claim.ClaimedSuit)
-            {
-                isLie = true;
-            }
-
-            threatValue += CombatLogic.GetCardValue(card.Rank);
-        }
+        // Combat Logic evaluates claim
+        var evaluation = CombatLogic.EvaluateClaim(claim);
 
         // Apply base damage
         // Because player passed no one is penalised, play just happens normally
@@ -238,7 +215,7 @@ public class TurnManager : MonoBehaviour
         CharacterStats enemyStats = isPlayerClaim ? target : claimer;
 
         // Calcualte shift
-        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, isLie, false, threatValue, claim.ClaimedSuit);
+        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, evaluation.isLie, false, evaluation.threatValue, claim.ClaimedSuit);
 
         if (paranoiaShift != 0)
         {
