@@ -207,6 +207,13 @@ public class TurnManager : MonoBehaviour
             // Challenger takes double the tru damage
             challenger.TakeDamage(trueDamage * 2);
 
+            // Only apply the card effects if it was a utility / defensive suit
+            // Otherwise Blood and Rot would effect the claimer
+            if (claim.ClaimedSuit == CardSuit.Bone || claim.ClaimedSuit == CardSuit.Feather)
+            {
+                CombatLogic.ProcessTurn(claim.TrueCards, claim.ClaimedSuit, claimer, challenger);
+            }
+
             // (Paranoia doesn't drop here because enemy was right to be scared)
         }
 
