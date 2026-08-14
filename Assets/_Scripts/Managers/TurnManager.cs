@@ -100,15 +100,11 @@ public class TurnManager : MonoBehaviour
         // Wait 1.5s while the speech bubble is on screen
         yield return new WaitForSeconds(1.5f);
 
-        // Calculate the actual threat value since the player no longer claims a rank
-        int totalThreatValue = 0;
-        foreach (CardData card in claim.TrueCards)
-        {
-            totalThreatValue += CombatLogic.GetCardValue(card.Rank);
-        }
+        // CombatLogic evaluates the claim
+        var evaluation = CombatLogic.EvaluateClaim(claim);
 
         // Ask AI if they think player is lying
-        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, totalThreatValue);
+        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, evaluation.threatValue);
 
         if (isChallenging)
         {
@@ -123,24 +119,6 @@ public class TurnManager : MonoBehaviour
         else
         {
             Debug.Log($"<color=purple>[Standoff] The {claim.TargetEnemy} accepted the player's claim.</color>");
-
-            // Did the player successfully lie?
-            bool isLie = false;
-            foreach (CardData card in claim.TrueCards)
-            {
-                if (card.Suit != claim.ClaimedSuit)
-                {
-                    isLie = true;
-                    break;
-                }
-            }
-
-            // If the player got away with a lie, the enemy gets more paranoid
-            if (isLie)
-            {
-                Debug.Log("<color=brown>Player successfully bluffed! Enemy paranoia increases.</color>");
-                targetStats.IncreaseParanoia(25);
-            }
 
             // Trigger cinematic reveal
             yield return StartCoroutine(ResolvePassRoutine(claim, _playerStats, targetStats));
@@ -161,34 +139,18 @@ public class TurnManager : MonoBehaviour
         // TODO: Play the card flip animation
         yield return new WaitForSeconds(1.0f);
 
-        // Check if the claimer lied. A lie means ANY card doesn't match the claimed suit
-        bool isLie = false;
-        foreach (CardData card in claim.TrueCards)
-        {
-            if (card.Suit != claim.ClaimedSuit)
-            {
-                isLie = true;
-                break; // Caught, no need to check the rest of the cards
-            }
-        }
+        // Combat Logic evaluates claim
+        var evaluation = CombatLogic.EvaluateClaim(claim);
 
-        if (isLie)
+        if (evaluation.isLie)
         {
             Debug.Log($"Caught {claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
             // If caught lying, trigger caught dialogue
             claimer.GetComponent<EnemyDialogue>()?.TriggerCaughtLying();
 
-            // The liar takes a penalty equal to the sum of the cards they physically placed
-            int trueValue = 0;
-            foreach (CardData card in claim.TrueCards)
-            {
-                trueValue += CombatLogic.GetCardValue(card.Rank);
-            }
-            claimer.TakeDamage(trueValue);
-
-            // Enemy liar paranoia drops because they failed their bluff
-            claimer.IncreaseParanoia(-20);
+            // The liar takes a penalty equal to the sum of the cards they physically  placed
+            claimer.TakeDamage(evaluation.threatValue);
         }
         else
         {
@@ -197,15 +159,8 @@ public class TurnManager : MonoBehaviour
             // Told the truth, trigger successfull dialogue
             claimer.GetComponent<EnemyDialogue>()?.TriggerSuccessfull();
 
-            // Calculate the true value of the cards
-            int trueDamage = 0;
-            foreach (CardData card in claim.TrueCards)
-            {
-                trueDamage += CombatLogic.GetCardValue(card.Rank);
-            }
-
-            // Challenger takes double the tru damage
-            challenger.TakeDamage(trueDamage * 2);
+            // Challenger takes double the true damage
+            challenger.TakeDamage(evaluation.threatValue * 2);
 
             // Only apply the card effects if it was a utility / defensive suit
             // Otherwise Blood and Rot would effect the claimer
@@ -215,6 +170,18 @@ public class TurnManager : MonoBehaviour
             }
 
             // (Paranoia doesn't drop here because enemy was right to be scared)
+        }
+
+        // Dyamic Paranoia Logic
+        bool isPlayerClaim = claimer == _playerStats;
+        CharacterStats enemyStats = isPlayerClaim ? challenger : claimer;
+
+        // Get CombatLogic to calculate the paranoia shift
+        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, evaluation.isLie, true, evaluation.threatValue, claim.ClaimedSuit);
+
+        if (paranoiaShift != 0)
+        {
+            enemyStats.IncreaseParanoia(paranoiaShift);
         }
 
         // Let damage sink in, then swoop back
@@ -236,9 +203,24 @@ public class TurnManager : MonoBehaviour
         // TODO: Play card flip animation
         yield return new WaitForSeconds(1.0f);
 
+        // Combat Logic evaluates claim
+        var evaluation = CombatLogic.EvaluateClaim(claim);
+
         // Apply base damage
         // Because player passed no one is penalised, play just happens normally
         CombatLogic.ProcessTurn(claim.TrueCards, claim.ClaimedSuit, claimer, target);
+
+        // paranoia 
+        bool isPlayerClaim = claimer == _playerStats;
+        CharacterStats enemyStats = isPlayerClaim ? target : claimer;
+
+        // Calcualte shift
+        int paranoiaShift = CombatLogic.CalculateParanoiaShift(isPlayerClaim, evaluation.isLie, false, evaluation.threatValue, claim.ClaimedSuit);
+
+        if (paranoiaShift != 0)
+        {
+            enemyStats.IncreaseParanoia(paranoiaShift);
+        }
 
         // Let reveal happen, then swoop back
         yield return new WaitForSeconds(2.0f);
@@ -312,32 +294,10 @@ public class TurnManager : MonoBehaviour
             yield return new WaitForSeconds(thinkTime);
 
             // Phase 3: Make the claim
-            // check their aggression
-            float aggression = activeEnemyAI.Profile.AggressionMultiplier;
-
-            // Determine the maximum cards they can physically play
-            int maxCards = Mathf.Min(3, enemyDeck.HandCount);
-            int cardsToPlayCount = UnityEngine.Random.Range(1, maxCards + 1);
-
-            // Apply aggression logic
-            if (aggression >= 2.0f && maxCards >= 2)
-            {
-                // Highly aggresive
-                cardsToPlayCount = UnityEngine.Random.Range(2, maxCards + 1);
-            }
-            else
-            {
-                // Standard Aggression
-                cardsToPlayCount = UnityEngine.Random.Range(1, maxCards + 1);
-            }
 
             // Get the actual CardData objects before discarding them
-            List<CardData> trueCards = new List<CardData>();
-            for (int i = 0; i < cardsToPlayCount; i++)
-            {
-                trueCards.Add(enemyDeck.Hand[i]);
-            }
-            
+            // Get the AI to pick its own cards
+            List<CardData> trueCards = activeEnemyAI.SelectCardsToPlay(enemyDeck);
             enemyDeck.DiscardCards(trueCards);
 
             // The enemy uses their AI profile to formulate a claim
