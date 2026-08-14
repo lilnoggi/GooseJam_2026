@@ -68,11 +68,11 @@ public class EnemyAI : MonoBehaviour
 
     private bool RunStandardProbability(CardSuit suit, int threatValue)
     {
-        // Establish a base 20% chance to challenge any claim
-        float baseChance = 0.20f;
+        // Establish a base 35% chance to challenge any claim
+        float baseChance = 0.35f;
 
         // The higher the total threat value, the more suspicious the enemy gets
-        float valueFactor = threatValue * 0.02f;
+        float valueFactor = threatValue * 0.03f;
 
         // Add together & multiply by the specific enemy's skepticism modifier
         float finalCheatChance = (baseChance + valueFactor) * _activeProfile.SkepticismMultiplier;
@@ -83,81 +83,81 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// Looks at the true cards and decides whether to tell the truth or bluff
+    /// Looks at the physical cards picked and decides strategy
     /// </summary>
     public ClaimData FormulateClaim(List<CardData> trueCards)
     {
-        // Default to the truth
-        CardSuit claimedSuit = trueCards[0].Suit;
-
         // Placeholder for the rank for the ClaimData constructor so it doesn't break
         CardRank placeholderRank = trueCards[0].Rank;
 
-        // Base 25% chance to lie (adjust in profiles)
-        float bluffChance = 0.25f;
-
-        // If the enemy has 0 paranoia, they become overconfident and are much more likely to bluff
-        if (_stats != null && _stats.CurrentParanoia <= 0)
+        // Evaluate wahat the enemy actually just picked
+        bool cardsMatch = true;
+        CardSuit trueSuit = trueCards[0].Suit;
+        for (int i = 1; i < trueCards.Count; i++)
         {
-            bluffChance = 0.50f;
+            if (trueCards[i].Suit != trueSuit)
+            {
+                cardsMatch = false;
+            }
         }
 
-        // Random value to see if they lie
-        if (Random.value < bluffChance)
-        {
-            Debug.Log($"{name} decideed to BLUFF");
+        CardSuit claimedSuit = trueSuit;
 
-            if (!_activeProfile.IsBoss)
+        // Decide the claim
+        if (!cardsMatch)
+        {
+            // The hand is mixed. FORCE lie
+            Debug.Log($"{name} is holding mixed cards. FORCED TO BLUFF!");
+            claimedSuit = GetTacticalBluffSuit();
+        }
+        else
+        {
+            // Honest set. Does the AI tell the truth or bait the player
+            float bluffChance = (_stats != null && _stats.CurrentParanoia <= 0) ? 0.40f : 0.15f;
+
+            if (Random.value < bluffChance)
             {
-            // STANDARD MINION LIE
-            // THE LIE: Claim a random scary suit (Blood or Rot)
-            claimedSuit = (Random.value > 0.5f) ? CardSuit.Blood : CardSuit.Rot;
+                Debug.Log($"{name} has a truthful hand, but decided to BLUFF");
+                claimedSuit = GetTacticalBluffSuit();
+                              
+                // Prevent accidental truth
+                if (claimedSuit == trueSuit)
+                {
+                    claimedSuit = (trueSuit == CardSuit.Blood) ? CardSuit.Bone : CardSuit.Blood;
+                }
             }
             else
             {
-                // Custom Boss Lies
-                switch (_activeProfile.TypeOfBoss)
-                {
-                    case BossType.FreddyFox:
-                        // Freddy lies about playing Traps/Rot to make the player paranoid
-                        claimedSuit = CardSuit.Rot;
-                        break;
-                    
-                    case BossType.BanditWolf:
-                        // Bandit always lies about massive brute force
-                        claimedSuit = CardSuit.Blood;
-                        break;
-
-                    case BossType.LucySwan:
-                        // Lucy tells unpredictable, weird lies to mess with your head
-                        claimedSuit = (CardSuit)Random.Range(0, 4);
-                        break;
-                }
-            }
-
-            // Lie --> Truth Bug Preventer (when the AI tries to lie but accidentally tells the truth)
-            bool isActuallyLying = false;
-            foreach (CardData card in trueCards)
-            {
-                if (card.Suit != claimedSuit)
-                {
-                    isActuallyLying = true;
-                    break;
-                }
-            }
-
-            // If an AI accidentally told the truth, force an actual lie
-            if (!isActuallyLying)
-            {
-                Debug.Log($"{name} accidentally told the truth! Forcing a real lie...");
-                
-                // Swap the suit to guarantee it is a lie
-                claimedSuit = (claimedSuit == CardSuit.Blood) ? CardSuit.Bone : CardSuit.Blood;
+                Debug.Log($"{name} is telling the TRUTH");
+                claimedSuit = trueSuit; // Honest play
             }
         }
 
-        // Always target the player
         return new ClaimData(trueCards, claimedSuit, placeholderRank, TurnSeat.Player);
+    }
+
+    // Helper method to assign personality-driven lies
+    private CardSuit GetTacticalBluffSuit()
+    {
+        if (!_activeProfile.IsBoss)
+        {
+            return (Random.value > 0.5f) ? CardSuit.Blood : CardSuit.Rot;
+        }
+
+        switch (_activeProfile.TypeOfBoss)
+        {
+            case BossType.FreddyFox:
+                return CardSuit.Rot;
+            
+            case BossType.BanditWolf:
+                return CardSuit.Blood;
+            
+            case BossType.LucySwan:
+                return (CardSuit)Random.Range(0, 4);
+            
+            default:
+                return CardSuit.Blood;
+        }
     }
 
     private bool FreddyFoxLogic(CardSuit suit, int threatValue)
@@ -199,28 +199,72 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// Looks at the current hand and decides how many cards to play based on aggression
+    /// Looks at the current hand and decides which specific cards to play
     /// </summary>
     public List<CardData> SelectCardsToPlay(DeckManager enemyDeck)
     {
-        float aggression = _activeProfile.AggressionMultiplier;
-        int maxCards = Mathf.Min(3, enemyDeck.HandCount);
-        int cardsToPlayCount;
+        IReadOnlyList<CardData> hand = enemyDeck.Hand;
+        List<CardData> selectedCards = new List<CardData>();
 
-        // Apply aggression logic
-        if (aggression >= 2.0f && maxCards >= 2)
+        // Group the hand by suits to find matching sets
+        Dictionary<CardSuit, List<CardData>> sortedHand = new Dictionary<CardSuit, List<CardData>>();
+        foreach (CardSuit suit in System.Enum.GetValues(typeof(CardSuit)))
         {
-            cardsToPlayCount = Random.Range(2, maxCards + 1); // Highly aggressive
+            sortedHand[suit] = new List<CardData>();
+        }
+        foreach (CardData card in hand)
+        {
+            sortedHand[card.Suit].Add(card);
+        }
+
+        int maxCards = Mathf.Min(3, hand.Count);
+        int targetCardCount = (_activeProfile.AggressionMultiplier >= 2.0f && maxCards >= 2) ? Random.Range(2, maxCards + 1) : 1;
+        bool foundMatch = false;
+
+        // Tactical Prioritisation based on Paranoia
+        CardSuit prioritySuit = CardSuit.Blood; // Default to aggression
+        if (_stats != null && _stats.CurrentParanoia >= 60)
+        {
+            // If highly paranoid/scared prioritise Bone (Shields) or Feather (Dodges)
+            prioritySuit = (sortedHand[CardSuit.Bone].Count > 0) ? CardSuit.Bone : CardSuit.Feather;
+        }
+
+        // Try to build a hand using the priority suit first
+        if (sortedHand[prioritySuit].Count >= targetCardCount)
+        {
+            selectedCards.AddRange(sortedHand[prioritySuit].GetRange(0, targetCardCount));
+            foundMatch = true;
         }
         else
         {
-            cardsToPlayCount = Random.Range(1, maxCards + 1); // Standard
+            // Fallback: Look for ANY matching set so the AI can actually tell the truth
+            foreach(var suitList in sortedHand.Values)
+            {
+                if (suitList.Count >= targetCardCount)
+                {
+                    selectedCards.AddRange(suitList.GetRange(0, targetCardCount));
+                    foundMatch = true;
+                    break;
+                }
+            }
         }
 
-        List<CardData> selectedCards = new List<CardData>();
-        for (int i = 0; i < cardsToPlayCount; i++)
+        // Forced Bluffs & Desperatin
+        if (!foundMatch)
         {
-            selectedCards.Add(enemyDeck.Hand[i]);
+            if (Random.value > 0.4f)
+            {
+                // Play safe: just play one card honestly
+                selectedCards.Add(hand[0]);
+            }
+            else
+            {
+                // Desperation: Grab random mismatched cards (GUARANTEES A BLUFF)
+                for (int i = 0; i < targetCardCount; i++)
+                {
+                    selectedCards.Add(hand[i]);
+                }
+            }
         }
 
         return selectedCards;
