@@ -90,6 +90,8 @@ public class TurnManager : MonoBehaviour
         // Discard the true cards from the player's hand so they leave the screen
         playerDeck.DiscardCards(claim.TrueCards);
 
+        yield return StartCoroutine(TableManager.Instance.PlayCardsToTable( claim.TrueCards, TurnSeat.Player));
+
         // Grab the target's stats & AI
         CharacterStats targetStats = GetStatsForTurn(claim.TargetEnemy);
         EnemyAI targetAI = targetStats.GetComponent<EnemyAI>();
@@ -134,7 +136,7 @@ public class TurnManager : MonoBehaviour
         yield return CameraController.Instance.SwoopToTable();
 
         // Let TableManager handle the reveal
-        yield return StartCoroutine(TableManager.Instance.SpawnAndFlipTableCards(claim.TrueCards));
+        yield return StartCoroutine(TableManager.Instance.FlipTableCards());
 
         // TODO: Play the card flip animation
         yield return new WaitForSeconds(1.0f);
@@ -198,7 +200,7 @@ public class TurnManager : MonoBehaviour
         yield return CameraController.Instance.SwoopToTable();
 
         // Let TableManager handle the reveal
-        yield return StartCoroutine(TableManager.Instance.SpawnAndFlipTableCards(claim.TrueCards));
+        yield return StartCoroutine(TableManager.Instance.FlipTableCards());
 
         // TODO: Play card flip animation
         yield return new WaitForSeconds(1.0f);
@@ -299,6 +301,8 @@ public class TurnManager : MonoBehaviour
             // Get the AI to pick its own cards
             List<CardData> trueCards = activeEnemyAI.SelectCardsToPlay(enemyDeck);
             enemyDeck.DiscardCards(trueCards);
+
+            yield return StartCoroutine (TableManager.Instance.PlayCardsToTable(trueCards, enemyTurn));
 
             // The enemy uses their AI profile to formulate a claim
             ClaimData enemyClaim = activeEnemyAI.FormulateClaim(trueCards);

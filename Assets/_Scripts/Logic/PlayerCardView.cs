@@ -22,6 +22,7 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     [SerializeField] private float _selectedHeight = 35f; //the height that the card will move upwards when it is selected
 
     [SerializeField] private float _moveSpeed = 12f; //speed of card movement
+    [SerializeField] private float _drawMoveSpeed = 4f; //speed the new card slides into the hand
 
     public CardData CardData {get; private set;}//the card that the UI is showing
 
@@ -32,6 +33,8 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     private bool _isHovered; //is card hovered
 
     private bool _canInteract = true;
+
+    private bool _isDrawingIntoHand; 
 
     private Vector2 _targetPosition; //where the card moves to
 
@@ -70,7 +73,17 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void Update()
     {
-        _visualRoot.anchoredPosition = Vector2.Lerp( _visualRoot.anchoredPosition, _targetPosition , Time.deltaTime * _moveSpeed );
+           
+        float currentSpeed = _isDrawingIntoHand ? _drawMoveSpeed : _moveSpeed; //use a slower speed when a newly drawn card is moving into the hand
+
+        _visualRoot.anchoredPosition = Vector2.Lerp(_visualRoot.anchoredPosition, _targetPosition, Time.deltaTime * currentSpeed);
+
+        //once the card is basically in place stop the draw animation
+        if (_isDrawingIntoHand && Vector2.Distance( _visualRoot.anchoredPosition, _targetPosition) < 0.5f)
+        {
+            _visualRoot.anchoredPosition = _targetPosition;
+            _isDrawingIntoHand = false;
+        }
     }
 
 
@@ -102,6 +115,26 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         }
 
         UpdateCardVisual();
+    }
+
+    public void PrepareDrawAnimation()
+    {
+        //hide the 2D card while the 3D card is travelling towards the player
+        _visualRoot.gameObject.SetActive(false);
+    }
+
+    public void PlayDrawAnimation(float verticalOffset)
+    {
+        //the 3D card has reached the player so show the 2D version
+        _visualRoot.gameObject.SetActive(true);
+
+        //start it off to the below its normal hand position
+        _visualRoot.anchoredPosition = new Vector2( 0f, verticalOffset);
+
+        //its normal resting position is the centre of its card slot
+        _targetPosition = Vector2.zero;
+
+        _isDrawingIntoHand = true;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

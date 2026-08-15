@@ -18,6 +18,8 @@ public class EnemyHandDisplay : MonoBehaviour
 
     private List<GameObject> _cardObjects = new List<GameObject>(); //stores the card objects that are showed
 
+    private bool _handHasBeenCreated;
+
 
     private void Start()
     {
@@ -25,53 +27,100 @@ public class EnemyHandDisplay : MonoBehaviour
         UpdateHand(); //show hand
     }
 
+    private void OnDestroy()
+    {
+        if (_deckManager != null) //stop listening when destroyed
+        {
+            _deckManager.HandChanged -= UpdateHand;
+        }
+    }
+
 
     private void UpdateHand()
     {
-        ClearHand(); //remove the old cards
+        int cardCount = _deckManager.HandCount;
 
-        int cardCount = _deckManager.HandCount; //how many cards enemy has
+        //if the enemy has fewer cards now remove only the extra card objects
+        while (_cardObjects.Count > cardCount)
+        {
+            int lastCardIndex = _cardObjects.Count - 1;
 
-        for (int i = 0; i < cardCount; i++)
+            GameObject cardToRemove = _cardObjects[lastCardIndex];
+
+            _cardObjects.RemoveAt(lastCardIndex);
+
+            Destroy(cardToRemove);
+        }
+
+        //if the enemy has drawn new cards, create the missing card 
+        while (_cardObjects.Count < cardCount)
         {
             GameObject newCard = Instantiate(_cardPrefab, _handRoot);
 
-            float angle = 0f;
+            FloatingCards floatingCard = newCard.GetComponent<FloatingCards>();
 
-            
-            if (cardCount > 1) //works out where this current card should sit on the arc
+            if (_cardsShouldFloat && floatingCard == null)
             {
-                angle = Mathf.Lerp( - _arcAngle / 2f, _arcAngle / 2f, (float) i / (cardCount - 1));
-            }
-
-            
-            float angleInRadians = angle * Mathf.Deg2Rad; //converts the angle into sin and cos
-
-            //positions the card around a curved arc
-            float xPosition = Mathf.Sin(angleInRadians) * _arcRadius;
-            float zPosition = Mathf.Cos(angleInRadians) * _arcRadius;
-
-            newCard.transform.localPosition =new Vector3( xPosition, 0f, zPosition);
-           
-            newCard.transform.localRotation =Quaternion.Euler( 0f, angle, 0f); //makes each card follow the curve
-
-            if (_cardsShouldFloat)
-            {
-                newCard.AddComponent<FloatingCards>();
+                floatingCard = newCard.AddComponent<FloatingCards>();
             }
 
             _cardObjects.Add(newCard);
         }
-    }
 
-
-    private void ClearHand()
-    {
-        for (int i = 0; i < _cardObjects.Count; i++) //delete cards
+        //the new centred positions
+        for (int i = 0; i < cardCount; i++)
         {
-            Destroy(_cardObjects[i]);
+            float angleSpacing = _arcAngle / 4f;
+
+            float angle = (i - (cardCount - 1) / 2f) * angleSpacing;
+
+            float angleInRadians = angle * Mathf.Deg2Rad;
+
+            float xPosition = Mathf.Sin(angleInRadians) * _arcRadius;
+
+            float zPosition = Mathf.Cos(angleInRadians) * _arcRadius;
+
+            Vector3 newPosition = new Vector3(xPosition, 0f, zPosition);
+
+            GameObject cardObject = _cardObjects[i];
+
+            //tell FloatingCards where this card should move to
+            FloatingCards floatingCard = cardObject.GetComponent<FloatingCards>();
+
+            if (! _handHasBeenCreated)
+            {
+                // the first time put cards in their correct positions immediately
+                if (floatingCard != null)
+                {
+                    floatingCard.SetStartingPosition(newPosition);
+                }
+
+                else
+                {
+                    cardObject.transform.localPosition = newPosition;
+                }
+            }
+
+            else
+            {
+                // move remaining cards into their new positions
+                if (floatingCard != null)
+                {
+                    floatingCard.MoveToPosition(newPosition);
+                }
+
+                else
+                {
+                    cardObject.transform.localPosition = newPosition;
+                }
+            }
+            //keep the card following the curve
+            cardObject.transform.localRotation =Quaternion.Euler(0f, angle, 0f);
         }
 
-        _cardObjects.Clear(); //clear list
-    }
+        if (cardCount > 0)
+        {
+            _handHasBeenCreated = true;
+        }
+    }  
 }
