@@ -22,9 +22,9 @@ public class EnemyAI : MonoBehaviour
         _stats = GetComponent<CharacterStats>();
     }
 
-    // This method will be called by TurnManager.cs during Phase 2 
-    // NOTE: claimedValue now represents the true total mathematical threat of the cards
-    public bool DecideToChallenge(CardSuit claimedSuit, int totalThreatValue)
+    //the AI only receives information it could actually know
+    //the claimed suit and how many cards are face-down
+    public bool DecideToChallenge(CardSuit claimedSuit, int claimedCardCount)
     {
         // Check Paranoia Overrides first
         if (_stats != null)
@@ -46,36 +46,74 @@ public class EnemyAI : MonoBehaviour
         // If a standard minion, execute standard logic
         if (!_activeProfile.IsBoss)
         {
-            return RunStandardProbability(claimedSuit, totalThreatValue);
+            return RunStandardProbability(claimedSuit, claimedCardCount);
         }
 
         // If a boss, execute their unique logic
         switch (_activeProfile.TypeOfBoss)
         {
             case BossType.FreddyFox:
-                return FreddyFoxLogic(claimedSuit, totalThreatValue);
+                return FreddyFoxLogic(claimedSuit, claimedCardCount);
 
             case BossType.BanditWolf:
-                return BanditWolfLogic(claimedSuit, totalThreatValue);
+                return BanditWolfLogic(claimedSuit, claimedCardCount);
 
             case BossType.LucySwan:
-                return LucySwanLogic(claimedSuit, totalThreatValue);
+                return LucySwanLogic(claimedSuit, claimedCardCount);
 
             default:
-                return RunStandardProbability(claimedSuit, totalThreatValue);
+                return RunStandardProbability(claimedSuit, claimedCardCount);
         }
     }   
 
-    private bool RunStandardProbability(CardSuit suit, int threatValue)
+    private bool RunStandardProbability(CardSuit suit, int cardCount)
     {
-        // Establish a base 35% chance to challenge any claim
-        float baseChance = 0.35f;
+        // Establish a base 25% chance to challenge any claim
+        float baseChance = 0.25f;
 
-        // The higher the total threat value, the more suspicious the enemy gets
-        float valueFactor = threatValue * 0.03f;
+        //more cards being claimed makes the claim more susicious
+        //1 card = no extra suspicion, 2 cards = +12%, 3 cards = +24%
+        float amountFactor = (cardCount - 1) * 0.12f;
 
-        // Add together & multiply by the specific enemy's skepticism modifier
-        float finalCheatChance = (baseChance + valueFactor) * _activeProfile.SkepticismMultiplier;
+        float suitFactor = 0f;//different suits feel more or less threatening to the AI
+
+        switch (suit)
+        {
+            case CardSuit.Blood:
+            suitFactor = 0.18f;
+            break;
+
+            case CardSuit.Rot:
+            suitFactor = 0.10f;
+            break;
+
+            case CardSuit.Bone:
+            suitFactor = 0.05f;
+            break;
+
+            case CardSuit.Feather:
+            suitFactor = 0.03f;
+            break;
+        }
+
+        float paranoiaFactor = 0f; //paranoi changes how suspicious the enemy is
+
+        if( _stats != null && _activeProfile.MaxParanoia > 0)
+        {
+            float paranoiaPercent= (float)_stats.CurrentParanoia / _activeProfile.MaxParanoia ;
+
+            //low paranoia makes Ai more trusting
+            //high paranoia makes Ai more suspicious
+            paranoiaFactor = Mathf.Lerp(-0.10f, 0.20f, paranoiaPercent);
+        }
+
+        //put everything together then apply to AI personality
+        float finalCheatChance = (baseChance + amountFactor + suitFactor + paranoiaFactor) * _activeProfile.SkepticismMultiplier; 
+
+        //keep the probability as a resenobale number
+        finalCheatChance = Mathf.Clamp(finalCheatChance, 0.05f, 0.95f);
+
+        Debug.Log ($"{name} has a {finalCheatChance * 100f:F0}% chance to call CHEAT " +$"on {cardCount} {suit} cards.");
 
         // Generate a random value between 0.0 and 1.0
         // If the nuymber is lower than the final chance, call cheat
@@ -160,19 +198,18 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private bool FreddyFoxLogic(CardSuit suit, int threatValue)
+    private bool FreddyFoxLogic(CardSuit suit, int cardCount)
     {
-        // Freddy is cunning and untrusting.
-        // Heavily weights towards calling bluff on high-damage Blood cards
-        if (suit == CardSuit.Blood && threatValue > 10)
+        //freddy doesnt trust big blood claims
+        if (suit == CardSuit.Blood && cardCount >= 2)
         {
             return true; // Almost always challenges this
         }
         
-        return RunStandardProbability(suit, threatValue);
+        return RunStandardProbability(suit, cardCount);
     }
 
-    private bool BanditWolfLogic(CardSuit suit, int threatValue)
+    private bool BanditWolfLogic(CardSuit suit, int cardCount)
     {
         // Bandit uses brute force, ignores bone because he just want to attack
         // Almost always accepts Bone claims to keep attacking
@@ -181,13 +218,13 @@ public class EnemyAI : MonoBehaviour
             return false; // Accept without checking
         }
 
-        return RunStandardProbability(suit, threatValue);
+        return RunStandardProbability(suit, cardCount);
     }
 
-    private bool LucySwanLogic(CardSuit suit, int threatValue)
+    private bool LucySwanLogic(CardSuit suit, int cardCount)
     {
-        // Dynamic AI. Remembers past bluffs and adapts her probability per suit
-        float standardChance = 0.20f + (threatValue * 0.02f);
+        // lucy gets more suspicious when multiple cards are played
+        float standardChance = 0.20f + ((cardCount - 1) * 0.12f);
 
         // Add her specific suspicion memory for this suit
         float finalChance = (standardChance + _swanSuspicion[suit]) * _activeProfile.SkepticismMultiplier;
