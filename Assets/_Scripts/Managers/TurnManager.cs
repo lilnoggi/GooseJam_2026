@@ -105,8 +105,8 @@ public class TurnManager : MonoBehaviour
         // CombatLogic evaluates the claim
         var evaluation = CombatLogic.EvaluateClaim(claim);
 
-        // Ask AI if they think player is lying
-        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, evaluation.threatValue);
+        //the AI only knows the suit claimed and how many face-down cards were played, it doesnt get told what the real cards are
+        bool isChallenging = targetAI.DecideToChallenge(claim.ClaimedSuit, claim.TrueCards.Count);
 
         if (isChallenging)
         {
@@ -138,14 +138,14 @@ public class TurnManager : MonoBehaviour
         // Let TableManager handle the reveal
         yield return StartCoroutine(TableManager.Instance.FlipTableCards());
 
-        // TODO: Play the card flip animation
-        yield return new WaitForSeconds(1.0f);
-
         // Combat Logic evaluates claim
         var evaluation = CombatLogic.EvaluateClaim(claim);
 
         if (evaluation.isLie)
         {
+            //the challenger caught the claim in a lie
+            yield return UIManager.Instance.ShowStandoffResult("CHEAT!");
+
             Debug.Log($"Caught {claimer.name.ToUpper()} IN A LIE!!! {claimer.name} takes penalty.");
 
             // If caught lying, trigger caught dialogue
@@ -156,6 +156,9 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
+            //the claim was actually true so the challenger messed up
+            yield return UIManager.Instance.ShowStandoffResult("WRONG CALL!");
+
             Debug.Log($"{claimer.name.ToUpper()} TOLD THE TRUTH!!! {challenger.name} takes critical penalty");
 
             // Told the truth, trigger successfull dialogue
@@ -202,11 +205,18 @@ public class TurnManager : MonoBehaviour
         // Let TableManager handle the reveal
         yield return StartCoroutine(TableManager.Instance.FlipTableCards());
 
-        // TODO: Play card flip animation
-        yield return new WaitForSeconds(1.0f);
-
         // Combat Logic evaluates claim
         var evaluation = CombatLogic.EvaluateClaim(claim);
+
+        //show whether the accepted claim was honest or a successful bluff
+        if (evaluation.isLie)
+        {
+            yield return UIManager.Instance.ShowStandoffResult("BLUFF SUCCESSFUL!");
+        }
+        else
+        {
+            yield return UIManager.Instance.ShowStandoffResult("TRUTH!");
+        }
 
         // Apply base damage
         // Because player passed no one is penalised, play just happens normally

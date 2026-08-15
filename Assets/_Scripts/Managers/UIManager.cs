@@ -14,6 +14,14 @@ public class UIManager : MonoBehaviour
     [Header("Turn Callouts")]
     [SerializeField] private TextMeshProUGUI _turnBannerText; // A text element in the center of the screen
 
+    [Header("Standoff Result")]
+    [SerializeField] private TextMeshProUGUI _standoffResultText; //TRUTH / CHEAT message
+    [SerializeField] private float _resultHoldTime = 0.8f; //how long it stays fully visible
+    [SerializeField] private float _resultFadeTime = 0.5f; //how long it takes to fade away
+    [SerializeField] private float _resultIntroTime = 0.25f; //how long the result takes to appear
+    [SerializeField] private float _cheatShakeAmount = 18f; //how violently CHEAT shakes
+    [SerializeField] private float _bluffRiseDistance = 100f; //how far BLUFF SUCCESSFUL rises from
+
     [Header("Enemy UI")]
     [Tooltip("Index 0 = Left, 1 = Center, 2 = Right")]
     [SerializeField] private Slider[] _enemyHealthBars;
@@ -40,6 +48,12 @@ public class UIManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+
+        //hide the standoff result until we need it
+        if (_standoffResultText != null)
+        {
+            _standoffResultText.gameObject.SetActive(false);
         }
     }
 
@@ -171,6 +185,203 @@ public class UIManager : MonoBehaviour
         {
             _playerPoisonIcon.SetActive(hasPoison);
         }
+    }
+
+
+    public IEnumerator ShowStandoffResult(string message)
+    {
+        //safety check in case the text wasn't assigned
+        if (_standoffResultText == null)
+        {
+            yield break;
+        }
+
+        _standoffResultText.text = message;
+        _standoffResultText.gameObject.SetActive(true);
+
+        //make sure the text starts fully visible
+        Color textColour = _standoffResultText.color;
+        textColour.a = 1f;
+        _standoffResultText.color = textColour;
+
+        //pick a different intro animation depending on what happened
+        switch (message)
+        {
+            case "CHEAT!":
+            yield return StartCoroutine(AnimateCheatResult());
+            break;
+
+            case "WRONG CALL!":
+            yield return StartCoroutine(AnimateWrongCallResult());
+            break;
+
+            case "BLUFF SUCCESSFUL!":
+            yield return StartCoroutine(AnimateBluffResult());
+            break;
+
+            case "TRUTH!":
+            yield return StartCoroutine(AnimateTruthResult());
+            break;
+        }
+
+        //leave the result on screen for a moment
+        yield return new WaitForSeconds(_resultHoldTime);
+
+        //fade it away afterwards
+        yield return StartCoroutine(FadeStandoffResult());
+
+        _standoffResultText.gameObject.SetActive(false);
+    }
+
+    private IEnumerator AnimateCheatResult()
+    {
+        RectTransform resultTransform = _standoffResultText.rectTransform;
+
+        Vector2 normalPosition = resultTransform.anchoredPosition;
+
+        //start big so it feels like the word slams into the screen
+        resultTransform.localScale = Vector3.one * 2.5f;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _resultIntroTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float percent = Mathf.Clamp01(elapsedTime / _resultIntroTime);
+
+            //quickly shrink down to its normal size
+            resultTransform.localScale = Vector3.Lerp(Vector3.one * 2.5f, Vector3.one, percent);
+
+            //shake it around while it lands
+            float randomX = Random.Range(-_cheatShakeAmount, _cheatShakeAmount);
+            float randomY = Random.Range(-_cheatShakeAmount, _cheatShakeAmount);
+
+            //shake gets weaker towards the end
+            float shakeStrength = 1f - percent;
+
+            resultTransform.anchoredPosition = normalPosition + new Vector2(randomX, randomY) * shakeStrength;
+
+            yield return null;
+        }
+
+        //put everything back exactly where it should be
+        resultTransform.localScale = Vector3.one;
+        resultTransform.anchoredPosition = normalPosition;
+    }
+
+    private IEnumerator AnimateWrongCallResult()
+    {
+        RectTransform resultTransform = _standoffResultText.rectTransform;
+
+        Vector2 normalPosition = resultTransform.anchoredPosition;
+
+        //start slightly bigger
+        resultTransform.localScale = Vector3.one * 1.5f;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _resultIntroTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float percent = Mathf.Clamp01(elapsedTime / _resultIntroTime);
+
+            //wobble left and right
+            float wobble = Mathf.Sin(percent * Mathf.PI * 4f) * 20f;
+
+            resultTransform.anchoredPosition = normalPosition + new Vector2(wobble, 0f);
+
+            resultTransform.localScale = Vector3.Lerp(Vector3.one * 1.5f, Vector3.one, percent);
+
+            yield return null;
+        }
+
+        resultTransform.localScale = Vector3.one;
+        resultTransform.anchoredPosition = normalPosition;
+    }
+
+    private IEnumerator AnimateBluffResult()
+    {
+        RectTransform resultTransform = _standoffResultText.rectTransform;
+
+        Vector2 normalPosition = resultTransform.anchoredPosition;
+
+        //start underneath the normal position
+        Vector2 startPosition = normalPosition + new Vector2(0f, -_bluffRiseDistance);
+
+        resultTransform.anchoredPosition = startPosition;
+        resultTransform.localScale = Vector3.one * 0.7f;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _resultIntroTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float percent = Mathf.Clamp01(elapsedTime / _resultIntroTime);
+            float smoothPercent = Mathf.SmoothStep(0f, 1f, percent);
+
+            //rise into place
+            resultTransform.anchoredPosition = Vector2.Lerp(startPosition, normalPosition, smoothPercent);
+
+            //grow slightly while rising
+            resultTransform.localScale = Vector3.Lerp( Vector3.one * 0.7f, Vector3.one, smoothPercent);
+
+            yield return null;
+        }
+
+        resultTransform.anchoredPosition = normalPosition;
+        resultTransform.localScale = Vector3.one;
+    }
+
+    private IEnumerator AnimateTruthResult()
+    {
+        RectTransform resultTransform = _standoffResultText.rectTransform;
+
+        //start slightly smaller
+        resultTransform.localScale = Vector3.one * 0.8f;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _resultIntroTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float percent = Mathf.Clamp01(elapsedTime / _resultIntroTime);
+            float smoothPercent = Mathf.SmoothStep(0f, 1f, percent);
+
+            resultTransform.localScale =
+                Vector3.Lerp(Vector3.one * 0.8f, Vector3.one, smoothPercent);
+
+            yield return null;
+        }
+
+        resultTransform.localScale = Vector3.one;
+    }
+
+    private IEnumerator FadeStandoffResult()
+    {
+        float elapsedTime = 0f;
+
+        Color textColour = _standoffResultText.color;
+
+        //slowly make the text transparent
+        while (elapsedTime < _resultFadeTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / _resultFadeTime);
+
+            textColour.a = alpha;
+            _standoffResultText.color = textColour;
+
+            yield return null;
+        }
+
+        //make sure it finishes completely invisible
+        textColour.a = 0f;
+        _standoffResultText.color = textColour;
     }
 
     private IEnumerator FadeBannerRoutine()

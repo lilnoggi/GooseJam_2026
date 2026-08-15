@@ -146,6 +146,11 @@ public class ClaimMenu : MonoBehaviour
                 // Find out which suit enum is currently being looked at
                 CardSuit currentSuit = (CardSuit)_suits.GetValue(_currentIndex);
 
+                string cardWord = _trueCards.Count == 1 ? "CARD" : "CARDS";//show the player exactly what claim they are about to make
+
+                _instructionText.text =
+                    $"CLAIM {_trueCards.Count} {currentSuit.ToString().ToUpper()} {cardWord}";
+
                 // Loop through the sample cards to find one that matches
                 foreach (CardData card in _sampleCards)
                 {
