@@ -10,7 +10,11 @@ public class EnemyTarget : MonoBehaviour
     [Header("System References")]
     [SerializeField] private TurnManager _turnManager;
 
-    private Color _originalColour; // Remember the default spotlight colour
+    [Header("Spotlight Colours")]
+    [SerializeField] private Color _hoverColour;
+    [SerializeField] private Color _turnColor;
+    [SerializeField] private Color _selectedColor;
+
     private bool _isEnemyTurn;
 
     private void Start()
@@ -19,9 +23,6 @@ public class EnemyTarget : MonoBehaviour
         if (_spotLight != null)
         {
             _spotLight.enabled = false;
-
-            // Save original colour
-            _originalColour = _spotLight.color;
         }
     }
 
@@ -53,13 +54,12 @@ public class EnemyTarget : MonoBehaviour
             if (_isEnemyTurn)
             {
                 // It is this current enemies turn.
-                _spotLight.color = Color.red;
+                _spotLight.color = _turnColor;
                 _spotLight.enabled = true;
             }
             else
             {
                 // It is another enemie's or the player turn
-                _spotLight.color = _originalColour;
                 _spotLight.enabled = false;
             }
         }
@@ -72,7 +72,7 @@ public class EnemyTarget : MonoBehaviour
         {
             if (_spotLight != null)
             {
-                _spotLight.color = _originalColour;
+                _spotLight.color = _hoverColour;
                 _spotLight.enabled = true;
             }
         }
@@ -95,7 +95,7 @@ public class EnemyTarget : MonoBehaviour
             if (_spotLight != null)
             {
                 // Turn the light green
-                _spotLight.color = Color.green;
+                _spotLight.color = _selectedColor;
             }
 
             // Pass the current enemy's specific seat to the UI menu

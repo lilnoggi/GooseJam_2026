@@ -11,11 +11,12 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     [SerializeField] private RectTransform _visualRoot;//The part of the card that will move upwards when it is selected
 
-    [SerializeField] private Outline _selectedOutline; //border of card
+    [SerializeField] private GameObject _selectedGlowOutline; //border of card
 
-    //the text for rank and suite
-    [SerializeField] private TMP_Text _rankText;
-    [SerializeField] private TMP_Text _suitText;
+    [Header("Card Visuals")]
+    [SerializeField] private TMP_Text _rankTextUpper;
+    [SerializeField] private TMP_Text _rankTextLower;
+    [SerializeField] private Image _suitImage;
 
     [SerializeField] private float _hoverHight =25f; //height when hovered
     [SerializeField] private float _selectedHeight = 35f; //the height that the card will move upwards when it is selected
@@ -38,15 +39,30 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         CardData = cardData;
         _onCardClicked = onCardClicked;
-        _rankText.text = cardData.RankDisplayName; //show rank
-        _suitText.text = cardData.Suit.ToString().ToUpper();//show suit
+
+        // Apply Data
+        if (_rankTextUpper != null)
+        {
+            _rankTextUpper.text = cardData.RankDisplayName;
+        }
+
+        if (_rankTextLower != null)
+        {
+            _rankTextLower.text = cardData.RankDisplayName;
+        }
+
+        if (_suitImage != null)
+        {
+            _suitImage.sprite = cardData.SuitSprite;
+        }
+
         _button.onClick.RemoveAllListeners(); //cant trigger click event twice
         _button.onClick.AddListener(CardClicked); //runs method when button pressed
 
         _isSelected = false;
         _isHovered = false;
 
-        _selectedOutline.enabled = false; //card starts without orange border
+        _selectedGlowOutline.SetActive(false); // Turn off the glow object
 
         UpdateCardVisual();
 
@@ -116,14 +132,14 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         {
             _targetPosition = new Vector2 (0f, _selectedHeight );
 
-            _selectedOutline.enabled = true; //show card border
+            _selectedGlowOutline.SetActive(true); // Turn on the glow object
         }
 
         else if (_isHovered && _canInteract) //hovered card move slightly and normal colour
         {
             _targetPosition = new Vector2 (0f, _hoverHight);
 
-            _selectedOutline.enabled = false; //no border
+            _selectedGlowOutline.SetActive(false); // Turn off the glow object
 
         }
 
@@ -131,7 +147,7 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         {
             _targetPosition = Vector2.zero;
 
-            _selectedOutline.enabled = false;// no border
+            _selectedGlowOutline.SetActive(false); // Turn off the glow object
         }
 
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,12 @@ public class ClaimMenu : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private GameObject _claimContainer;
-    [SerializeField] private TextMeshProUGUI _cardDisplayText;
+    [SerializeField] private Image _suitDisplayImage;
     [SerializeField] private TextMeshProUGUI _instructionText;
 
     [Header("System References")]
     [SerializeField] private TurnManager _turnManager;
+    [SerializeField] private CardData[] _sampleCards;
 
     private List<CardData> _trueCards;
     private CardSuit _selectedSuit;
@@ -137,7 +139,23 @@ public class ClaimMenu : MonoBehaviour
             if (_instructionText != null)
             {
                 _instructionText.text = "CHOOSE A SUIT";
-                _cardDisplayText.text = _suits.GetValue(_currentIndex).ToString();
+            }
+
+            if (_suitDisplayImage != null && _sampleCards != null)
+            {
+                // Find out which suit enum is currently being looked at
+                CardSuit currentSuit = (CardSuit)_suits.GetValue(_currentIndex);
+
+                // Loop through the sample cards to find one that matches
+                foreach (CardData card in _sampleCards)
+                {
+                    if (card != null && card.Suit == currentSuit) // Card checks itself
+                    {
+                        // Found a match
+                        _suitDisplayImage.sprite = card.SuitSprite;
+                        break; // Stop searching once found
+                    }
+                }
             }
         }
     }

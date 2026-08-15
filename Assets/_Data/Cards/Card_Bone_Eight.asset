@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Card_Bone_Eight
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   _suit: 0
+  _suitSprite: {fileID: 21300000, guid: c4f7d73c9b0180c4d9e442850450d78f, type: 3}
   _rank: 7
