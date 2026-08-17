@@ -146,7 +146,7 @@ public class StoryIntroManager : MonoBehaviour
         {
             // Lock the zoom state and transition to actual game
             _isZooming = false;
-            _levelLoader.LoadNextScene("01_Swamp_Fox_Scene");
+            _levelLoader.LoadNextScene("01a_Swamp_Minions_Scene");
         }
     }
 }
