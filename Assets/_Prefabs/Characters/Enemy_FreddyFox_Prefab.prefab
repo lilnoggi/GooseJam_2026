@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   _isPlayer: 0
-  _enemySeatIndex: 2
+  _healthBarUI: {fileID: 0}
 --- !u!114 &5598442147007053409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,9 +414,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1bdd851560ece40a9ff2b9586fe902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTarget
-  _enemySeat: 3
+  _enemySeat: 2
   _spotLight: {fileID: 0}
   _turnManager: {fileID: 0}
+  _hoverColour: {r: 0.972549, g: 0.9764706, b: 0.98039216, a: 0}
+  _turnColor: {r: 0.8584906, g: 0.11743506, b: 0.11743506, a: 0}
+  _selectedColor: {r: 0.4862745, g: 0.5647059, b: 0.20392157, a: 0}
 --- !u!1 &7902023193859109071
 GameObject:
   m_ObjectHideFlags: 0
