@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TurnManager _turnManager;
 
     [Header("Turn Callouts")]
+    [SerializeField] private GameObject _turnBanner;
     [SerializeField] private TextMeshProUGUI _turnBannerText; // A text element in the center of the screen
+    [SerializeField] private CanvasGroup _turnBannerGroup;
 
     [Header("Standoff Result")]
     [SerializeField] private TextMeshProUGUI _standoffResultText; //TRUTH / CHEAT message
@@ -334,10 +337,16 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator FadeBannerRoutine()
     {
-        // Reset the text colour so it is 100% visible
-        Color originalColour = _turnBannerText.color;
-        originalColour.a = 1f;
-        _turnBannerText.color = originalColour;
+        // Turn the banner ON and make it 100% visible
+        if (_turnBanner != null)
+        {
+            _turnBanner.SetActive(true);
+        }
+
+        if (_turnBannerGroup != null)
+        {
+            _turnBannerGroup.alpha = 1f;
+        }
 
         // Wait for 2 seconds
         yield return new WaitForSeconds(2f);
@@ -350,19 +359,23 @@ public class UIManager : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
-            // Calculate the exact alpha value between 1 an 0
-            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
-
-            Color newColour = _turnBannerText.color;
-            newColour.a = alpha;
-            _turnBannerText.color = newColour;
+            if (_turnBannerGroup != null)
+            {
+                _turnBannerGroup.alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            }
 
             yield return null; // Wait for next frame before looping again
         }
 
         // Ensure it is completely invisible at the very end
-        Color finalColour = _turnBannerText.color;
-        finalColour.a = 0f;
-        _turnBannerText.color = finalColour;
+        if (_turnBannerGroup != null)
+        {
+            _turnBannerGroup.alpha = 0f;
+        }
+
+        if (_turnBanner != null)
+        {
+            _turnBanner.SetActive(false);
+        }
     }
 }

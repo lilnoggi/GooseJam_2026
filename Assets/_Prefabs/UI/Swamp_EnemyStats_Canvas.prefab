@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 5737669405587529712}
   - component: {fileID: 3796845602065420354}
   m_Layer: 0
-  m_Name: EnemyStats_Canvas
+  m_Name: Swamp_EnemyStats_Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
