@@ -25,14 +25,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float _cheatShakeAmount = 18f; //how violently CHEAT shakes
     [SerializeField] private float _bluffRiseDistance = 100f; //how far BLUFF SUCCESSFUL rises from
 
-    [Header("Player UI")]
-    [SerializeField] private Slider _playerHealthBar; // The slider of the player health bar
-    [SerializeField] private Sprite _playerHeartIcon; // The heart Sprite
-    [SerializeField] private Sprite _playerShieldIcon; // The Shield Sprite
-    [SerializeField] private GameObject _playerStatusIcon; // The actual status icon gameObject
-    [SerializeField] private TextMeshProUGUI _playerShieldText; // Shows the amount of shield the player currently has
-    [SerializeField] private GameObject _playerPoisonIcon; // Placeholder
-    [SerializeField] private GameObject _playerDodgeIcon; // Placeholder
     // fade coroutine tracker
     private Coroutine _bannerFadeRoutine;
 
@@ -92,52 +84,6 @@ public class UIManager : MonoBehaviour
             _bannerFadeRoutine = StartCoroutine(FadeBannerRoutine());
         }
     }
-
-    public void UpdatePlayerHealth(int currentHealth, int maxHealth)
-    {
-        if (_playerHealthBar != null)
-        {
-            _playerHealthBar.maxValue = maxHealth;
-            _playerHealthBar.value = currentHealth;
-        }
-    }
-
-    public void UpdatePlayerStatusIcon(bool hasShield, int shieldAmount, bool hasDodge, bool hasPoison)
-    {
-        // Make sure status icon is assigned
-        if (_playerStatusIcon != null)
-        {
-            // Get the Image component attatched to it
-            Image statusImage = _playerStatusIcon.GetComponent<Image>();
-
-            if (statusImage != null)
-            {
-                // Swap the sprite depending on if the player has shield
-                // If hasShield is true, use ShieldIcon, otherwise use HeartIcon
-                statusImage.sprite = hasShield ? _playerShieldIcon : _playerHeartIcon;
-            }
-        }
-
-        // Toggle shield text ON if the player has shield, OFF if they don't
-        if (_playerShieldText != null)
-        {
-            _playerShieldText.gameObject.SetActive(hasShield);
-
-            // Set the text to display the current shield amount
-            _playerShieldText.text = shieldAmount.ToString();
-        }
-
-        if (_playerDodgeIcon != null)
-        {
-            _playerDodgeIcon.SetActive(hasDodge);
-        }
-
-        if (_playerPoisonIcon != null)
-        {
-            _playerPoisonIcon.SetActive(hasPoison);
-        }
-    }
-
 
     public IEnumerator ShowStandoffResult(string message)
     {

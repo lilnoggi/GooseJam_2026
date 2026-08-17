@@ -71,8 +71,11 @@ public class CharacterStats : MonoBehaviour
         _maxHealth = 100;
         _currentHealth = _maxHealth;
 
-        // Push starting health to UI
-        UIManager.Instance.UpdatePlayerHealth(_currentHealth, _maxHealth);
+        // Push starting health to local UI
+        if (_healthBarUI != null)
+        {
+            _healthBarUI.UpdateHealth(_currentHealth, _maxHealth);
+        }
         
         // Ensure all icons start turned off
         UpdateStatusUI(); 
@@ -142,13 +145,9 @@ public class CharacterStats : MonoBehaviour
         }
         
         // Tell UI exactly WHO took damage
-        if (!_isPlayer && _healthBarUI != null)
+        if (_healthBarUI != null)
         {
             _healthBarUI.UpdateHealth(_currentHealth, _maxHealth);
-        }
-        else
-        {
-            UIManager.Instance.UpdatePlayerHealth(_currentHealth, _maxHealth);
         }
     }
 
@@ -278,14 +277,10 @@ public class CharacterStats : MonoBehaviour
         bool hasDodge = _dodgeTokens > 0;
         bool hasPoison = _poisonStacks > 0;
 
-        if (_isPlayer)
-        {
-            UIManager.Instance.UpdatePlayerStatusIcon(hasShield, _currentShield, hasDodge, hasPoison);
-        }
-        else if (_healthBarUI != null)
+        if (_healthBarUI != null)
         {
             // Call local UI instead of UIManager
-            _healthBarUI.UpdateStatusIcon(hasShield, _currentShield, hasDodge, hasPoison);
+            _healthBarUI.UpdateStatusIcon(hasShield, _currentShield, _dodgeTokens, hasPoison);
         }
     }
 }

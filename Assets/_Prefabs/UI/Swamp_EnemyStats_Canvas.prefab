@@ -612,8 +612,11 @@ MonoBehaviour:
   _heartSprite: {fileID: 21300000, guid: 80dd94899bf1af442b923cb675979621, type: 3}
   _shieldSprite: {fileID: 21300000, guid: 823b439253c65e741bca9f7fdb23e677, type: 3}
   _shieldAmountText: {fileID: 5987356785284388686}
-  _poisonIcon: {fileID: 8966256086507022086}
   _dodgeIcon: {fileID: 8056042407618321857}
+  _dodgeOneFeather: {fileID: 21300000, guid: 7681202bd4e16d84bb306603c315ed87, type: 3}
+  _dodgeTwoFeathers: {fileID: 21300000, guid: 427590e93259c924480958f5b13ab083, type: 3}
+  _dodgeThreeFeathers: {fileID: 21300000, guid: 728ba2797afdabf42a48b21044918c88, type: 3}
+  _poisonIcon: {fileID: 8966256086507022086}
 --- !u!1 &6421025024638752362
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,7 +875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.97088087, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
