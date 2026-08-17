@@ -13,6 +13,7 @@ public class ClaimMenu : MonoBehaviour
     [SerializeField] private GameObject _claimContainer;
     [SerializeField] private Image _suitDisplayImage;
     [SerializeField] private TextMeshProUGUI _instructionText;
+    [SerializeField] private GameObject _instructionBanner;
 
     [Header("System References")]
     [SerializeField] private TurnManager _turnManager;
@@ -38,9 +39,9 @@ public class ClaimMenu : MonoBehaviour
 
         // Ensure the menu is hidden when the game starts
         _claimContainer.SetActive(false);
-        if (_instructionText != null)
+        if (_instructionBanner != null)
         {
-            _instructionText.gameObject.SetActive(false);
+            _instructionBanner.gameObject.SetActive(false);
         }
     }
 
@@ -54,9 +55,9 @@ public class ClaimMenu : MonoBehaviour
         _currentIndex = 0;
 
         _claimContainer.SetActive(true);
-        if (_instructionText != null)
+        if (_instructionBanner != null)
         {
-            _instructionText.gameObject.SetActive(true);
+            _instructionBanner.gameObject.SetActive(true);
 
             UpdateDisplay();
         }
@@ -126,9 +127,9 @@ public class ClaimMenu : MonoBehaviour
 
         // Hide the menu and reset for the next turn
         _currentPhase = ClaimPhase.Inactive;
-        if (_instructionText != null)
+        if (_instructionBanner != null)
         {
-            _instructionText.gameObject.SetActive(false);
+            _instructionBanner.gameObject.SetActive(false);
         }
     }
 

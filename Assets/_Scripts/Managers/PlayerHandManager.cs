@@ -229,12 +229,19 @@ public class PlayerHandManager : MonoBehaviour
 
     private void UpdateButtons()
     {
-
+        // Is the player ALLOWED to play right now?
         bool canUseHand =_turnManager.IsPlayerTurn && !_isChoosingClaim && !_isDrawingCards;
 
-        // Play needs at least one selected card.
-        _playButton.interactable = canUseHand && _selectedCards.Count > 0; ////player needs atleast 1 card selected in order to play turn
+        // If they can use their hand, turn the buttons ON. If not, turn them off
+        _playButton.gameObject.SetActive(canUseHand);
+        _skipButton.gameObject.SetActive(canUseHand);
 
-        _skipButton.interactable = canUseHand; //skip button can always be used
+        // If the buttons are visible, handle the interactbale states
+        if (canUseHand)
+        {
+            // Play needs at least one selected card.
+            _playButton.interactable = canUseHand && _selectedCards.Count > 0; ////player needs atleast 1 card selected in order to play turn
+            _skipButton.interactable = canUseHand; //skip button can always be used   
+        }
     }
 }

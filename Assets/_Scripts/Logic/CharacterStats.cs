@@ -5,7 +5,9 @@ public class CharacterStats : MonoBehaviour
     [Header("Identity")]
     [SerializeField] private bool _isPlayer; // Check if this script is on the player
     [Tooltip("0 = Left, 1 = Center, 2 = Right")]
-    [SerializeField] private int _enemySeatIndex;
+
+    [Header("UI Components")]
+    [SerializeField] private HealthBarUI _healthBarUI;
 
     [Header("Runtime Stats")]
     private int _currentHealth;
@@ -53,10 +55,13 @@ public class CharacterStats : MonoBehaviour
 
             _currentHealth = _maxHealth;
 
-            // Push all of  the starting data to the UIManager
-            UIManager.Instance.UpdateEnemyName(_enemySeatIndex, _enemyAI.Profile.EnemyName);
-            UIManager.Instance.UpdateEnemyHealth(_enemySeatIndex, _currentHealth, _maxHealth);
-            UIManager.Instance.UpdateEnemyParanoia(_enemySeatIndex, _currentParanoia, _maxParanoia);
+            // Push starting data directly to THIS enemy's health bar ui
+            if (_healthBarUI != null)
+            {
+                _healthBarUI.UpdateHealth(_currentHealth, _maxHealth);
+                _healthBarUI.UpdateParanoia(_currentParanoia, _maxParanoia);
+            }
+
             UpdateStatusUI(); 
         }
     }
@@ -66,8 +71,11 @@ public class CharacterStats : MonoBehaviour
         _maxHealth = 100;
         _currentHealth = _maxHealth;
 
-        // Push starting health to UI
-        UIManager.Instance.UpdatePlayerHealth(_currentHealth, _maxHealth);
+        // Push starting health to local UI
+        if (_healthBarUI != null)
+        {
+            _healthBarUI.UpdateHealth(_currentHealth, _maxHealth);
+        }
         
         // Ensure all icons start turned off
         UpdateStatusUI(); 
@@ -137,13 +145,9 @@ public class CharacterStats : MonoBehaviour
         }
         
         // Tell UI exactly WHO took damage
-        if (!_isPlayer)
+        if (_healthBarUI != null)
         {
-            UIManager.Instance.UpdateEnemyHealth(_enemySeatIndex, _currentHealth, _maxHealth);
-        }
-        else
-        {
-            UIManager.Instance.UpdatePlayerHealth(_currentHealth, _maxHealth);
+            _healthBarUI.UpdateHealth(_currentHealth, _maxHealth);
         }
     }
 
@@ -238,9 +242,9 @@ public class CharacterStats : MonoBehaviour
             _currentParanoia = 0;
         }
 
-        if (!_isPlayer)
+        if (!_isPlayer && _healthBarUI != null)
         {
-            UIManager.Instance.UpdateEnemyParanoia(_enemySeatIndex, _currentParanoia, _maxParanoia);
+            _healthBarUI.UpdateParanoia(_currentParanoia, _maxParanoia);
         }
     }
 
@@ -273,13 +277,10 @@ public class CharacterStats : MonoBehaviour
         bool hasDodge = _dodgeTokens > 0;
         bool hasPoison = _poisonStacks > 0;
 
-        if (_isPlayer)
+        if (_healthBarUI != null)
         {
-            UIManager.Instance.UpdatePlayerStatusIcon(hasShield, hasDodge, hasPoison);
-        }
-        else
-        {
-            UIManager.Instance.UpdateEnemyStatusIcons(_enemySeatIndex, hasShield, hasDodge, hasPoison);
+            // Call local UI instead of UIManager
+            _healthBarUI.UpdateStatusIcon(hasShield, _currentShield, _dodgeTokens, hasPoison);
         }
     }
 }
