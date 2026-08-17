@@ -9,7 +9,6 @@ public class PlayerDecisionMenu : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private GameObject _decisionMenuContainer;
     [SerializeField] private TextMeshProUGUI _claimText;
-    [SerializeField] private Button _passButton;
     [SerializeField] private Button _cheatButton;
 
     [Header("Settings")]
@@ -22,8 +21,7 @@ public class PlayerDecisionMenu : MonoBehaviour
 
     private void Awake()
     {
-        // Connect the button's to pass 'true' (Cheat) or 'false'(pass)
-        _passButton.onClick.AddListener(() => MakeDecision(false));
+        // Connect the button's to pass 'true' (Cheat)
         _cheatButton.onClick.AddListener(() => MakeDecision(true));
 
         _decisionMenuContainer.SetActive(false);
