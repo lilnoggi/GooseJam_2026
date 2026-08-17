@@ -32,10 +32,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject[] _enemyPoisonIcons;
 
     [Header("Player UI")]
-    [SerializeField] private Slider _playerHealthBar;
-    [SerializeField] private GameObject _playerShieldIcon;
-    [SerializeField] private GameObject _playerDodgeIcon;
-    [SerializeField] private GameObject _playerPoisonIcon;
+    [SerializeField] private Slider _playerHealthBar; // The slider of the player health bar
+    [SerializeField] private Sprite _playerHeartIcon; // The heart Sprite
+    [SerializeField] private Sprite _playerShieldIcon; // The Shield Sprite
+    [SerializeField] private GameObject _playerStatusIcon; // The actual status icon gameObject
+    [SerializeField] private GameObject _playerPoisonIcon; // Placeholder
+    [SerializeField] private GameObject _playerDodgeIcon; // Placeholder
     // fade coroutine tracker
     private Coroutine _bannerFadeRoutine;
 
@@ -171,9 +173,18 @@ public class UIManager : MonoBehaviour
 
     public void UpdatePlayerStatusIcon(bool hasShield, bool hasDodge, bool hasPoison)
     {
-        if (_playerShieldIcon != null)
+        // Make sure status icon is assigned
+        if (_playerStatusIcon != null)
         {
-            _playerShieldIcon.SetActive(hasShield);
+            // Get the Image component attatched to it
+            Image statusImage = _playerStatusIcon.GetComponent<Image>();
+
+            if (statusImage != null)
+            {
+                // Swap the sprite depending on if the player has shield
+                // If hasShield is true, use ShieldIcon, otherwise use HeartIcon
+                statusImage.sprite = hasShield ? _playerShieldIcon : _playerHeartIcon;
+            }
         }
 
         if (_playerDodgeIcon != null)
