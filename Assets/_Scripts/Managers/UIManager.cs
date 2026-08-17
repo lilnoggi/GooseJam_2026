@@ -22,15 +22,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float _cheatShakeAmount = 18f; //how violently CHEAT shakes
     [SerializeField] private float _bluffRiseDistance = 100f; //how far BLUFF SUCCESSFUL rises from
 
-    [Header("Enemy UI")]
-    [Tooltip("Index 0 = Left, 1 = Center, 2 = Right")]
-    [SerializeField] private Slider[] _enemyHealthBars;
-    [SerializeField] private Slider[] _enemyParanoiaBars;
-    [SerializeField] private TextMeshProUGUI[] _enemyNames;
-    [SerializeField] private GameObject[] _enemyShieldIcons;
-    [SerializeField] private GameObject[] _enemyDodgeIcons;
-    [SerializeField] private GameObject[] _enemyPoisonIcons;
-
     [Header("Player UI")]
     [SerializeField] private Slider _playerHealthBar; // The slider of the player health bar
     [SerializeField] private Sprite _playerHeartIcon; // The heart Sprite
@@ -96,70 +87,6 @@ public class UIManager : MonoBehaviour
 
             // Start the new fade sequence
             _bannerFadeRoutine = StartCoroutine(FadeBannerRoutine());
-        }
-    }
-
-    /// <summary>
-    /// Call this from CharacterStats.cs whenever an enemy takes damage.
-    /// </summary>
-    public void UpdateEnemyHealth(int enemySeatIndex, int currentHealth, int maxHealth)
-    {
-        // Check to ensure the slider exists
-        if (enemySeatIndex >= 0 && enemySeatIndex < _enemyHealthBars.Length)
-        {
-            _enemyHealthBars[enemySeatIndex].maxValue = maxHealth;
-            _enemyHealthBars[enemySeatIndex].value = currentHealth;
-        }
-    }
-
-    /// <summary>
-    /// This is called when the scene loads to display the boss names
-    /// </summary>
-    public void UpdateEnemyName(int enemySeatIndex, string name)
-    {
-        // Check to ensure the text element exists in array
-        if (enemySeatIndex >= 0 && enemySeatIndex < _enemyNames.Length)
-        {
-            if (_enemyNames[enemySeatIndex] != null)
-            {
-                _enemyNames[enemySeatIndex].text = name;
-            }
-        }
-    }
-
-    // Call this in CharacterStats.cs when an enemy gets more paranoid
-    public void UpdateEnemyParanoia(int enemySeatIndex, int currentParanoia, int maxParanoia)
-    {
-        // Check to ensure the slider exists in the array
-        if (enemySeatIndex >= 0 && enemySeatIndex < _enemyParanoiaBars.Length)
-        {
-            _enemyParanoiaBars[enemySeatIndex].maxValue = maxParanoia;
-            _enemyParanoiaBars[enemySeatIndex].value = currentParanoia;
-        }
-    }
-
-    /// <summary>
-    /// Toggles the status icons for a specific enemy on the HUD
-    /// </summary>
-    public void UpdateEnemyStatusIcons(int enemySeatIndex, bool hasShield, bool hasDodge, bool hasPoison)
-    {
-        // Check to make sure the seat index is valid and the arrays are set
-        if (enemySeatIndex >= 0 && enemySeatIndex < _enemyShieldIcons.Length)
-        {
-            if (_enemyShieldIcons[enemySeatIndex] != null)
-            {
-                _enemyShieldIcons[enemySeatIndex].SetActive(hasShield);
-            }
-
-            if (_enemyDodgeIcons[enemySeatIndex] != null)
-            {
-                _enemyDodgeIcons[enemySeatIndex].SetActive(hasDodge);
-            }
-
-            if (_enemyPoisonIcons[enemySeatIndex] != null)
-            {
-                _enemyPoisonIcons[enemySeatIndex].SetActive(hasPoison);
-            }
         }
     }
 
