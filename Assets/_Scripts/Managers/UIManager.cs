@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite _playerHeartIcon; // The heart Sprite
     [SerializeField] private Sprite _playerShieldIcon; // The Shield Sprite
     [SerializeField] private GameObject _playerStatusIcon; // The actual status icon gameObject
+    [SerializeField] private TextMeshProUGUI _playerShieldText; // Shows the amount of shield the player currently has
     [SerializeField] private GameObject _playerPoisonIcon; // Placeholder
     [SerializeField] private GameObject _playerDodgeIcon; // Placeholder
     // fade coroutine tracker
@@ -171,7 +172,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdatePlayerStatusIcon(bool hasShield, bool hasDodge, bool hasPoison)
+    public void UpdatePlayerStatusIcon(bool hasShield, int shieldAmount, bool hasDodge, bool hasPoison)
     {
         // Make sure status icon is assigned
         if (_playerStatusIcon != null)
@@ -185,6 +186,15 @@ public class UIManager : MonoBehaviour
                 // If hasShield is true, use ShieldIcon, otherwise use HeartIcon
                 statusImage.sprite = hasShield ? _playerShieldIcon : _playerHeartIcon;
             }
+        }
+
+        // Toggle shield text ON if the player has shield, OFF if they don't
+        if (_playerShieldText != null)
+        {
+            _playerShieldText.gameObject.SetActive(hasShield);
+
+            // Set the text to display the current shield amount
+            _playerShieldText.text = shieldAmount.ToString();
         }
 
         if (_playerDodgeIcon != null)

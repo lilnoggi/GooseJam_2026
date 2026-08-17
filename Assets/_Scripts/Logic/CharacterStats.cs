@@ -275,7 +275,7 @@ public class CharacterStats : MonoBehaviour
 
         if (_isPlayer)
         {
-            UIManager.Instance.UpdatePlayerStatusIcon(hasShield, hasDodge, hasPoison);
+            UIManager.Instance.UpdatePlayerStatusIcon(hasShield, _currentShield, hasDodge, hasPoison);
         }
         else
         {
