@@ -27,7 +27,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540372582294739139}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 0.001, y: 0.0009999999, z: 0.001}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.69, y: 1.2446}
+  m_AnchoredPosition: {x: -1.586, y: 0.575}
   m_SizeDelta: {x: 1920, y: 347.4958}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4000251149312894666
@@ -128,17 +128,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1379857817838793613}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5164316788289316576}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -16.3, y: -11.7}
+  m_SizeDelta: {x: -32.5, y: -23.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7358692722824039582
 CanvasRenderer:
@@ -170,8 +170,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Dialogue....
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 973df02609c74fb4b9758ff80a01e186, type: 2}
+  m_sharedMaterial: {fileID: -1176439312478243875, guid: 973df02609c74fb4b9758ff80a01e186, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   _isPlayer: 0
-  _enemySeatIndex: 2
+  _healthBarUI: {fileID: 0}
 --- !u!114 &5598442147007053409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,9 +414,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1bdd851560ece40a9ff2b9586fe902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTarget
-  _enemySeat: 3
+  _enemySeat: 2
   _spotLight: {fileID: 0}
   _turnManager: {fileID: 0}
+  _hoverColour: {r: 0.972549, g: 0.9764706, b: 0.98039216, a: 0}
+  _turnColor: {r: 0.8584906, g: 0.11743506, b: 0.11743506, a: 0}
+  _selectedColor: {r: 0.4862745, g: 0.5647059, b: 0.20392157, a: 0}
 --- !u!1 &7902023193859109071
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,18 +445,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7902023193859109071}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 922588399002535199}
   m_Father: {fileID: 4939799423549264697}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 16.900024, y: -57.300003}
+  m_SizeDelta: {x: 33.8, y: 114.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8762568469898295980
 CanvasRenderer:
@@ -483,7 +486,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: ef00107a01ae0b1489ccc4205f4ad2d0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
