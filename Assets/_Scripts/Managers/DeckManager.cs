@@ -1,11 +1,11 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 
 public class DeckManager : MonoBehaviour
 {
    [SerializeField] private CardDatabase _cardDatabase;//contains all the possible cards used to build the deck
+   [SerializeField] private CardDatabase _statusDatabase; // Only assigned to the player
 
    [SerializeField] private int _handSize = 5; //how many cards the character will hold
 
@@ -38,6 +38,12 @@ public class DeckManager : MonoBehaviour
         }
 
         _drawPile.AddRange(_cardDatabase.Cards); //copy all 52 card refrences into the draw pile
+
+        // If a status database is assigned (ONLY TO THE PLAYYYYEEEEEEEEEERRRRRRRRR) addd those!
+        if (_statusDatabase != null && _statusDatabase.Cards.Count > 0)
+        {
+            _drawPile.AddRange(_statusDatabase.Cards);
+        }
 
         Shuffle(_drawPile); //remember SHUFFLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE //shuffel them
 
@@ -76,6 +82,46 @@ public class DeckManager : MonoBehaviour
             HandChanged?.Invoke();
         }
 
+    }
+
+    /// <summary>
+    /// Forces the deck to draw a specific amount of cards, ignoring the hand size limit
+    /// Used by Draw 2 status card
+    /// </summary>
+    public void DrawAmount(int amount)
+    {
+        bool handChanged = false;
+
+        for (int i = 0; i < amount; i++)
+        {
+            // Recycle the discard pile if ran out of cards mid-draw
+            if (_drawPile.Count == 0)
+            {
+                ReshuffleDiscardPile();
+            }
+
+            // If it is STILL empty, stop drawing
+            if (_drawPile.Count == 0)
+            {
+                break;
+            }
+
+            // Get the top card
+            int cardIndex = _drawPile.Count - 1;
+            CardData card = _drawPile[cardIndex];
+
+            // Move it from the deck to the hand
+            _drawPile.RemoveAt(cardIndex);
+            _hand.Add(card);
+
+            handChanged = true;
+        }
+
+        // Refresh visuals if successfully drew anything
+        if (handChanged)
+        {
+            HandChanged?.Invoke();
+        }
     }
 
 

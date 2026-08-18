@@ -8,7 +8,7 @@ public class EnemyTarget : MonoBehaviour
     [SerializeField] private Light _spotLight; // The light object to turn on when hovered
 
     [Header("System References")]
-    [SerializeField] private TurnManager _turnManager;
+    [SerializeField] private TurnController _turnController;
 
     [Header("Spotlight Colours")]
     [SerializeField] private Color _hoverColour;
@@ -29,18 +29,18 @@ public class EnemyTarget : MonoBehaviour
     private void OnEnable()
     {
         // Start listening for turn changes when the enemy is active
-        if (_turnManager != null)
+        if (_turnController != null)
         {
-            _turnManager.OnTurnChanged += HandleTurnChanged;
+            _turnController.OnTurnChanged += HandleTurnChanged;
         }
     }
 
     private void OnDisable()
     {
         // Always stop listening when disabled
-        if (_turnManager != null)
+        if (_turnController != null)
         {
-            _turnManager.OnTurnChanged -= HandleTurnChanged;
+            _turnController.OnTurnChanged -= HandleTurnChanged;
         }
     }
 

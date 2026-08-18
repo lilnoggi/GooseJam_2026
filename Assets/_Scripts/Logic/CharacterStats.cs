@@ -29,7 +29,7 @@ public class CharacterStats : MonoBehaviour
     // Component references
     private EnemyAI _enemyAI;
 
-    private void Start()
+    private void Awake()
     {
         if (!_isPlayer)
         {
@@ -245,6 +245,62 @@ public class CharacterStats : MonoBehaviour
         if (!_isPlayer && _healthBarUI != null)
         {
             _healthBarUI.UpdateParanoia(_currentParanoia, _maxParanoia);
+        }
+    }
+
+    /// <summary>
+    /// Restores health up to the maximum limit. Used by Rotten Apple
+    /// </summary>
+    public void Heal(int healAmount)
+    {
+        if (IsEliminated)
+        {
+            return; // Don't heal dead characters
+        }
+
+        _currentHealth += healAmount;
+
+        // Prevent overhealing past the max
+        if (_currentHealth > _maxHealth)
+        {
+            _currentHealth = _maxHealth;
+        }
+
+        // Update the UI
+        if (_healthBarUI != null)
+        {
+            _healthBarUI.UpdateHealth(_currentHealth, _maxHealth);
+        }
+    }
+
+    /// <summary>
+    /// Permanently reduces the maximum health pool. Used by Gambler's Fallacy
+    /// </summary>
+    public void ReduceMaxHealth(int amount)
+    {
+        if (IsEliminated)
+        {
+            return;
+        }
+
+        _maxHealth -= amount;
+
+        // Safety check to ensure max health never drops to 0 or below
+        if (_maxHealth < 1)
+        {
+            _maxHealth = 1;
+        }
+
+        // If current health is now higher than the new max, bring it down
+        if (_currentHealth > _maxHealth)
+        {
+            _currentHealth = _maxHealth;
+        }
+
+        // Update the UI to reflect smaller health pool
+        if (_healthBarUI != null)
+        {
+            _healthBarUI.UpdateHealth(_currentHealth, _maxHealth);
         }
     }
 
