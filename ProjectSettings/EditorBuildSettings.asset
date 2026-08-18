@@ -12,7 +12,10 @@ EditorBuildSettings:
     path: Assets/_Scenes/00b_IntroCutscene_Scene.unity
     guid: 6c700d7d3177c0948b7791fabb676d2a
   - enabled: 1
-    path: Assets/_Scenes/00c_Tutorial_Scene.unity
+    path: Assets/_Scenes/00c_Map_LevelSelect_Scene.unity
+    guid: 7c4dfbd214a8c03458094cc85f690233
+  - enabled: 1
+    path: Assets/_Scenes/00d_Tutorial_Scene.unity
     guid: c3fa54e690327034686824e564db0532
   - enabled: 1
     path: Assets/_Scenes/01a_Swamp_Minions_Scene.unity

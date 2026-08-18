@@ -25,7 +25,6 @@ public class StoryIntroManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _dialogueText;
     [SerializeField] private GameObject _actionButton;
     [SerializeField] private TextMeshProUGUI _buttonText;
-    [SerializeField] private LevelLoader _levelLoader;
 
     [Header("Cinematic References")]
     [SerializeField] private Image _cinematicDisplay;
@@ -146,7 +145,7 @@ public class StoryIntroManager : MonoBehaviour
         {
             // Lock the zoom state and transition to actual game
             _isZooming = false;
-            _levelLoader.LoadNextScene("01a_Swamp_Minions_Scene");
+            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
         }
     }
 }

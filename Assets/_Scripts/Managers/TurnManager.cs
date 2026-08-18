@@ -30,6 +30,9 @@ public class TurnManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private PlayerDecisionMenu _playerDecisionMenu;
 
+    [Header("Session Data")]
+    [SerializeField] private SessionData _sessionData;
+
     private bool _isWaitingForPlayerDecision;
     private bool _playerCalledCheat;
 
@@ -361,7 +364,13 @@ public class TurnManager : MonoBehaviour
         if (_leftEnemyStats.IsEliminated && _centerEnemyStats.IsEliminated && _rightEnemyStats.IsEliminated)
         {
             Debug.Log("VICTORY! All enemies have been defeated!");
-            // TODO: Trigger Victory UI / Transition to next room
+            // TODO: Trigger Victory UI 
+            
+            // Tell SessionData the player won
+            _sessionData.CompleteCurrentLevel();
+
+            // Load the map scene
+            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
             return; // Stop the turn loop completely
         }
 
@@ -370,6 +379,9 @@ public class TurnManager : MonoBehaviour
         {
             Debug.Log("GAME OVER! The Goose has been cooked!");
             // TODO: Trigger Game Over UI
+
+            // Return to map
+            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
             return; // Stop turn loop completely
         }
 
