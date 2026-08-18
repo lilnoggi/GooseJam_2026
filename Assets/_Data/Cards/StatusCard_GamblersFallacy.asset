@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18e2890599f73e34184f6b429b964b07, type: 3}
+  m_Name: StatusCard_GamblersFallacy
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  _suit: 0
+  _suitSprite: {fileID: 0}
+  _rank: 0
+  _isStatusCard: 1
+  _statusType: 2
+  _playType: 3
+  _statusName: Gambler's Fallacy
+  _statusDescription: Instantly discards the current hand and draws 5 new cards,
+    but reduces maximum health by 10.
+  _effectLogic: {fileID: 11400000, guid: a61b4725ca1b52d449a762866d5d1ca3, type: 2}

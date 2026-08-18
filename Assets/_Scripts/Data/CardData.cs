@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -9,11 +10,26 @@ public class CardData : ScriptableObject
     [SerializeField] private Sprite _suitSprite; // the sprite of the cards suit
     [SerializeField] private CardRank _rank; //the rank of the card
 
+    [Header("Status Cards")]
+    [SerializeField] private bool _isStatusCard; // Check this if the card is a status card
+    [SerializeField] private StatusType _statusType;
+    [SerializeField] private CardPlayType _playType;
+    [SerializeField] private string _statusName;
+    [TextArea(3, 5)]
+    [SerializeField] private string _statusDescription;
+    [SerializeField] private StatusEffect _effectLogic;
+
 
     //other scripts can read these values but cant change them
     public CardSuit Suit => _suit; 
     public Sprite SuitSprite => _suitSprite;
     public CardRank Rank => _rank;
+    public bool IsStatusCard => _isStatusCard;
+    public StatusType StatusType => _statusType;
+    public CardPlayType PlayType => _playType;
+    public string StatusName => _statusName;
+    public string StatusDescription => _statusDescription;
+    public StatusEffect EffectLogic => _effectLogic;
 
 
     //returns A, 2, ,3 ,J ,Q ,K etc.

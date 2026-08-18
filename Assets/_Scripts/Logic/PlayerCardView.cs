@@ -18,6 +18,9 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     [SerializeField] private TMP_Text _rankTextLower;
     [SerializeField] private Image _suitImage;
 
+    [Header("Status Card Visuals")]
+    [SerializeField] private TMP_Text _statusDescriptionText;
+
     [SerializeField] private float _hoverHight =25f; //height when hovered
     [SerializeField] private float _selectedHeight = 35f; //the height that the card will move upwards when it is selected
 
@@ -43,20 +46,48 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         CardData = cardData;
         _onCardClicked = onCardClicked;
 
-        // Apply Data
-        if (_rankTextUpper != null)
+        // Check if it is a stuats card
+        if (cardData.IsStatusCard)
         {
-            _rankTextUpper.text = cardData.RankDisplayName;
-        }
+            // Hide standard suit image and numbers
+            if (_suitImage != null && _rankTextLower != null && _rankTextUpper != null)
+            {
+                _suitImage.gameObject.SetActive(false);
+                _rankTextLower.gameObject.SetActive(false);
+                _rankTextUpper.gameObject.SetActive(false);
+            }
 
-        if (_rankTextLower != null)
-        {
-            _rankTextLower.text = cardData.RankDisplayName;
-        }
+            // Show description text 
+            if (_statusDescriptionText != null)
+            {
+                _statusDescriptionText.gameObject.SetActive(true);
 
-        if (_suitImage != null)
+                // Make the text bold and clear for prototypeing
+                _statusDescriptionText.text = $"<b>{cardData.StatusName}</b>\n\n{cardData.StatusDescription}";
+            }
+        }
+        else
         {
-            _suitImage.sprite = cardData.SuitSprite;
+            // It is a normal card
+            if (_statusDescriptionText != null)
+            {
+                _statusDescriptionText.gameObject.SetActive(false);
+            }
+            // Apply Data
+            if (_rankTextUpper != null)
+            {
+                _rankTextUpper.text = cardData.RankDisplayName;
+            }
+
+            if (_rankTextLower != null)
+            {
+                _rankTextLower.text = cardData.RankDisplayName;
+            }
+
+            if (_suitImage != null)
+            {
+                _suitImage.sprite = cardData.SuitSprite;
+            }
         }
 
         _button.onClick.RemoveAllListeners(); //cant trigger click event twice
@@ -73,6 +104,11 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void Update()
     {
+        // Safety check: If the visual root was destroyed mid-animation, stop running update
+        if (_visualRoot == null)
+        {
+            return;
+        }
            
         float currentSpeed = _isDrawingIntoHand ? _drawMoveSpeed : _moveSpeed; //use a slower speed when a newly drawn card is moving into the hand
 

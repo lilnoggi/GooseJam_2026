@@ -25,6 +25,25 @@ public enum CardRank // every value taht is avaliable in the deck
     King
 }
 
+public enum StatusType
+{
+    None,
+    RottenApple,
+    GamblersFallacy,
+    HollowPromise,
+    DrawTwo,
+    LoadedDice,
+    Intuition,
+}
+
+public enum CardPlayType
+{
+    Normal,   // Regular suits
+    Passive,  // Rotton Apple, Hollow Promise
+    Action,   // Intution, Loaded Dice
+    InstaPlay // Draw 2, Gambler's Fallacy 
+}
+
 public static class CardRankUtility //converts the enum names into the text that will appear on card (FOR NOW AS A PLACEHOLDER)
 {
     public static string GetDisplayName(CardRank rank)

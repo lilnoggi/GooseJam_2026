@@ -16,14 +16,14 @@ public class ClaimMenu : MonoBehaviour
     [SerializeField] private GameObject _instructionBanner;
 
     [Header("System References")]
-    [SerializeField] private TurnManager _turnManager;
+    [SerializeField] private TurnController _turnController;
     [SerializeField] private CardData[] _sampleCards;
 
     private List<CardData> _trueCards;
     private CardSuit _selectedSuit;
 
     // Track what step of the lie the player is currently on
-    private enum ClaimPhase { Inactive, SuitPhase, TargetPhase }
+    private enum ClaimPhase { Inactive, SuitPhase, TargetPhase, ActionTargetPhase }
     private ClaimPhase _currentPhase = ClaimPhase.Inactive;
 
     // Store Enums as arrays to easily cycle through
@@ -31,7 +31,7 @@ public class ClaimMenu : MonoBehaviour
     private int _currentIndex = 0;
 
     // Public getter | 3D spotlight will only turn on during the final target phase
-    public bool IsActive => _currentPhase == ClaimPhase.TargetPhase;
+    public bool IsActive => _currentPhase == ClaimPhase.TargetPhase || _currentPhase == ClaimPhase.ActionTargetPhase;
 
     private void Awake()
     {
@@ -60,6 +60,28 @@ public class ClaimMenu : MonoBehaviour
             _instructionBanner.gameObject.SetActive(true);
 
             UpdateDisplay();
+        }
+    }
+
+    /// <summary>
+    /// Called by PlayerHandManager when an Action card is played
+    /// </summary>
+    public void ShowActionTargetMenu(CardData actionCard)
+    {
+        // Save the single action card
+        _trueCards = new List<CardData> { actionCard };
+        _currentPhase = ClaimPhase.ActionTargetPhase;
+
+        // Hide the Suit Selection box, but keep the instruction banner
+        _claimContainer.SetActive(false);
+
+        if (_instructionBanner != null)
+        {
+            _instructionBanner.gameObject.SetActive(true);
+            if (_instructionText != null)
+            {
+                _instructionText.text = $"SELECT TARGET";
+            }
         }
     }
 
@@ -111,19 +133,26 @@ public class ClaimMenu : MonoBehaviour
     public void SubmitClaimWithTarget(TurnSeat targetEnemy)
     {
         // Check to ensure player canno tclick an enemy early
-        if (_currentPhase != ClaimPhase.TargetPhase)
+        if (_currentPhase == ClaimPhase.TargetPhase)
         {
-            return;
+            // Pass the true rank of the very first card selected as a hidden placeholder
+            // so the ClaimData and damage calculations don't break
+            CardRank placeholderRank = _trueCards.Count > 0 ? _trueCards[0].Rank : CardRank.Two;
+
+            // Build the final claim and send it to the turnmanager
+            ClaimData newClaim = new ClaimData(_trueCards, _selectedSuit, placeholderRank, targetEnemy);
+
+            _turnController.ProcessPlayerClaim(newClaim);
         }
-
-        // Pass the true rank of the very first card selected as a hidden placeholder
-        // so the ClaimData and damage calculations don't break
-        CardRank placeholderRank = _trueCards.Count > 0 ? _trueCards[0].Rank : CardRank.Two;
-
-        // Build the final claim and send it to the turnmanager
-        ClaimData newClaim = new ClaimData(_trueCards, _selectedSuit, placeholderRank, targetEnemy);
-
-        _turnManager.ProcessPlayerClaim(newClaim);
+        else if (_currentPhase == ClaimPhase.ActionTargetPhase)
+        {
+            // Tell the TurnManager to cast the spell at the targeted enemy
+            _turnController.PlayActionCard(_trueCards[0], targetEnemy);
+        }
+        else
+        {
+            return; // Safety net
+        }
 
         // Hide the menu and reset for the next turn
         _currentPhase = ClaimPhase.Inactive;
