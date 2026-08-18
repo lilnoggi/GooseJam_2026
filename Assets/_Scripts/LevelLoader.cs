@@ -7,6 +7,21 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class LevelLoader : MonoBehaviour
 {
+    public static LevelLoader Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Set instance to this
+        Instance = this;
+
+        DontDestroyOnLoad(gameObject);
+    }
     /// <summary>
     /// Loads a new unity scene by its name
     /// Target scene must be included in build files
