@@ -20,5 +20,5 @@ MonoBehaviour:
   _statusSprite: {fileID: 21300000, guid: 2c1029d57ea251e4c98cc4603c397fdb, type: 3}
   _playType: 3
   _statusName: Draw 2
-  _statusDescription: Instantly drains 5 HP, but draw 2 extra cards
+  _statusDescription: Lose 5 HP. Discard this card and Draw 2.
   _effectLogic: {fileID: 11400000, guid: c73ce0b2d1491ae429b6f6a8960f3c6a, type: 2}
