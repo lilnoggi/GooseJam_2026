@@ -13,6 +13,7 @@ public class CardVisuals : MonoBehaviour
     [SerializeField] private Image _suitImage;
 
     [Header("Status References")]
+    [SerializeField] private Image _statusImage;
     [SerializeField] private TMP_Text _statusText;
 
     /// <summary>
@@ -42,6 +43,13 @@ public class CardVisuals : MonoBehaviour
             if (_suitImage != null)
             {
                 _suitImage.gameObject.SetActive(false);
+            }
+
+            // Show status image
+            if (_statusImage != null)
+            {
+                _statusImage.gameObject.SetActive(true);
+                _statusImage.sprite = cardData.StatusSprite;
             }
 
             // Show the status text
@@ -77,9 +85,10 @@ public class CardVisuals : MonoBehaviour
             }
 
             // Hide status text
-            if (_statusText != null)
+            if (_statusText != null && _statusImage != null)
             {
                 _statusText.gameObject.SetActive(false);
+                _statusImage.gameObject.SetActive(false);
             }
         }
     }
