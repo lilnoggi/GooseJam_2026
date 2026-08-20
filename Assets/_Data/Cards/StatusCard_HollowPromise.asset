@@ -17,6 +17,7 @@ MonoBehaviour:
   _rank: 0
   _isStatusCard: 1
   _statusType: 3
+  _statusSprite: {fileID: 21300000, guid: 9d6eebb9b3093244ba8cfc20cfcc6edc, type: 3}
   _playType: 1
   _statusName: Hollow Promise
   _statusDescription: Absorbs alldamage if you are caught in a lie. If held for 3

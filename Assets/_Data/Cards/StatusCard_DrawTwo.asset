@@ -17,6 +17,7 @@ MonoBehaviour:
   _rank: 0
   _isStatusCard: 1
   _statusType: 4
+  _statusSprite: {fileID: 21300000, guid: 2c1029d57ea251e4c98cc4603c397fdb, type: 3}
   _playType: 3
   _statusName: Draw 2
   _statusDescription: Instantly drains 5 HP, but draw 2 extra cards

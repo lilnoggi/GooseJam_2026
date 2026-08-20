@@ -19,6 +19,7 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     [SerializeField] private Image _suitImage;
 
     [Header("Status Card Visuals")]
+    [SerializeField] private Image _statusImage;
     [SerializeField] private TMP_Text _statusDescriptionText;
 
     [SerializeField] private float _hoverHight =25f; //height when hovered
@@ -57,6 +58,13 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 _rankTextUpper.gameObject.SetActive(false);
             }
 
+            // Turn on status card image
+            if (_statusImage != null)
+            {
+                _statusImage.gameObject.SetActive(true);
+                _statusImage.sprite = cardData.StatusSprite;
+            }
+
             // Show description text 
             if (_statusDescriptionText != null)
             {
@@ -69,9 +77,10 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         else
         {
             // It is a normal card
-            if (_statusDescriptionText != null)
+            if (_statusDescriptionText != null && _statusImage != null)
             {
                 _statusDescriptionText.gameObject.SetActive(false);
+                _statusImage.gameObject.SetActive(false);
             }
             // Apply Data
             if (_rankTextUpper != null)

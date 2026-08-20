@@ -17,6 +17,7 @@ MonoBehaviour:
   _rank: 0
   _isStatusCard: 1
   _statusType: 6
+  _statusSprite: {fileID: 21300000, guid: a4294e5e13c7d364795f09166920c978, type: 3}
   _playType: 2
   _statusName: Intuition
   _statusDescription: Allows the user to look at a target's hand.

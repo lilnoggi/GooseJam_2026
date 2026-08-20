@@ -17,6 +17,7 @@ MonoBehaviour:
   _rank: 0
   _isStatusCard: 1
   _statusType: 1
+  _statusSprite: {fileID: 21300000, guid: c933d8e79c982ec44ad130a21b74e053, type: 3}
   _playType: 1
   _statusName: Rotten Apple
   _statusDescription: At the start of your turn, take 2 damage. If held for 3 full
