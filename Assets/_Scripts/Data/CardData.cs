@@ -13,6 +13,7 @@ public class CardData : ScriptableObject
     [Header("Status Cards")]
     [SerializeField] private bool _isStatusCard; // Check this if the card is a status card
     [SerializeField] private StatusType _statusType;
+    [SerializeField] private Sprite _statusSprite;
     [SerializeField] private CardPlayType _playType;
     [SerializeField] private string _statusName;
     [TextArea(3, 5)]
@@ -26,6 +27,7 @@ public class CardData : ScriptableObject
     public CardRank Rank => _rank;
     public bool IsStatusCard => _isStatusCard;
     public StatusType StatusType => _statusType;
+    public Sprite StatusSprite => _statusSprite;
     public CardPlayType PlayType => _playType;
     public string StatusName => _statusName;
     public string StatusDescription => _statusDescription;
