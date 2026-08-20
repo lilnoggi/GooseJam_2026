@@ -20,6 +20,5 @@ MonoBehaviour:
   _statusSprite: {fileID: 21300000, guid: 899e9856460813043a790c2ce8518d9c, type: 3}
   _playType: 3
   _statusName: Gambler's Fallacy
-  _statusDescription: Instantly discards the current hand and draws 5 new cards,
-    but reduces maximum health by 10.
+  _statusDescription: Discard all cards, redraw 5 and permenantly lose 10 HP.
   _effectLogic: {fileID: 11400000, guid: a61b4725ca1b52d449a762866d5d1ca3, type: 2}
