@@ -20,6 +20,5 @@ MonoBehaviour:
   _statusSprite: {fileID: 21300000, guid: 76693d4a2a308ac4ca6caf8cd1019076, type: 3}
   _playType: 2
   _statusName: Loaded Dice
-  _statusDescription: Instantly maxes out the targeted enemy's paranoia meter to
-    100%.
+  _statusDescription: Max out an enemy's paranoia.
   _effectLogic: {fileID: 11400000, guid: bdb488687c7153f4482d1a75f51c0f59, type: 2}

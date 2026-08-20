@@ -20,6 +20,6 @@ MonoBehaviour:
   _statusSprite: {fileID: 21300000, guid: 9d6eebb9b3093244ba8cfc20cfcc6edc, type: 3}
   _playType: 1
   _statusName: Hollow Promise
-  _statusDescription: Absorbs alldamage if you are caught in a lie. If held for 3
-    full turns without being caught, take 15 damage.
+  _statusDescription: Absorbs all damage if you are caught in a lie. If held for
+    3 full turns without being caught, take 15 damage.
   _effectLogic: {fileID: 11400000, guid: db24b4965e5b84f4984a1992df9eae07, type: 2}

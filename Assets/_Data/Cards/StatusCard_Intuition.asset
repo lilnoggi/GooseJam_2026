@@ -20,5 +20,5 @@ MonoBehaviour:
   _statusSprite: {fileID: 21300000, guid: a4294e5e13c7d364795f09166920c978, type: 3}
   _playType: 2
   _statusName: Intuition
-  _statusDescription: Allows the user to look at a target's hand.
+  _statusDescription: Look at an enemy's hand for [x] seconds.
   _effectLogic: {fileID: 11400000, guid: 64359338a050ee14c96055565456bb5e, type: 2}
