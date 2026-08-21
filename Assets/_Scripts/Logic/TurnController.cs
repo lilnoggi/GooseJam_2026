@@ -13,6 +13,9 @@ public class TurnController : MonoBehaviour
     [SerializeField] private SessionData _sessionData;
     [SerializeField] private PlayerDecisionMenu _playerDecisionMenu;
 
+    [Header("Enemy Drawing")]
+    [SerializeField] private EnemyDrawAnimator _enemyDrawAnimator;
+
     [Header("Deck Managers")]
     [SerializeField] private DeckManager playerDeck;
     [SerializeField] private DeckManager leftEnemyDeck;
@@ -34,6 +37,12 @@ public class TurnController : MonoBehaviour
     [SerializeField] private float _turnEndDelay = 1.0f;
     [Tooltip("How long to pause and let the player observe an Action Card's effect.")]
     [SerializeField] private float _actionCardObserveTime = 2.0f;
+
+    [Header("Round Reshuffle")]
+    [SerializeField] private DiscardShuffleAnimator _discardShuffleAnimator;
+
+    [Header("Player Drawing")]
+    [SerializeField] private PlayerHandManager _playerHandManager;
 
     // State trackers
     private TurnSeat _currentTurn;
@@ -57,8 +66,7 @@ public class TurnController : MonoBehaviour
             return;
         }
 
-        InitDecks();
-        StartTurn(TurnSeat.Player); 
+        StartCoroutine(StartGameRoutine()); 
     }
 
     /// <summary>
@@ -121,11 +129,20 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private void InitDecks()
     {
-        DeckManager[] decks = { playerDeck, leftEnemyDeck, centreEnemyDeck, rightEnemyDeck };
-        foreach (var deck in decks)
+        // Create all four logical decks
+        playerDeck.InitialiseDeck();
+        leftEnemyDeck.InitialiseDeck();
+        centreEnemyDeck.InitialiseDeck();
+        rightEnemyDeck.InitialiseDeck();
+
+        // The player keeps their existing starting-hand system
+        playerDeck.DrawToFullHand();
+
+        // Start the physical DrawDeck looking full
+        // before we animate the enemies taking their cards
+        if (DrawDeckVisual.Instance != null)
         {
-            deck.InitialiseDeck();
-            deck.DrawToFullHand(); 
+            DrawDeckVisual.Instance.RefillVisualDeck();
         }
     }
 
@@ -147,7 +164,13 @@ public class TurnController : MonoBehaviour
         }
 
         DeckManager activeDeck = GetDeckForTurn(turn);
-        activeDeck.DrawToFullHand();
+
+        // The player's existing draw system handles their cards.
+        // Enemy cards are dealt visually inside EnemyTurnRoutine.
+        if (turn == TurnSeat.Player)
+        {
+            activeDeck.DrawToFullHand();
+        }
 
         OnTurnChanged?.Invoke(turn);
 
@@ -170,10 +193,33 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private IEnumerator EnemyTurnRoutine(TurnSeat enemyTurn)
     {
-        yield return new WaitForSeconds(_turnStartDelay);
-        if (_currentTurn != enemyTurn) yield break; // Safety check in case turn shifted unexpectedly
-
         DeckManager enemyDeck = GetDeckForTurn(enemyTurn);
+
+        // amimate any cards this enemy needs before they take their turn
+        if (_enemyDrawAnimator != null)
+        {
+            yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand(enemyTurn, enemyDeck));
+        }
+        else
+        {
+            // saftey in case animator has not been assigned
+            enemyDeck.DrawToFullHand();
+        }
+
+        //make sure the turn didnt change during draw animation
+        if (_currentTurn != enemyTurn)
+        {
+            yield break;
+        }
+
+        // Small pause before enemy begins thinking
+        yield return new WaitForSeconds(_turnStartDelay);
+
+        if (_currentTurn != enemyTurn)
+        {
+            yield break;
+        }
+
         CharacterStats enemyStats = GetStatsForTurn(enemyTurn);
         EnemyAI activeEnemyAI = enemyStats.GetComponent<EnemyAI>();
 
@@ -252,13 +298,39 @@ public class TurnController : MonoBehaviour
             TurnSeat nextSeat = (TurnSeat)nextTurnIndex;
             CharacterStats nextStats = GetStatsForTurn(nextSeat);
 
-            // Only grant a turn if the character exists and is still alive
             if (nextStats != null && !nextStats.IsEliminated)
             {
+                // when going back to the player a full round has finished
+                if (nextSeat == TurnSeat.Player && _currentTurn != TurnSeat.Player)
+                {
+                    StartCoroutine(EndRoundRoutine(nextSeat));
+                    return;
+                }
+
                 StartTurn(nextSeat);
                 return;
             }
         }
+    }
+
+    private IEnumerator EndRoundRoutine(TurnSeat nextSeat)
+    {
+        Debug.Log("ROUND COMPLETE - Starting reshuffle");
+
+        //play the visual reshuffle
+        if (_discardShuffleAnimator != null)
+        {
+            yield return StartCoroutine( _discardShuffleAnimator.PlayReshuffleAnimation());
+        }
+
+        //reshuffle each characters logical deck
+        playerDeck.ShuffleDiscardBackIntoDrawPile();
+        leftEnemyDeck.ShuffleDiscardBackIntoDrawPile();
+        centreEnemyDeck.ShuffleDiscardBackIntoDrawPile();
+        rightEnemyDeck.ShuffleDiscardBackIntoDrawPile();
+
+        //start the players turn after everything is finished
+        StartTurn(nextSeat);
     }
 
     // --------------------------------------------------------
@@ -272,10 +344,17 @@ public class TurnController : MonoBehaviour
     {
         switch (turn)
         {
-            case TurnSeat.LeftEnemy:   return leftEnemyDeck;
-            case TurnSeat.CentreEnemy: return centreEnemyDeck;
-            case TurnSeat.RightEnemy:  return rightEnemyDeck;
-            default:                   return playerDeck;
+            case TurnSeat.LeftEnemy: 
+            return leftEnemyDeck;
+
+            case TurnSeat.CentreEnemy:
+            return centreEnemyDeck;
+
+            case TurnSeat.RightEnemy:
+            return rightEnemyDeck;
+
+            default:
+            return playerDeck;
         }
     }
 
@@ -303,5 +382,44 @@ public class TurnController : MonoBehaviour
         if (stats == _centerEnemyStats) return centreEnemyDeck;
         if (stats == _rightEnemyStats) return rightEnemyDeck;
         return playerDeck;
+    }
+
+    private IEnumerator StartGameRoutine()
+    {
+        InitDecks();
+
+        // give players draw animation a frame to begin
+        yield return null;
+
+        //wait until all of players starting cards have finished being dealt
+        if (_playerHandManager != null)
+        {
+            yield return new WaitUntil(() => !_playerHandManager.IsDrawingCards);
+        }
+
+        // small pause before dealing to first enemy
+        yield return new WaitUntil(() => !_playerHandManager.IsDrawingCards);
+
+        if (_enemyDrawAnimator != null)
+        {
+            // left enemy starting hand
+            yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand (TurnSeat.LeftEnemy, leftEnemyDeck));
+
+            //center enemy starting hand
+            yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand( TurnSeat.CentreEnemy, centreEnemyDeck));
+
+            // right enemy starting hand
+            yield return StartCoroutine( _enemyDrawAnimator.DrawToFullHand(TurnSeat.RightEnemy, rightEnemyDeck));
+        }
+        else
+        {
+            //saftey in case the animator wasn't assigned
+            leftEnemyDeck.DrawToFullHand();
+            centreEnemyDeck.DrawToFullHand();
+            rightEnemyDeck.DrawToFullHand();
+        }
+
+        //gameplay starts after everybody has their cards
+        StartTurn(TurnSeat.Player);
     }
 }

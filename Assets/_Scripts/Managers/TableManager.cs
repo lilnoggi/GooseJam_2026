@@ -18,10 +18,20 @@ public class TableManager : MonoBehaviour
     [SerializeField] private Transform _rightEnemyPlayAnchor;
 
     [Header("Player Draw Animation")]
-    [SerializeField] private Transform _drawPileAnchor;
+    [SerializeField] private Transform _drawDeckSpawnPoint;
     [SerializeField] private Transform _playerDrawArrivalAnchor;
     [SerializeField] private float _drawMoveDuration = 0.45f;
     [SerializeField] private float _drawArcHeight = 0.25f;
+
+    [Header("Reshuffle Animation")]
+    [SerializeField] private float _reshuffleMoveDuration = 0.2f;
+    [SerializeField] private float _reshuffleDelayBetweenCards = 0.04f;
+    [SerializeField] private float _reshuffleArcHeight = 0.12f;
+
+    [Header("Shared Discard Pile")]
+    [SerializeField] private Transform _sharedDiscardPoint;
+    [SerializeField] private float _discardMoveDuration = 0.35f;
+    [SerializeField] private float _discardStackHeight = 0.003f;
 
     [SerializeField] private float _cardPlayDuration = 0.5f;
     [SerializeField] private float _cardArcHeight = 0.3f;
@@ -32,7 +42,14 @@ public class TableManager : MonoBehaviour
     [SerializeField] private float _cardSpacing = 1.2f;
     [SerializeField] private float _flipDuration = 0.5f;
 
+    public Transform DrawDeckSpawnPoint => _drawDeckSpawnPoint;
     private List<GameObject> _spawnedTableCards = new List<GameObject>();
+
+    private List<GameObject> _sharedDiscardCards = new List<GameObject>();
+
+    public IReadOnlyList<GameObject> SharedDiscardCards => _sharedDiscardCards;
+
+    public Transform SharedDiscardPoint => _sharedDiscardPoint;
 
     private void Awake()
     {
@@ -236,12 +253,12 @@ public class TableManager : MonoBehaviour
         }
 
         // Let the player look at the flipped cards for a second before the combat logic executes
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.3f);
     }
 
     public IEnumerator AnimateCardDrawToPlayer()
     {
-        if (_drawPileAnchor == null || _playerDrawArrivalAnchor == null) //make sure both points are assigned
+        if (_drawDeckSpawnPoint == null || _playerDrawArrivalAnchor == null) //make sure both points are assigned
         {
             yield break;
         }
@@ -249,12 +266,11 @@ public class TableManager : MonoBehaviour
         GameObject drawCard = Instantiate(_tableCardPrefab); //create card for transition
 
         //where the card starts and ends
-        Vector3 startPosition = _drawPileAnchor.position;
+        Vector3 startPosition = _drawDeckSpawnPoint.position;
         Vector3 endPosition = _playerDrawArrivalAnchor.position;
 
-        //copy rotation sothat they are upsidedown
-        Quaternion startRotation = _drawPileAnchor.rotation;
-        Quaternion endRotation = _playerDrawArrivalAnchor.rotation;
+        //flip rotation sothat they are upsidedown
+       Quaternion startRotation = _drawDeckSpawnPoint.rotation * Quaternion.Euler(0f, 0f, 180f);
 
         //put card at draw pile
         drawCard.transform.position = startPosition;
@@ -280,12 +296,80 @@ public class TableManager : MonoBehaviour
 
             drawCard.transform.position = position;
 
-            drawCard.transform.rotation =Quaternion.Slerp(startRotation,endRotation,smoothPercent); //rotate card to player side
+            drawCard.transform.rotation = startRotation; //keep cards face down
 
             yield return null;
         }
 
         Destroy(drawCard); //destroys 3D card
+    }
+
+    public IEnumerator AnimateDiscardPileBackToDrawDeck()
+    {
+        if (_drawDeckSpawnPoint == null)
+        {
+            Debug.LogWarning("Draw Deck Spawn Point has not been assigned!");
+            ClearSharedDiscardPile();
+            yield break;
+        }
+
+        //nothing to animate
+        if (_sharedDiscardCards.Count == 0)
+        {
+            yield break;
+        }
+
+        //take cards from top of discard pile
+        for (int i = _sharedDiscardCards.Count - 1; i >= 0; i--)
+        {
+            GameObject card = _sharedDiscardCards[i];
+
+            if (card == null)
+            {
+                continue;
+            }
+
+            Vector3 startPosition = card.transform.position;
+            Quaternion startRotation = card.transform.rotation;
+
+            Vector3 endPosition = _drawDeckSpawnPoint.position;
+
+            //face down when going back into the deck
+            Quaternion endRotation = _drawDeckSpawnPoint.rotation * Quaternion.Euler(0f, 0f, 180f);
+
+            float elapsed = 0f;
+
+            while (elapsed < _reshuffleMoveDuration)
+            {
+                elapsed += Time.deltaTime;
+
+                float percent = Mathf.Clamp01(elapsed / _reshuffleMoveDuration);
+                float smoothPercent = Mathf.SmoothStep(0f, 1f, percent);
+
+                Vector3 position = Vector3.Lerp( startPosition, endPosition, smoothPercent);
+
+                //give the reshuffle a little arc
+                float arc = Mathf.Sin(percent * Mathf.PI) * _reshuffleArcHeight;
+                position += Vector3.up * arc;
+
+                card.transform.position = position;
+
+                card.transform.rotation = Quaternion.Slerp(startRotation, endRotation, smoothPercent);
+
+                yield return null;
+            }
+
+            //snap into place
+            card.transform.position = endPosition;
+            card.transform.rotation = endRotation;
+
+            //destroy the temporary visual card once it reaches the deck
+            Destroy(card);
+
+            yield return new WaitForSeconds(_reshuffleDelayBetweenCards);
+        }
+
+        _sharedDiscardCards.Clear();
     }
 
     /// <summary>
@@ -308,5 +392,92 @@ public class TableManager : MonoBehaviour
         {
             _revealSpotlight.enabled = false;
         }
+    }
+
+    public IEnumerator MoveTableCardsToDiscardPile()
+    {
+        //make sure shared discard point is assignrd
+        if (_sharedDiscardPoint == null)
+        {
+            Debug.LogWarning("Shared Discard Point has not been assigned!");
+            ClearTableCards();
+            yield break;
+        }
+
+        //move cards played on the table into the shared discard pile
+        for (int i = 0; i < _spawnedTableCards.Count; i++)
+        {
+            GameObject card = _spawnedTableCards[i];
+
+            if (card == null)
+            {
+                continue;
+            }
+
+            Vector3 startPosition = card.transform.position;
+            Quaternion startRotation = card.transform.rotation;
+
+            // put new cards above the previous discarded card
+            int discardIndex = _sharedDiscardCards.Count;
+
+            Vector3 endPosition = _sharedDiscardPoint.position + (_sharedDiscardPoint.up * (_discardStackHeight * discardIndex));
+
+            Quaternion endRotation = _sharedDiscardPoint.rotation;
+
+            float elapsed = 0f;
+
+            while (elapsed < _discardMoveDuration)
+            {
+                elapsed += Time.deltaTime;
+
+                float percent = Mathf.Clamp01(elapsed / _discardMoveDuration);
+                float smoothPercent = Mathf.SmoothStep(0f, 1f, percent);
+
+                // move towards the discard pile
+                card.transform.position = Vector3.Lerp( startPosition, endPosition, smoothPercent);
+
+                //rotate towards the discard pile rotation
+                card.transform.rotation = Quaternion.Slerp( startRotation, endRotation, smoothPercent );
+
+                yield return null;
+            }
+
+            //make sure the card ends in right pos and rot
+            card.transform.position = endPosition;
+            card.transform.rotation = endRotation;
+
+            //make it a child of the discard point
+            card.transform.SetParent(_sharedDiscardPoint, true);
+
+            // ass card to shared discard pile
+            _sharedDiscardCards.Add(card);
+        }
+
+        // clear cards from active play area
+        _spawnedTableCards.Clear();
+
+        // turn off the reveal spotlight
+        if (_revealSpotlight != null)
+        {
+            _revealSpotlight.enabled = false;
+        }
+    }
+
+    public void ClearSharedDiscardPile()
+    {
+        foreach (GameObject card in _sharedDiscardCards)
+        {
+            if (card != null)
+            {
+                Destroy(card);
+            }
+        }
+
+        _sharedDiscardCards.Clear();
+    }
+
+    public void ClearSharedDiscardReferences()
+    {
+        _sharedDiscardCards.Clear();
     }
 }

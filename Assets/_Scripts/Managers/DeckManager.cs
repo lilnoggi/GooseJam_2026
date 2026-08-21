@@ -65,13 +65,17 @@ public class DeckManager : MonoBehaviour
                 break;
             }
 
-            int cardIndex = _drawPile.Count -1; //take the last card from the shuffeled list
+            int cardIndex = _drawPile.Count - 1;
+            CardData card = _drawPile[cardIndex];
 
-            CardData card = _drawPile [cardIndex];
+            _drawPile.RemoveAt(cardIndex);
+            _hand.Add(card);
 
-            _drawPile.RemoveAt(cardIndex); //remove it from the deck
-
-            _hand.Add(card); //add it to the hand
+            //remove one card from the visual draw pile
+            if (DrawDeckVisual.Instance != null)
+            {
+                DrawDeckVisual.Instance.RemoveVisualCard();
+            }
 
             handChanged = true;
         }
@@ -113,6 +117,12 @@ public class DeckManager : MonoBehaviour
             // Move it from the deck to the hand
             _drawPile.RemoveAt(cardIndex);
             _hand.Add(card);
+
+            // remove a card from the visual draw pile
+            if (DrawDeckVisual.Instance != null)
+            {
+                DrawDeckVisual.Instance.RemoveVisualCard();
+            }
 
             handChanged = true;
         }
@@ -177,15 +187,29 @@ public class DeckManager : MonoBehaviour
 
     private void ReshuffleDiscardPile()
     {
+        // yses same reshuffle system if the deck runs out mid turn (this will never happen as the game is now, but just for saftey)
+        ShuffleDiscardBackIntoDrawPile();
+    }
+
+    public void ShuffleDiscardBackIntoDrawPile()
+    {
         if (_discardPile.Count == 0)
         {
             return;
         }
 
+        // move discarded cards into draw pile
         _drawPile.AddRange(_discardPile);
+
+        //empty the discard pile
         _discardPile.Clear();
-        Shuffle(_discardPile);
+
+        //shuffle the draw pile
+        Shuffle(_drawPile);
+
+        Debug.Log($"{name} shuffled its discard pile back into its draw pile.");
     }
+
 
 
 
