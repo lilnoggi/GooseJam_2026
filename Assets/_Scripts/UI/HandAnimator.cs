@@ -20,6 +20,8 @@ public class HandAnimator : MonoBehaviour
     [Header("System References")]
     [SerializeField] private RectTransform _handContainer;
 
+    public bool IsDrawingCards { get; private set; }
+
     // ----------------------------------------------------------------------------------------------- 
 
     /// <summary>
@@ -30,6 +32,7 @@ public class HandAnimator : MonoBehaviour
     /// <param name="handManager">Reference back to the manager to trigger actual card logic.</param>
     public IEnumerator AnimateDrawnCardsRoutine(List<PlayerCardView> drawnCards, PlayerHandManager handManager)
     {
+        IsDrawingCards = true;
         // Force the hand layout to finish arranging the invisible cards before we slide them in
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(_handContainer);
@@ -72,6 +75,8 @@ public class HandAnimator : MonoBehaviour
                     // Tell the manager to discard it and trigger the effect
                     handManager.ExecuteInstaPlay(cardView.CardData);
 
+                    IsDrawingCards = false;
+
                     // Stop this specific coroutine because ExecuteInstaPlay forces a brand new sequence loop
                     yield break;
                 }
@@ -80,6 +85,8 @@ public class HandAnimator : MonoBehaviour
 
         // Tell the Hand Manager that the animation is completely finished
         handManager.CompleteDrawingSequence();
+        
+        IsDrawingCards = false;
     }
 
     /// <summary>

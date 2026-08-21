@@ -17,7 +17,7 @@ public class StandoffResolver : MonoBehaviour
     [Tooltip("How long to wait while the targeted enemy reacts to being claimed against.")]
     [SerializeField] private float _claimReactionTime = 1.5f;
     [Tooltip("How long to let the damage numbers sit on screen before returning to the player.")]
-    [SerializeField] private float _damageSinkTime = 2.0f;
+    [SerializeField] private float _damageSinkTime = 0.5f;
     [Tooltip("How long to give the player to read the SAVED BY PROMISE banner.")]
     [SerializeField] private float _hollowPromiseReadTime = 1.0f;
     [Tooltip("How long the Hollow Promise card glows in the hand.")]
@@ -153,8 +153,15 @@ public class StandoffResolver : MonoBehaviour
 
         // Give the UI time to show damage numbers before resetting the camera
         yield return new WaitForSeconds(_damageSinkTime);
-        TableManager.Instance.ClearTableCards();
+
+        yield return new WaitForSeconds(_damageSinkTime);
+
         yield return CameraController.Instance.SwoopToDefault();
+
+        //move the finished cards into the shared discard pile
+        yield return StartCoroutine( TableManager.Instance.MoveTableCardsToDiscardPile());
+
+        
     }
 
     /// <summary>
@@ -195,7 +202,14 @@ public class StandoffResolver : MonoBehaviour
         }
 
         yield return new WaitForSeconds(_damageSinkTime);
-        TableManager.Instance.ClearTableCards();
+
+        yield return new WaitForSeconds(_damageSinkTime);
+
         yield return CameraController.Instance.SwoopToDefault();
+
+        //move the finished cards into the shared discard pile
+        yield return StartCoroutine( TableManager.Instance.MoveTableCardsToDiscardPile());
+
+        
     }
 }

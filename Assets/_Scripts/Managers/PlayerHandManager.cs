@@ -46,6 +46,8 @@ public class PlayerHandManager : MonoBehaviour
     /// </summary>
     public IReadOnlyList<PlayerCardView> CardViews => _cardViews;
 
+    public bool IsDrawingCards => _isDrawingCards;
+
     // ----------------------------------------------------------------------------------------------- 
 
     private void Start()
