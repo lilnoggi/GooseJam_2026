@@ -44,6 +44,8 @@ public class StoryIntroManager : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.Instance.PlayBGM(BGMType.MainTheme);
+
         // Start the sequence with the first line
         PlaySlide(_currentSlideIndex);
     }

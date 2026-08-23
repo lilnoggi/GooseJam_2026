@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7146166266881153559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3011718344898624070}
+  - component: {fileID: 4529024094458999429}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3011718344898624070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7146166266881153559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4529024094458999429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7146166266881153559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 074796802abb146489b913f38bf8746e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  _sfxSource: {fileID: 0}
+  _bgmSource: {fileID: 0}
+  _sfxLibrary:
+  - SoundType: 0
+    AudioFile: {fileID: 8300000, guid: 940fe088bbf1c1843949bf0effa83af0, type: 3}
+  - SoundType: 2
+    AudioFile: {fileID: 8300000, guid: 403e7160046addb4297748248a1b7f2d, type: 3}
+  - SoundType: 1
+    AudioFile: {fileID: 8300000, guid: b8d5b81001ed4714abe3beec11afcb05, type: 3}
+  - SoundType: 3
+    AudioFile: {fileID: 8300000, guid: 09ba2cfb3c62c5c47b2fddad946d25fe, type: 3}
+  - SoundType: 3
+    AudioFile: {fileID: 8300000, guid: d56fa2d3262f7544fac8d9ec9616a48b, type: 3}
+  - SoundType: 6
+    AudioFile: {fileID: 8300000, guid: c6a3367dd61bc8b4a9a9f65033b2d0a6, type: 3}
+  - SoundType: 7
+    AudioFile: {fileID: 8300000, guid: b93f58c9edec0df41ae39e73a49f183f, type: 3}
+  - SoundType: 8
+    AudioFile: {fileID: 8300000, guid: bd2273b0285b0dc4aaea21218617703a, type: 3}
+  - SoundType: 8
+    AudioFile: {fileID: 8300000, guid: 77f1d5c3f981edc4599354a115f2b810, type: 3}
+  - SoundType: 9
+    AudioFile: {fileID: 8300000, guid: cedc203d4c9a6ef438fabf52c4b5f67b, type: 3}
+  - SoundType: 4
+    AudioFile: {fileID: 8300000, guid: ae8558280b7d00f438ea79f096bc61ca, type: 3}
+  - SoundType: 5
+    AudioFile: {fileID: 8300000, guid: f2868bdc88e285341b6a3e98d5cdc764, type: 3}
+  - SoundType: 10
+    AudioFile: {fileID: 8300000, guid: 0039d0231e043344b8077ef7b51b61fa, type: 3}
+  - SoundType: 11
+    AudioFile: {fileID: 8300000, guid: 2c9c019cbfa118c488975cd4f356611c, type: 3}
+  - SoundType: 12
+    AudioFile: {fileID: 8300000, guid: 7a59edc270a89ab499f6f2f75c6f7ae2, type: 3}
+  - SoundType: 13
+    AudioFile: {fileID: 8300000, guid: ba8ddb84a9a8dd949b438d72c45a35d3, type: 3}
+  - SoundType: 14
+    AudioFile: {fileID: 8300000, guid: 556eaa04357205441ace9dfeb28e7bb1, type: 3}
+  - SoundType: 15
+    AudioFile: {fileID: 8300000, guid: 5831ec1d23fe0c946b82a6c197eef069, type: 3}
+  - SoundType: 16
+    AudioFile: {fileID: 8300000, guid: 53910c53e8d5dd645b4cb1bb76508bd2, type: 3}
+  _bgmLibrary:
+  - TrackType: 0
+    AudioFile: {fileID: 8300000, guid: b38d30509673b7244948ee6586ff1d57, type: 3}
+  - TrackType: 1
+    AudioFile: {fileID: 8300000, guid: 68c6cd7033d622243a0ebedb1ea71fc0, type: 3}

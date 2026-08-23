@@ -102,4 +102,27 @@ public class AudioManager : MonoBehaviour
             }       
         }
     }
+
+    /// <summary>
+    /// Plays background music by name and loops it.
+    /// </summary>
+    public void PlayBGM(BGMType bgmToPlay)
+    {
+        foreach (BGMMapping mapping in _bgmLibrary)
+        {
+            if (mapping.TrackType == bgmToPlay)
+            {
+                // Check if already playing
+                if (_bgmSource.clip == mapping.AudioFile && _bgmSource.isPlaying)
+                {
+                    return;
+                }
+
+                _bgmSource.clip = mapping.AudioFile;
+                _bgmSource.loop = true;
+                _bgmSource.Play();
+                return;
+            }
+        }
+    }
 }

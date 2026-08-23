@@ -66,6 +66,8 @@ public class TurnController : MonoBehaviour
             return;
         }
 
+        AudioManager.Instance.PlayBGM(BGMType.PlayingTheme);
+
         StartCoroutine(StartGameRoutine()); 
     }
 
