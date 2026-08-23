@@ -11,6 +11,8 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.Instance.PlayBGM(BGMType.MainTheme);
+        
         // As soon as the map scene loads, update the visuals based on the player's progress
         RefreshMapState();
     }

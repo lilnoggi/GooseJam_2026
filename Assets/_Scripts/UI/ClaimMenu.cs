@@ -91,6 +91,7 @@ public class ClaimMenu : MonoBehaviour
         if (_currentPhase == ClaimPhase.SuitPhase)
         {
             _currentIndex = (_currentIndex + 1) % _suits.Length;
+            AudioManager.Instance.PlaySFX(SFXType.Hover);
             UpdateDisplay();
         }
     }
@@ -106,6 +107,7 @@ public class ClaimMenu : MonoBehaviour
                _currentIndex = _suits.Length - 1; 
             }
 
+            AudioManager.Instance.PlaySFX(SFXType.Hover);
             UpdateDisplay();
         }
     }
@@ -117,6 +119,8 @@ public class ClaimMenu : MonoBehaviour
         {
             // Save the suit and move to target phase
             _selectedSuit = (CardSuit)_suits.GetValue(_currentIndex);
+
+            AudioManager.Instance.PlaySFX(SFXType.Select);
 
             // Hide the blank card UI and activate Target Phase
             _claimContainer.SetActive(false);

@@ -44,6 +44,8 @@ public class StoryIntroManager : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.Instance.PlayBGM(BGMType.MainTheme);
+
         // Start the sequence with the first line
         PlaySlide(_currentSlideIndex);
     }
@@ -121,6 +123,11 @@ public class StoryIntroManager : MonoBehaviour
         foreach (char letter in line.ToCharArray())
         {
             _dialogueText.text += letter;
+
+            if (letter != ' ')
+            {
+                AudioManager.Instance.PlaySFX(SFXType.DialogueBlip);
+            }
             yield return new WaitForSeconds(_typingSpeed);
         }
 
@@ -134,6 +141,8 @@ public class StoryIntroManager : MonoBehaviour
     /// </summary>
     public void OnActionButtonClicked()
     {
+        AudioManager.Instance.PlaySFX(SFXType.Select);
+
         _currentSlideIndex++;
 
         // If there are more lines, play the next one

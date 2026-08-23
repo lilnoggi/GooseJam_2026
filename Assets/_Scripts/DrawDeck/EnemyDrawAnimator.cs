@@ -45,6 +45,8 @@ public class EnemyDrawAnimator : MonoBehaviour
 
             float elapsed = 0f;
 
+            AudioManager.Instance.PlaySFX(SFXType.CardDealing);
+
             // float card towards the enemy
             while (elapsed < _moveDuration)
             {

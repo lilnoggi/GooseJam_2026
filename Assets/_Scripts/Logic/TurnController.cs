@@ -66,6 +66,8 @@ public class TurnController : MonoBehaviour
             return;
         }
 
+        AudioManager.Instance.PlayBGM(BGMType.PlayingTheme);
+
         StartCoroutine(StartGameRoutine()); 
     }
 
@@ -386,6 +388,8 @@ public class TurnController : MonoBehaviour
 
     private IEnumerator StartGameRoutine()
     {
+        yield return new WaitForSeconds(0.5f);
+        
         InitDecks();
 
         // give players draw animation a frame to begin

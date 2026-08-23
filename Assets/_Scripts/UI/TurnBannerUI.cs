@@ -42,6 +42,7 @@ public class TurnBannerUI : MonoBehaviour
     {
         if (_turnBannerText != null)
         {
+            AudioManager.Instance.PlaySFX(SFXType.TurnBell);
             _turnBannerText.text = $"{currentTurn}'s Turn!";
 
             // Stop the current fade if a new turn starts before the old text finishes fading

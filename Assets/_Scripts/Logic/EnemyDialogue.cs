@@ -14,7 +14,11 @@ public class EnemyDialogue : MonoBehaviour
     [SerializeField] private GameObject _speechBubbleContainer;
     [SerializeField] private TextMeshProUGUI _dialogueText;
 
+    [Header("Typewriter Settings")]
+    [SerializeField] private float _typeSpeed = 0.03f;
+
     private Coroutine _hideRoutine;
+    private Coroutine _typewriterRoutine;
 
     private void Awake()
     {
@@ -48,16 +52,44 @@ public class EnemyDialogue : MonoBehaviour
 
         // Pick a random line from the combined pool
         string selectedLine = combinedPool[Random.Range(0, combinedPool.Count)];
-
-        _dialogueText.text = selectedLine;
         _speechBubbleContainer.SetActive(true);
 
-        // Reset timer if already speaking
+        // Stop any active typing or hiding routines before starting a new sentence
+        if (_typewriterRoutine != null)
+        {
+            StopCoroutine(_typewriterRoutine);
+        }
+
         if (_hideRoutine != null)
         {
             StopCoroutine(_hideRoutine);
         }
 
+        // Start typewriter effect
+        _typewriterRoutine = StartCoroutine(TypewriterRoutine(selectedLine, duration));
+    }
+
+    private IEnumerator TypewriterRoutine(string line, float duration)
+    {
+        // Clear text box
+        _dialogueText.text = "";
+
+        // Loop through every single letter in the sentence
+        foreach (char letter in line.ToCharArray())
+        {
+            // Add one letter to the screen
+            _dialogueText.text += letter;
+
+            // Only play the sound if the character is not a blank space
+            if (letter != ' ')
+            {
+                AudioManager.Instance.PlaySFX(SFXType.DialogueBlip);
+            }
+
+            yield return new WaitForSeconds(_typeSpeed);
+        }
+
+        // Once the sentence is fully typed out, start the countdown to hide the bubble
         _hideRoutine = StartCoroutine(HideAfterSeconds(duration));
     }
 

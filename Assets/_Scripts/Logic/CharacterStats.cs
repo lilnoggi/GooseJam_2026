@@ -95,6 +95,8 @@ public class CharacterStats : MonoBehaviour
         _currentShield += shieldAmount;
         Debug.Log($"Added {shieldAmount} Bone shield! Current shield: {_currentShield}");
 
+        AudioManager.Instance.PlaySFX(SFXType.ShieldBlock);
+
         // Connect to UI Manager
         UpdateStatusUI(); 
     }
@@ -111,12 +113,15 @@ public class CharacterStats : MonoBehaviour
         if (_dodgeTokens > 0)
         {
             _dodgeTokens--;
+            AudioManager.Instance.PlaySFX(SFXType.WingFlap);
             UpdateStatusUI(); 
             return;
         }
         // If character has shield, let is absorb the damage 
         if (_currentShield > 0)
         {
+            AudioManager.Instance.PlaySFX(SFXType.ShieldBlock);
+
             if (_currentShield >= damageAmount)
             {
                 // Shield fully absorbs the hit
@@ -133,6 +138,8 @@ public class CharacterStats : MonoBehaviour
             // Update UI because shield was broken
                 UpdateStatusUI(); 
         }
+
+        AudioManager.Instance.PlaySFX(SFXType.Blood);
 
         // Any leftover damage hits the health pool
         _currentHealth -= damageAmount;
@@ -163,6 +170,8 @@ public class CharacterStats : MonoBehaviour
         }
         _poisonStacks += stacks;
         Debug.Log($"{name} was afflicted with {stacks} stacks of poison. Total stacks: {_poisonStacks}");
+
+        AudioManager.Instance.PlaySFX(SFXType.Rot);
 
         // Connect to UI Manager
         UpdateStatusUI(); 
@@ -212,6 +221,8 @@ public class CharacterStats : MonoBehaviour
         _dodgeTokens += tokenAmount;
 
         Debug.Log($"{name} gained {tokenAmount} dodge tokens! Total: {_dodgeTokens}");
+
+        AudioManager.Instance.PlaySFX(SFXType.WingFlap);
 
         // Connect to UI Manager
         UpdateStatusUI(); 

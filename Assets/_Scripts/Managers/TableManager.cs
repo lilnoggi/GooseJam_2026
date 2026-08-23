@@ -130,8 +130,9 @@ public class TableManager : MonoBehaviour
             endRotations.Add(endRotation);
         }
 
-        float elapsed = 0f;
+        AudioManager.Instance.PlaySFX(SFXType.CardPlace);
 
+        float elapsed = 0f;
         float totalDuration = _cardPlayDuration + ( _cardStaggerDelay * ( _spawnedTableCards.Count - 1));
 
         while (elapsed < totalDuration)
@@ -215,6 +216,7 @@ public class TableManager : MonoBehaviour
             _revealSpotlight.enabled = true;
         }
 
+        AudioManager.Instance.PlaySFX(SFXType.CardFlip);
 
         // Wait half a second 
         yield return new WaitForSeconds(0.5f);
@@ -445,6 +447,8 @@ public class TableManager : MonoBehaviour
             //make sure the card ends in right pos and rot
             card.transform.position = endPosition;
             card.transform.rotation = endRotation;
+
+            AudioManager.Instance.PlaySFX(SFXType.CardPlace);
 
             //make it a child of the discard point
             card.transform.SetParent(_sharedDiscardPoint, true);
