@@ -42,6 +42,8 @@ public class HandAnimator : MonoBehaviour
         {
             if (drawnCards[i] == null) continue;
 
+            AudioManager.Instance.PlaySFX(SFXType.CardDealing);
+
             // Move the 3D card from the draw pile towards the player
             yield return StartCoroutine(TableManager.Instance.AnimateCardDrawToPlayer());
 

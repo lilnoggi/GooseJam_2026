@@ -47,6 +47,7 @@ public class DeckManager : MonoBehaviour
 
         Shuffle(_drawPile); //remember SHUFFLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE //shuffel them
 
+        AudioManager.Instance.PlaySFX(SFXType.CardShuffle);
     }
 
     public void DrawToFullHand()//draw untill hand is full
@@ -206,8 +207,6 @@ public class DeckManager : MonoBehaviour
 
         //shuffle the draw pile
         Shuffle(_drawPile);
-
-        Debug.Log($"{name} shuffled its discard pile back into its draw pile.");
     }
 
 

@@ -187,6 +187,7 @@ public class PlayerHandManager : MonoBehaviour
             _selectedCards.Remove(card);
             card.SetSelected(false);
             UpdateButtons();
+            AudioManager.Instance.PlaySFX(SFXType.CardPlace);
             return;
         }
 
@@ -207,6 +208,7 @@ public class PlayerHandManager : MonoBehaviour
         if (_selectedCards.Count >= _maximumSelectedCards) return;
 
         _selectedCards.Add(card);
+        AudioManager.Instance.PlaySFX(SFXType.CardSelect);
         card.SetSelected(true);
         UpdateButtons();
     }
@@ -248,6 +250,8 @@ public class PlayerHandManager : MonoBehaviour
 
     private void SkipTurn()
     {
+        AudioManager.Instance.PlaySFX(SFXType.Back);
+
         _turnController.SkipPlayerTurn();
     }
 

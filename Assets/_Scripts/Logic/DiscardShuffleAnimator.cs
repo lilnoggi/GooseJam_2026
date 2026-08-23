@@ -171,6 +171,8 @@ public class DiscardShuffleAnimator : MonoBehaviour
         // repeat the shuffle movement 
         for (int pass = 0; pass < _shufflePasses; pass++)
         {
+            AudioManager.Instance.PlaySFX(SFXType.CardShuffle);
+
             List<Vector3> startPositions = new List<Vector3>();
             List<Vector3> targetPositions = new List<Vector3>();
 
@@ -329,6 +331,8 @@ public class DiscardShuffleAnimator : MonoBehaviour
 
             card.transform.position = endPosition;
             card.transform.rotation = endRotation;
+
+            AudioManager.Instance.PlaySFX(SFXType.CardPlace);
 
             // add new layer to fake visual DrawDeck
             _drawDeckVisual.AddVisualCard();
