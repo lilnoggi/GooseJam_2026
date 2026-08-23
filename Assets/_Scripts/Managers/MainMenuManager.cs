@@ -1,15 +1,33 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private GameObject _settingsPanel;
+    [SerializeField] private Button _continueButton;
+
+    [Header("Game Data")]
+    [SerializeField] private SessionData _sessionData;
 
     void Start()
     {
         AudioManager.Instance.PlayBGM(BGMType.MainTheme);
 
-        _settingsPanel.SetActive(false);
+        if (_settingsPanel != null)
+        {
+            _settingsPanel.SetActive(false);
+        }
+
+        // Check if there is any saved progress when the menu loads
+        if (_continueButton != null)
+        {
+            // If the saved level is 0, player has not beaten anything yet
+            bool hasSaveData = PlayerPrefs.GetInt("SavedLevelIndex", 0) > 0;
+
+            // Make the button not interactable
+            _continueButton.interactable = hasSaveData;
+        }
     }
 
     public void OpenSettingsMenu()
@@ -18,5 +36,31 @@ public class MainMenuManager : MonoBehaviour
         {
             _settingsPanel.SetActive(true);
         }
+
+        AudioManager.Instance.PlaySFX(SFXType.Select);
+    }
+
+    /// <summary>
+    /// Triggered by "New Game" button. Wipes data, then loads intro.
+    /// </summary>
+    public void StartNewGame()
+    {
+        AudioManager.Instance.PlaySFX(SFXType.Select);
+
+        if (_sessionData != null)
+        {
+            _sessionData.ResetRun(); // Wipe save data
+        }
+
+        LevelLoader.Instance.LoadNextScene("00b_IntroCutscene_Scene");
+    }
+
+    /// <summary>
+    /// Triggered by the "Continue" button. Loads the map with existing data.
+    /// </summary>
+    public void ContinueGame()
+    {
+        AudioManager.Instance.PlaySFX(SFXType.Select);
+        LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
     }
 }
