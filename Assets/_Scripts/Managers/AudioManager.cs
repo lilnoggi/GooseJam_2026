@@ -22,6 +22,7 @@ public enum SFXType {
     Rot,
     DialogueBlip,
     VictoryJingle,
+    TurnBell,
 }
 
 /// <summary>
