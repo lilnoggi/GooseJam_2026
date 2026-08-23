@@ -20,6 +20,9 @@ public class SettingsManager : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField] private AudioMixer _audioMixer;
 
+    [Header("Game Data")]
+    [SerializeField] private SessionData _sessionData;
+
     private Resolution[] _resolutions;
     private List<Resolution> _filteredResolutions;
 
@@ -212,5 +215,20 @@ public class SettingsManager : MonoBehaviour
         {
             _settingsPanel.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// Triggered by Delete Saved Data Button OnClick event
+    /// </summary>
+    public void DeleteSavedData()
+    {
+        if (_sessionData != null)
+        {
+            // Trigger reset AND overwrite hard drive save to 0
+            _sessionData.ResetRun();
+        }
+
+        // Audio feedback
+        AudioManager.Instance.PlaySFX(SFXType.Select);
     }
 }

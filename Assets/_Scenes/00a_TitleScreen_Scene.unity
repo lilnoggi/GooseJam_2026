@@ -579,6 +579,7 @@ MonoBehaviour:
   _musicSlider: {fileID: 610583766}
   _sfxSlider: {fileID: 1670993109}
   _audioMixer: {fileID: 24100000, guid: de15462d23e0e1743935f08287ca2d29, type: 2}
+  _sessionData: {fileID: 11400000, guid: 3dd36079d2a27c2438df973c66612125, type: 2}
 --- !u!1 &156592532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,7 +1681,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 437695241}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 136507793}
+        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
+        m_MethodName: DeleteSavedData
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &437695241
 MonoBehaviour:
   m_ObjectHideFlags: 0
