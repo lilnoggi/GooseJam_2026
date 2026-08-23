@@ -18,6 +18,10 @@ public enum SFXType {
     Hover,
     CardDealing,
     CardSelect,
+    Blood,
+    Rot,
+    DialogueBlip,
+    VictoryJingle,
 }
 
 /// <summary>

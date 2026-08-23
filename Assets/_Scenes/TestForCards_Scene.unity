@@ -5561,6 +5561,14 @@ MonoBehaviour:
     AudioFile: {fileID: 8300000, guid: 0039d0231e043344b8077ef7b51b61fa, type: 3}
   - SoundType: 11
     AudioFile: {fileID: 8300000, guid: 2c9c019cbfa118c488975cd4f356611c, type: 3}
+  - SoundType: 12
+    AudioFile: {fileID: 8300000, guid: 7a59edc270a89ab499f6f2f75c6f7ae2, type: 3}
+  - SoundType: 13
+    AudioFile: {fileID: 8300000, guid: ba8ddb84a9a8dd949b438d72c45a35d3, type: 3}
+  - SoundType: 14
+    AudioFile: {fileID: 8300000, guid: 556eaa04357205441ace9dfeb28e7bb1, type: 3}
+  - SoundType: 15
+    AudioFile: {fileID: 8300000, guid: 5831ec1d23fe0c946b82a6c197eef069, type: 3}
   _bgmLibrary:
   - TrackType: 0
     AudioFile: {fileID: 8300000, guid: b38d30509673b7244948ee6586ff1d57, type: 3}
