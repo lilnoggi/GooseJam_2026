@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 public class SettingsManager : MonoBehaviour
 {
+    [Header("Menu References")]
+    [SerializeField] private GameObject _settingsPanel;
+
     [Header("Screen References")]
     [SerializeField] private TMP_Dropdown _resolutionDropdown;
     [SerializeField] private TextMeshProUGUI _fullScreenCheckboxText;
@@ -19,6 +22,12 @@ public class SettingsManager : MonoBehaviour
 
     private Resolution[] _resolutions;
     private List<Resolution> _filteredResolutions;
+
+    // --- Memory for Cancel Button ---
+    private int _savedResIndex;
+    private bool _savedFullScreen;
+    private float _savedMusicVol;
+    private float _savedSFXVol;
 
     private void Start()
     {
@@ -76,6 +85,20 @@ public class SettingsManager : MonoBehaviour
         // Apply the volume to the mixer
         SetMusicVolume(savedMusicVol);
         SetSFXVolume(savedSFXVol);
+
+        // --- SAVE INITIAL STATE FOR CANCEL BUTTON ---
+        CaptureCurrentSettings(currentResIndex, Screen.fullScreen, savedMusicVol, savedSFXVol);
+    }
+
+    /// <summary>
+    /// Caches current state of settings to be restoyred later
+    /// </summary>
+    private void CaptureCurrentSettings(int resIndex, bool isFullScreen, float musicVol, float sfxVol)
+    {
+        _savedResIndex = resIndex;
+        _savedFullScreen = isFullScreen;
+        _savedMusicVol = musicVol;
+        _savedSFXVol = sfxVol;
     }
 
     // --- SCREEN LOGIC ---
@@ -135,5 +158,59 @@ public class SettingsManager : MonoBehaviour
 
         // Save the setting
         PlayerPrefs.SetFloat("SFXVolume", sliderValue);
+    }
+
+    // --- SAVE / CANCEL BUTTON LOGIC ---
+
+    /// <summary>
+    /// Triggered by the Save Button's OnClick Event
+    /// </summary>
+    public void SaveSettings()
+    {
+        // Force the hardware to write PlayerPrefs to the disk
+        PlayerPrefs.Save();
+
+        // Update the memory cache. If menu is opened and cancel is pressed, revert to this new save
+        CaptureCurrentSettings(_resolutionDropdown.value, Screen.fullScreen, _musicSlider.value, _sfxSlider.value);
+
+        // Play feedback sound
+        AudioManager.Instance.PlaySFX(SFXType.Select);
+
+        // Hide panel
+        if (_settingsPanel != null)
+        {
+            _settingsPanel.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Triggered by the Cancel Button's OnClick event.
+    /// </summary>
+    public void CancelSettings()
+    {
+        // Revert the UI to the last saved state
+        _resolutionDropdown.value = _savedResIndex;
+        _musicSlider.value = _savedMusicVol;
+        _sfxSlider.value = _savedSFXVol;
+
+        // Revert the fullscreen toggle if it was pressed
+        if (Screen.fullScreen != _savedFullScreen)
+        {
+            ToggleFullScreen();
+        }
+
+        // Reapply the original audio volumes and screen resolution
+        SetResolution(_savedResIndex);
+        SetMusicVolume(_savedMusicVol);
+        SetSFXVolume(_savedSFXVol);
+
+        // Play back sound
+        AudioManager.Instance.PlaySFX(SFXType.Back);
+
+        // Hide the panel
+        if (_settingsPanel != null)
+        {
+            _settingsPanel.SetActive(false);
+        }
     }
 }
