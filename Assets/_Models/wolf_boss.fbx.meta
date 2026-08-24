@@ -3,7 +3,32 @@ guid: 1cf1707c7ab5c2b48876ad0a99b71e91
 ModelImporter:
   serializedVersion: 24501
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Wolf_Boss
+    second: {fileID: 2100000, guid: b98cfa336f07a0a45bba7699d1880d7d, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: wolf_Wolf_Boss_Emissive
+    second: {fileID: 2800000, guid: b0f5c122a86f75c429625c2584455fea, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: wolf_Wolf_Boss_Metallic
+    second: {fileID: 2800000, guid: 87773d6253d4d6846b860206e344845c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: wolf_Wolf_Boss_Normal
+    second: {fileID: 2800000, guid: e9c89da1053f0ea46825f9c7bed86403, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: wolf_Wolf_Boss_Roughness
+    second: {fileID: 2800000, guid: 876746a18d890ae4eaad86460fae96de, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
