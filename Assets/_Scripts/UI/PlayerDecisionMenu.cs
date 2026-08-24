@@ -19,6 +19,8 @@ public class PlayerDecisionMenu : MonoBehaviour
     private Action<bool> _onDecisionMade;
     private Coroutine _timerRoutine;
 
+    public bool HideCheatButtonForTutorial { get; set; } = false;
+
     private void Awake()
     {
         // Connect the button's to pass 'true' (Cheat)
@@ -35,6 +37,12 @@ public class PlayerDecisionMenu : MonoBehaviour
     {
         _claimText.gameObject.SetActive(true);
         _onDecisionMade = callback;
+
+        // Toggle the cheat button on or off depending on the tutorial state
+        if (_cheatButton != null)
+        {
+            _cheatButton.gameObject.SetActive(!HideCheatButtonForTutorial);
+        }
 
         // Display what the enemy is claiming
         _claimText.text =$"{enemyName} claims they played {claim.TrueCards.Count} {claim.ClaimedSuit} cards.";
@@ -91,5 +99,17 @@ public class PlayerDecisionMenu : MonoBehaviour
 
         // Push the result back to the turnmanager
         _onDecisionMade?.Invoke(calledCheat);
+    }
+    
+    /// <summary>
+    /// Permanently freezes the decision timer. Used strictly for the tutorial!
+    /// </summary>
+    public void DisableTimerForTutorial()
+    {
+        if (_timerRoutine != null)
+        {
+            StopCoroutine(_timerRoutine);
+            _timerRoutine = null;
+        }
     }
 }

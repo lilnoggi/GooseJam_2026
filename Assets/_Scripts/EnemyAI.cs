@@ -7,6 +7,11 @@ public class EnemyAI : MonoBehaviour
 
     private CharacterStats _stats;
 
+    // TUTORIAL FLAGS
+    public bool ForceHonestPlay { get; set; } = false;
+    public int ForcedCardPlayCount { get; set; } = 0;
+    public bool ForceBluffPlay { get; set; } = false;
+
     // Lucy memory: Tracks how suspicious she is of each suit
     private Dictionary<CardSuit, float> _swanSuspicion = new Dictionary<CardSuit, float>()
     {
@@ -141,8 +146,19 @@ public class EnemyAI : MonoBehaviour
 
         CardSuit claimedSuit = trueSuit;
 
+        // TUTORIAL OVERRIDE
+        if (ForceBluffPlay)
+        {
+            claimedSuit = GetTacticalBluffSuit();
+
+            // Ensure lie does not accidentally match true suit
+            if (claimedSuit == trueSuit)
+            {
+                claimedSuit = (trueSuit == CardSuit.Blood ? CardSuit.Bone : CardSuit.Blood);
+            }
+        }
         // Decide the claim
-        if (!cardsMatch)
+        else if (!cardsMatch)
         {
             // The hand is mixed. FORCE lie
             Debug.Log($"{name} is holding mixed cards. FORCED TO BLUFF!");
@@ -152,6 +168,12 @@ public class EnemyAI : MonoBehaviour
         {
             // Honest set. Does the AI tell the truth or bait the player
             float bluffChance = (_stats != null && _stats.CurrentParanoia <= 0) ? 0.40f : 0.15f;
+
+            // Force the bluff chance to 0 for TUTORIAL
+            if (ForceHonestPlay)
+            {
+                bluffChance = 0f;
+            }
 
             if (Random.value < bluffChance)
             {
@@ -256,6 +278,13 @@ public class EnemyAI : MonoBehaviour
 
         int maxCards = Mathf.Min(3, hand.Count);
         int targetCardCount = (_activeProfile.AggressionMultiplier >= 2.0f && maxCards >= 2) ? Random.Range(2, maxCards + 1) : 1;
+        
+        // Override the AI's decision if the tutorial is running
+        if (ForcedCardPlayCount > 0)
+        {
+            targetCardCount = Mathf.Min(ForcedCardPlayCount, hand.Count);
+        }
+        
         bool foundMatch = false;
 
         // Tactical Prioritisation based on Paranoia
@@ -289,18 +318,17 @@ public class EnemyAI : MonoBehaviour
         // Forced Bluffs & Desperatin
         if (!foundMatch)
         {
-            if (Random.value > 0.4f)
-            {
-                // Play safe: just play one card honestly
-                selectedCards.Add(hand[0]);
-            }
-            else
+            if (ForcedCardPlayCount > 0 || Random.value > 0.4f)
             {
                 // Desperation: Grab random mismatched cards (GUARANTEES A BLUFF)
                 for (int i = 0; i < targetCardCount; i++)
                 {
                     selectedCards.Add(hand[i]);
                 }
+            }
+            else
+            {
+                selectedCards.Add(hand[0]);
             }
         }
 

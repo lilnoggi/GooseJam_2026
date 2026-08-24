@@ -23,6 +23,8 @@ public class CharacterStats : MonoBehaviour
     public int PoisonStacks => _poisonStacks; // public getter
     public int DodgeTokens => _dodgeTokens;
     public int CurrentParanoia => _currentParanoia;
+    public int CurrentHealth => _currentHealth;
+    public int CurrentShield => _currentShield;
     
     public bool IsEliminated { get; private set; } // Public flag to check if this character is out of the game
 
@@ -260,6 +262,24 @@ public class CharacterStats : MonoBehaviour
     }
 
     /// <summary>
+    /// Forces paranoia to a specific number. Used strictly in TutorialManager
+    /// </summary>
+    public void SetParanoia(int exactAmount)
+    {
+        if (IsEliminated)
+        {
+            return;
+        }
+
+        _currentParanoia = Mathf.Clamp(exactAmount, 0, _maxParanoia);
+
+        if (!_isPlayer && _healthBarUI != null)
+        {
+            _healthBarUI.UpdateParanoia(_currentParanoia, _maxParanoia);
+        }
+    }
+
+    /// <summary>
     /// Restores health up to the maximum limit. Used by Rotten Apple
     /// </summary>
     public void Heal(int healAmount)
@@ -349,5 +369,16 @@ public class CharacterStats : MonoBehaviour
             // Call local UI instead of UIManager
             _healthBarUI.UpdateStatusIcon(hasShield, _currentShield, _dodgeTokens, hasPoison);
         }
+    }
+
+    /// <summary>
+    /// Clears all poison stacks. Used by TutorialManager to reset the enemy for free play.
+    /// </summary>
+    public void ClearPoison()
+    {
+        if (IsEliminated) return;
+
+        _poisonStacks = 0;
+        UpdateStatusUI();
     }
 }

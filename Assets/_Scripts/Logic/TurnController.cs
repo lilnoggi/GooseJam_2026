@@ -275,8 +275,13 @@ public class TurnController : MonoBehaviour
     /// </summary>
     public void AdvanceTurn()
     {
+        // Check if all ACTIVE enemies are dead
+        bool leftDead = !_leftEnemyStats.gameObject.activeInHierarchy || _leftEnemyStats.IsEliminated;
+        bool centerDead = !_centerEnemyStats.gameObject.activeInHierarchy || _centerEnemyStats.IsEliminated;
+        bool rightDead = !_rightEnemyStats.gameObject.activeInHierarchy || _rightEnemyStats.IsEliminated;
+
         // Evaluate Victory Condition (All 3 enemies eliminated)
-        if (_leftEnemyStats.IsEliminated && _centerEnemyStats.IsEliminated && _rightEnemyStats.IsEliminated)
+        if (leftDead && centerDead && rightDead)
         {
             Debug.Log("VICTORY! All enemies have been defeated!");
             _sessionData.CompleteCurrentLevel();
@@ -292,7 +297,7 @@ public class TurnController : MonoBehaviour
             return; 
         }
 
-        // Cycle clockwise to find the next active seat
+        // Cycle clockwise to find the next active seat SKIPPING disabled enemies
         int nextTurnIndex = (int)_currentTurn;
         for (int i = 0; i < 4; i++)
         {
@@ -300,7 +305,7 @@ public class TurnController : MonoBehaviour
             TurnSeat nextSeat = (TurnSeat)nextTurnIndex;
             CharacterStats nextStats = GetStatsForTurn(nextSeat);
 
-            if (nextStats != null && !nextStats.IsEliminated)
+            if (nextStats != null && nextStats.gameObject.activeInHierarchy && !nextStats.IsEliminated)
             {
                 // when going back to the player a full round has finished
                 if (nextSeat == TurnSeat.Player && _currentTurn != TurnSeat.Player)
@@ -406,14 +411,21 @@ public class TurnController : MonoBehaviour
 
         if (_enemyDrawAnimator != null)
         {
-            // left enemy starting hand
-            yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand (TurnSeat.LeftEnemy, leftEnemyDeck));
+            // Only draw cards for enemies that are actually active
+            if (_leftEnemyStats.gameObject.activeInHierarchy)
+            {
+                yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand (TurnSeat.LeftEnemy, leftEnemyDeck));
+            }
 
-            //center enemy starting hand
-            yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand( TurnSeat.CentreEnemy, centreEnemyDeck));
+            if (_centerEnemyStats.gameObject.activeInHierarchy) 
+            {
+                yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand( TurnSeat.CentreEnemy, centreEnemyDeck));
+            }
 
-            // right enemy starting hand
-            yield return StartCoroutine( _enemyDrawAnimator.DrawToFullHand(TurnSeat.RightEnemy, rightEnemyDeck));
+            if (_rightEnemyStats.gameObject.activeInHierarchy) 
+            {
+                yield return StartCoroutine( _enemyDrawAnimator.DrawToFullHand(TurnSeat.RightEnemy, rightEnemyDeck));
+            }
         }
         else
         {
