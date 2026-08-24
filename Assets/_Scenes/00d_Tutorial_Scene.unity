@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.3638814, g: 0.22901967, b: 0.22901967, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.042
+  m_FogDensity: 0.009
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -11424,6 +11424,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 3251595987155945380, guid: e075619252107374a875fcae33addfe8, type: 3}
+      propertyPath: m_CameraType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4007140524743413911, guid: e075619252107374a875fcae33addfe8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -11472,6 +11476,10 @@ PrefabInstance:
       propertyPath: _healthBarUI
       value: 
       objectReference: {fileID: 1602130181}
+    - target: {fileID: 9043886255868577419, guid: e075619252107374a875fcae33addfe8, type: 3}
+      propertyPath: m_ClearFlags
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
