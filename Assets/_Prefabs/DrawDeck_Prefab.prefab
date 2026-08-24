@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5100858262319759564}
   - component: {fileID: 8621270651386657780}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DrawDeck_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 5574736703483009714}
   - component: {fileID: 2409980497057515789}
   - component: {fileID: 8380025340366432980}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Deck_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2007941964019643552}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DrawSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3769011147711227563}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VisualStackRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 1451367874622962450}
   - component: {fileID: 2165408718403915214}
   - component: {fileID: 1960979533386902561}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Deck_TopFace
   m_TagString: Untagged
   m_Icon: {fileID: 0}

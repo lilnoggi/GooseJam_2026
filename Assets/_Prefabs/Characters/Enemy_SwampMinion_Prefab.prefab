@@ -162,6 +162,7 @@ MonoBehaviour:
   _uniqueDialogue: {fileID: 0}
   _speechBubbleContainer: {fileID: 2181099697017175842}
   _dialogueText: {fileID: 155679090862526927}
+  _typeSpeed: 0.03
 --- !u!114 &4784558021730358701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1bdd851560ece40a9ff2b9586fe902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTarget
-  _enemySeat: 1
+  _enemySeat: 2
   _spotLight: {fileID: 0}
   _turnController: {fileID: 0}
   _hoverColour: {r: 0.972549, g: 0.9764706, b: 0.98039216, a: 0}
@@ -191,7 +192,7 @@ GameObject:
   - component: {fileID: 6743768321885144385}
   - component: {fileID: 3573596212085706093}
   - component: {fileID: 5809332592150493033}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SpeechBackground_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +268,7 @@ GameObject:
   - component: {fileID: 6250098628758186967}
   - component: {fileID: 2484642636038253820}
   - component: {fileID: 155679090862526927}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Dialogue_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -405,7 +406,7 @@ GameObject:
   - component: {fileID: 7083251854947529960}
   - component: {fileID: 3680883719997944703}
   - component: {fileID: 4113488832434413298}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
