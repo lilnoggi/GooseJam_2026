@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 582931252423415311}
   - component: {fileID: 605532210230524290}
   - component: {fileID: 9013652114914072276}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card_EnemyBack3d
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 3728870337793537103}
   - component: {fileID: 2642128022173887600}
   - component: {fileID: 5470138672380321245}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Card_Back_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6616652486500830256}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card_EnemyBack3d
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 4945437753925349521}
   - component: {fileID: 1457167835354396988}
   - component: {fileID: 5606931094329749775}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

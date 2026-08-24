@@ -42,7 +42,6 @@ public class TurnBannerUI : MonoBehaviour
     {
         if (_turnBannerText != null)
         {
-            AudioManager.Instance.PlaySFX(SFXType.TurnBell);
             _turnBannerText.text = $"{currentTurn}'s Turn!";
 
             // Stop the current fade if a new turn starts before the old text finishes fading
@@ -57,6 +56,19 @@ public class TurnBannerUI : MonoBehaviour
 
     private IEnumerator FadeBannerRoutine()
     {
+        // Ensure banner NEVER blocks the mouse
+        if (_turnBannerGroup != null)
+        {
+            _turnBannerGroup.blocksRaycasts = false;
+            _turnBannerGroup.interactable = false;
+        }
+
+        // If TutorialManager has frozen time, wait in background
+        yield return new WaitUntil(() => Time.timeScale > 0f);
+
+        // After, show banner and ring bell
+        AudioManager.Instance.PlaySFX(SFXType.TurnBell);
+
         // Snap the banner to full visibility
         if (_turnBanner != null) _turnBanner.SetActive(true);
         if (_turnBannerGroup != null) _turnBannerGroup.alpha = 1f;

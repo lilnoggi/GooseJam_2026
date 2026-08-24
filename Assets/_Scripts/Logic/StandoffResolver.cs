@@ -50,6 +50,9 @@ public class StandoffResolver : MonoBehaviour
         if (isChallenging)
         {
             targetStats.GetComponent<EnemyDialogue>()?.TriggerCallCheat();
+
+            yield return new WaitForSeconds(2f);
+            
             yield return StartCoroutine(ResolveChallenge(claim, _playerStats, targetStats));
         }
         else

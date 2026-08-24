@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -37,6 +38,11 @@ public class TurnController : MonoBehaviour
     [SerializeField] private float _turnEndDelay = 1.0f;
     [Tooltip("How long to pause and let the player observe an Action Card's effect.")]
     [SerializeField] private float _actionCardObserveTime = 2.0f;
+
+    [Header("End Game UI")]
+    [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private TextMeshProUGUI _gameOverText;
+    [SerializeField] private float _endGameDelay = 4.0f;
 
     [Header("Round Reshuffle")]
     [SerializeField] private DiscardShuffleAnimator _discardShuffleAnimator;
@@ -275,24 +281,64 @@ public class TurnController : MonoBehaviour
     /// </summary>
     public void AdvanceTurn()
     {
+        // Start sequence
+        StartCoroutine(AdvanceTurnRoutine());
+    }
+
+    private IEnumerator AdvanceTurnRoutine()
+    {
+        // Check if ANY character just died, and make them throw their cards on the table
+        if (_playerStats.IsEliminated && playerDeck.HandCount > 0)
+        {
+            yield return StartCoroutine(TableManager.Instance.PlayCardsToTable(new List<CardData>(playerDeck.Hand), TurnSeat.Player));
+            playerDeck.DiscardCards(new List<CardData>(playerDeck.Hand));
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        if (_leftEnemyStats != null && _leftEnemyStats.gameObject.activeInHierarchy && _leftEnemyStats.IsEliminated && leftEnemyDeck.HandCount > 0)
+        {
+            yield return StartCoroutine(TableManager.Instance.PlayCardsToTable(new List<CardData>(leftEnemyDeck.Hand), TurnSeat.LeftEnemy));
+            leftEnemyDeck.DiscardCards(new List<CardData>(leftEnemyDeck.Hand));
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        if (_centerEnemyStats != null && _centerEnemyStats.gameObject.activeInHierarchy && _centerEnemyStats.IsEliminated && centreEnemyDeck.HandCount > 0)
+        {
+            yield return StartCoroutine(TableManager.Instance.PlayCardsToTable(new List<CardData>(centreEnemyDeck.Hand), TurnSeat.CentreEnemy));
+            centreEnemyDeck.DiscardCards(new List<CardData>(centreEnemyDeck.Hand));
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        if (_rightEnemyStats != null && _rightEnemyStats.gameObject.activeInHierarchy && _rightEnemyStats.IsEliminated && rightEnemyDeck.HandCount > 0)
+        {
+            yield return StartCoroutine(TableManager.Instance.PlayCardsToTable(new List<CardData>(rightEnemyDeck.Hand), TurnSeat.RightEnemy));
+            rightEnemyDeck.DiscardCards(new List<CardData>(rightEnemyDeck.Hand));
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        // Check if all ACTIVE enemies are dead
+        bool leftDead = !_leftEnemyStats.gameObject.activeInHierarchy || _leftEnemyStats.IsEliminated;
+        bool centerDead = !_centerEnemyStats.gameObject.activeInHierarchy || _centerEnemyStats.IsEliminated;
+        bool rightDead = !_rightEnemyStats.gameObject.activeInHierarchy || _rightEnemyStats.IsEliminated;
+
         // Evaluate Victory Condition (All 3 enemies eliminated)
-        if (_leftEnemyStats.IsEliminated && _centerEnemyStats.IsEliminated && _rightEnemyStats.IsEliminated)
+        if (leftDead && centerDead && rightDead)
         {
             Debug.Log("VICTORY! All enemies have been defeated!");
             _sessionData.CompleteCurrentLevel();
-            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
-            return; 
+            yield return StartCoroutine(EndGameRoutine(true));
+            yield break; // Stop the loop, game is over!
         }
 
         // Evaluate Defeat Condition (Player eliminated)
         if (_playerStats.IsEliminated)
         {
             Debug.Log("GAME OVER! The Goose has been cooked!");
-            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
-            return; 
+            yield return StartCoroutine(EndGameRoutine(false));
+            yield break; // Stop the loop, game is over!
         }
 
-        // Cycle clockwise to find the next active seat
+        // CYCLE TO NEXT LIVING SEAT
         int nextTurnIndex = (int)_currentTurn;
         for (int i = 0; i < 4; i++)
         {
@@ -300,19 +346,39 @@ public class TurnController : MonoBehaviour
             TurnSeat nextSeat = (TurnSeat)nextTurnIndex;
             CharacterStats nextStats = GetStatsForTurn(nextSeat);
 
-            if (nextStats != null && !nextStats.IsEliminated)
+            if (nextStats != null && nextStats.gameObject.activeInHierarchy && !nextStats.IsEliminated)
             {
-                // when going back to the player a full round has finished
                 if (nextSeat == TurnSeat.Player && _currentTurn != TurnSeat.Player)
                 {
                     StartCoroutine(EndRoundRoutine(nextSeat));
-                    return;
+                    yield break;
                 }
 
                 StartTurn(nextSeat);
-                return;
+                yield break;
             }
         }
+    }
+
+    private IEnumerator EndGameRoutine(bool isVictory)
+    {
+        // Wait a moment for the shock of the final blow to settle
+        yield return new WaitForSeconds(1.0f);
+
+        if (_gameOverPanel != null)
+        {
+            _gameOverPanel.SetActive(true);
+            
+            if (_gameOverText != null)
+            {
+                _gameOverText.text = isVictory ? "VICTORY!" : "GAME OVER";
+            }
+        }
+        
+        // Give the player a few seconds to breathe and look at the screen
+        yield return new WaitForSeconds(_endGameDelay);
+
+        LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
     }
 
     private IEnumerator EndRoundRoutine(TurnSeat nextSeat)
@@ -406,14 +472,21 @@ public class TurnController : MonoBehaviour
 
         if (_enemyDrawAnimator != null)
         {
-            // left enemy starting hand
-            yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand (TurnSeat.LeftEnemy, leftEnemyDeck));
+            // Only draw cards for enemies that are actually active
+            if (_leftEnemyStats.gameObject.activeInHierarchy)
+            {
+                yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand (TurnSeat.LeftEnemy, leftEnemyDeck));
+            }
 
-            //center enemy starting hand
-            yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand( TurnSeat.CentreEnemy, centreEnemyDeck));
+            if (_centerEnemyStats.gameObject.activeInHierarchy) 
+            {
+                yield return StartCoroutine(_enemyDrawAnimator.DrawToFullHand( TurnSeat.CentreEnemy, centreEnemyDeck));
+            }
 
-            // right enemy starting hand
-            yield return StartCoroutine( _enemyDrawAnimator.DrawToFullHand(TurnSeat.RightEnemy, rightEnemyDeck));
+            if (_rightEnemyStats.gameObject.activeInHierarchy) 
+            {
+                yield return StartCoroutine( _enemyDrawAnimator.DrawToFullHand(TurnSeat.RightEnemy, rightEnemyDeck));
+            }
         }
         else
         {

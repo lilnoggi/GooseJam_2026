@@ -154,7 +154,7 @@ public class StoryIntroManager : MonoBehaviour
         {
             // Lock the zoom state and transition to actual game
             _isZooming = false;
-            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
+            LevelLoader.Instance.LoadNextScene("00d_Tutorial_Scene");
         }
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2983078645951675210}
   - component: {fileID: 4992325679565291147}
   - component: {fileID: 3627744241235942359}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VisualDeckCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}

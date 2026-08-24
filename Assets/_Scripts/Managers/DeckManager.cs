@@ -12,6 +12,8 @@ public class DeckManager : MonoBehaviour
    private readonly List <CardData> _drawPile = new ();//cards waiting to be drawn
    private readonly List <CardData> _hand = new (); //cards currently being held
    private readonly List<CardData> _discardPile = new (); //cards that have already been played
+   
+   private List<CardData> _forcedCards = new List<CardData>();
 
    public IReadOnlyList<CardData> Hand => _hand; // other scripts can read the hand but cant edit the list
 
@@ -66,10 +68,23 @@ public class DeckManager : MonoBehaviour
                 break;
             }
 
-            int cardIndex = _drawPile.Count - 1;
-            CardData card = _drawPile[cardIndex];
+            CardData card;
 
-            _drawPile.RemoveAt(cardIndex);
+            // Check if the TutorialManager is the "boss" of the deck
+            if (_forcedCards.Count > 0)
+            {
+                card = _forcedCards[0];
+                _forcedCards.RemoveAt(0);
+            }
+            else
+            {
+                // Normal random draw logic
+                int cardIndex = _drawPile.Count - 1;
+                card = _drawPile[cardIndex];
+
+                _drawPile.RemoveAt(cardIndex);
+            }
+
             _hand.Add(card);
 
             //remove one card from the visual draw pile
@@ -111,12 +126,23 @@ public class DeckManager : MonoBehaviour
                 break;
             }
 
-            // Get the top card
-            int cardIndex = _drawPile.Count - 1;
-            CardData card = _drawPile[cardIndex];
+            CardData card;
 
-            // Move it from the deck to the hand
-            _drawPile.RemoveAt(cardIndex);
+            // Check if the TutorialManager is the "boss" of the deck
+            if (_forcedCards.Count > 0)
+            {
+                card = _forcedCards[0];
+                _forcedCards.RemoveAt(0);
+            }
+            else
+            {
+                // Normal random draw logic
+                int cardIndex = _drawPile.Count - 1;
+                card = _drawPile[cardIndex];
+
+                _drawPile.RemoveAt(cardIndex);
+            }
+
             _hand.Add(card);
 
             // remove a card from the visual draw pile
@@ -226,4 +252,15 @@ public class DeckManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Used by TutorialManager to stack the top of the deck
+    /// </summary>
+    public void SetForcedCards(List<CardData> cards)
+    {
+        _forcedCards.Clear();
+        if (cards != null)
+        {
+            _forcedCards.AddRange(cards);
+        }
+    }
 }

@@ -38,6 +38,12 @@ public class PlayerHandManager : MonoBehaviour
     private bool _isChoosingClaim;
     private bool _isDrawingCards;
     private bool _isProcessingPassives;
+    
+    // TUTORIAL FLAGS
+    private bool _isCardSelectionLocked = false;
+    private CardSuit _lockedSuit;
+    private int _requiredCardCount = 0;
+    private bool _isSkipLocked = false;
 
     private Coroutine _drawCoroutine;
 
@@ -191,6 +197,13 @@ public class PlayerHandManager : MonoBehaviour
             return;
         }
 
+        // Reject the click if the suit is locked
+        if (_isCardSelectionLocked && card.CardData.Suit != _lockedSuit)
+        {
+            AudioManager.Instance.PlaySFX(SFXType.Error);
+            return;
+        }
+
         // RULE 2: Action/InstaPlay cards are too powerful to combine with other bluffs
         if (card.CardData.PlayType == CardPlayType.Action || card.CardData.PlayType == CardPlayType.InstaPlay)
         {
@@ -267,8 +280,18 @@ public class PlayerHandManager : MonoBehaviour
 
         if (canUseHand)
         {
-            _playButton.interactable = _selectedCards.Count > 0; 
-            _skipButton.interactable = true;   
+            // If a specific number is required, lock the button
+            if (_requiredCardCount > 0)
+            {
+                _playButton.interactable = _selectedCards.Count == _requiredCardCount;
+            }
+            else
+            {
+                _playButton.interactable = _selectedCards.Count > 0; 
+            }
+            
+            // Disable the skip button if locked
+            _skipButton.interactable = !_isSkipLocked;   
         }
     }
 
@@ -374,5 +397,30 @@ public class PlayerHandManager : MonoBehaviour
         {
             yield return StartCoroutine(_handAnimator.HighlightCardRoutine(visualCard, duration));
         }
+    }
+
+    // TUTORIAL HELPERS
+
+    public void LockSelectionToSuit(CardSuit suit)
+    {
+        _isCardSelectionLocked = true;
+        _lockedSuit = suit;
+    }
+
+    public void UnlockSelection()
+    {
+        _isCardSelectionLocked = false;
+    }
+
+    public void SetRequiredCardCount(int count)
+    {
+        _requiredCardCount = count;
+        UpdateButtons();
+    }
+
+    public void SetSkipLocked(bool isLocked)
+    {
+        _isSkipLocked = isLocked;
+        UpdateButtons();
     }
 }

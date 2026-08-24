@@ -21,6 +21,7 @@ public class ClaimMenu : MonoBehaviour
 
     private List<CardData> _trueCards;
     private CardSuit _selectedSuit;
+    private bool _isSuitLocked = false;
 
     // Track what step of the lie the player is currently on
     private enum ClaimPhase { Inactive, SuitPhase, TargetPhase, ActionTargetPhase }
@@ -90,6 +91,12 @@ public class ClaimMenu : MonoBehaviour
     {
         if (_currentPhase == ClaimPhase.SuitPhase)
         {
+            if (_isSuitLocked)
+            {
+                AudioManager.Instance.PlaySFX(SFXType.Error);
+                return;
+            }
+
             _currentIndex = (_currentIndex + 1) % _suits.Length;
             AudioManager.Instance.PlaySFX(SFXType.Hover);
             UpdateDisplay();
@@ -101,6 +108,12 @@ public class ClaimMenu : MonoBehaviour
     {
         if (_currentPhase == ClaimPhase.SuitPhase)
         {
+            if (_isSuitLocked)
+            {
+                AudioManager.Instance.PlaySFX(SFXType.Error);
+                return;
+            }
+
             _currentIndex--;
             if (_currentIndex < 0)
             {
@@ -164,6 +177,8 @@ public class ClaimMenu : MonoBehaviour
         {
             _instructionBanner.gameObject.SetActive(false);
         }
+
+        UnlockSuit();
     }
 
     private void UpdateDisplay()
@@ -197,5 +212,33 @@ public class ClaimMenu : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Forces the menu to a specific suit and disables the cycle arrows. Used by TutorialManager
+    /// </summary>
+    public void LockSuit(CardSuit suitToLock)
+    {
+        _isSuitLocked = true;
+
+        // Find the exact index of the required suit so the UI displays it immediately
+        for (int i = 0; i < _suits.Length; i++)
+        {
+            if ((CardSuit)_suits.GetValue(i) == suitToLock)
+            {
+                _currentIndex = i;
+                break;
+            }
+        }
+
+        UpdateDisplay();
+    }
+
+    /// <summary>
+    /// Unlocks the menu so the player can choose freely
+    /// </summary>
+    public void UnlockSuit()
+    {
+        _isSuitLocked = false;
     }
 }
