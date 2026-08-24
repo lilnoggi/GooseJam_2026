@@ -391,12 +391,9 @@ public class CharacterStats : MonoBehaviour
         {
             // Dialogue for final angry line before folding
             GetComponent<EnemyDialogue>()?.TriggerDefeated();
-
-            // TODO: Play animation tossing cards onto table
         }
         else
         {
-            // TODO: Trigger game over ui
             Debug.Log("PLAYER HAS DIED! GAME OVER!");
         }
     }

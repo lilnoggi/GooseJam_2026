@@ -40,8 +40,7 @@ public class TurnController : MonoBehaviour
     [SerializeField] private float _actionCardObserveTime = 2.0f;
 
     [Header("End Game UI")]
-    [SerializeField] private GameObject _gameOverPanel;
-    [SerializeField] private TextMeshProUGUI _gameOverText;
+    [SerializeField] private EndGameManagerUI _endGameUIManager;
     [SerializeField] private float _endGameDelay = 4.0f;
 
     [Header("Round Reshuffle")]
@@ -365,18 +364,16 @@ public class TurnController : MonoBehaviour
         // Wait a moment for the shock of the final blow to settle
         yield return new WaitForSeconds(1.0f);
 
-        if (_gameOverPanel != null)
+        if (_endGameUIManager != null)
         {
-            _gameOverPanel.SetActive(true);
-            
-            if (_gameOverText != null)
-            {
-                _gameOverText.text = isVictory ? "VICTORY!" : "GAME OVER";
-            }
+            // Send to UIManager
+            yield return StartCoroutine(_endGameUIManager.ShowEndScreenRoutine(isVictory, _endGameDelay));
         }
-        
-        // Give the player a few seconds to breathe and look at the screen
-        yield return new WaitForSeconds(_endGameDelay);
+        else
+        {
+            // Fallback just in case the UI isn't assigned
+            yield return new WaitForSeconds(_endGameDelay);
+        }
 
         LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
     }
