@@ -11,7 +11,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Screen References")]
     [SerializeField] private TMP_Dropdown _resolutionDropdown;
-    [SerializeField] private TextMeshProUGUI _fullScreenCheckboxText;
+    [SerializeField] private Image _fullScreenCheckboxTick;
 
     [Header("Audio References")]
     [SerializeField] private Slider _musicSlider;
@@ -129,9 +129,10 @@ public class SettingsManager : MonoBehaviour
     /// </summary>
     private void UpdateFullScreenUI()
     {
-        if (_fullScreenCheckboxText != null)
+        // Turn the Image GameObject on if fullscreen is true, off if false
+        if (_fullScreenCheckboxTick != null)
         {
-            _fullScreenCheckboxText.text = Screen.fullScreen ? "X" : " ";
+            _fullScreenCheckboxTick.gameObject.SetActive(Screen.fullScreen);
         }
     }
 

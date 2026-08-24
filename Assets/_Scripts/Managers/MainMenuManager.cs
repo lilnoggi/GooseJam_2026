@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private GameObject _settingsPanel;
     [SerializeField] private Button _continueButton;
+    [SerializeField] private GameObject _guidePanel;
 
     [Header("Game Data")]
     [SerializeField] private SessionData _sessionData;
@@ -45,12 +47,19 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void StartNewGame()
     {
+        StartCoroutine(StartNewGameRoutine());
+    }
+
+    private IEnumerator StartNewGameRoutine()
+    {
         AudioManager.Instance.PlaySFX(SFXType.Select);
 
         if (_sessionData != null)
         {
             _sessionData.ResetRun(); // Wipe save data
         }
+
+        yield return new WaitForSeconds(0.5f);
 
         LevelLoader.Instance.LoadNextScene("00b_IntroCutscene_Scene");
     }
@@ -60,7 +69,33 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     public void ContinueGame()
     {
+        StartCoroutine(ContinueGameRoutine());
+    }
+
+    private IEnumerator ContinueGameRoutine()
+    {
         AudioManager.Instance.PlaySFX(SFXType.Select);
+
+        yield return new WaitForSeconds(0.5f);
+        
         LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
+    }
+
+    public void OpenGuidePanel()
+    {
+        if (_guidePanel != null)
+        {
+            AudioManager.Instance.PlaySFX(SFXType.Select);
+            _guidePanel.SetActive(true);
+        }
+    }
+
+    public void CloseGuidePanel()
+    {
+        if (_guidePanel != null)
+        {
+            AudioManager.Instance.PlaySFX(SFXType.Select);
+            _guidePanel.SetActive(false);
+        }
     }
 }
