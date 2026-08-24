@@ -97,6 +97,12 @@ public class PlayerDecisionMenu : MonoBehaviour
 
         _claimText.gameObject.SetActive(false);
 
+        // --- PLAY THE GOOSE HONK ---
+        if (calledCheat)
+        {
+            AudioManager.Instance.PlaySFX(SFXType.Cheat);
+        }
+
         // Push the result back to the turnmanager
         _onDecisionMade?.Invoke(calledCheat);
     }

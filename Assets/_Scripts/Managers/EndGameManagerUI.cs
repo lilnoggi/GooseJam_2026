@@ -9,6 +9,7 @@ public class EndGameManagerUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _titleText;
     [SerializeField] private Image _gooseImage;
     [SerializeField] private Animator _gooseAnimator;
+    [SerializeField] private CanvasGroup _canvasGroup;
 
     [Header("Assets")]
     [SerializeField] private Sprite _victorySprite;
@@ -17,25 +18,31 @@ public class EndGameManagerUI : MonoBehaviour
     [Header("Fade Settings")]
     [SerializeField] private float _fadeDuration = 1.0f;
 
-    private CanvasGroup _canvasGroup;
-
     private void Awake()
     {
-        _canvasGroup = GetComponent<CanvasGroup>();
-
         // Ensure starts completely invisible and turned off
-        _canvasGroup.alpha = 0f;
-        gameObject.SetActive(false);
+        if (_canvasGroup != null)
+        {
+            _canvasGroup.alpha = 0f;
+        }
+        
+        _canvasGroup.gameObject.SetActive(false);
     }
 
     public IEnumerator ShowEndScreenRoutine(bool isVictory, float holdDuration)
     {
-        gameObject.SetActive(true);
+        _canvasGroup.gameObject.SetActive(true);
 
-        // SETUP THE VISUALS
+        // Stop the combat music so the final stings can be heard clearly!
+        AudioManager.Instance.StopBGM();
+
+        // SETUP THE VISUALS & AUDIO
         if (isVictory)
         {
             _titleText.text = "Victory";
+            
+            // Play the Victory Jingle
+            AudioManager.Instance.PlaySFX(SFXType.VictoryJingle);
             
             // Turn OFF the animator to show the static crown sprite
             if (_gooseAnimator != null) _gooseAnimator.enabled = false;
@@ -44,6 +51,9 @@ public class EndGameManagerUI : MonoBehaviour
         else
         {
             _titleText.text = "Game Over";
+            
+            // Play the Game Over Sting
+            AudioManager.Instance.PlaySFX(SFXType.GameOverSting);
             
             // Turn the animator back ON so the goose cooks!
             if (_gooseAnimator != null) _gooseAnimator.enabled = true;
@@ -73,6 +83,6 @@ public class EndGameManagerUI : MonoBehaviour
         }
         _canvasGroup.alpha = 0f;
         
-        gameObject.SetActive(false);
+        _canvasGroup.gameObject.SetActive(false);
     }
 }

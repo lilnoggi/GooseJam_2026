@@ -85,6 +85,10 @@ MonoBehaviour:
     AudioFile: {fileID: 8300000, guid: 5831ec1d23fe0c946b82a6c197eef069, type: 3}
   - SoundType: 16
     AudioFile: {fileID: 8300000, guid: 53910c53e8d5dd645b4cb1bb76508bd2, type: 3}
+  - SoundType: 17
+    AudioFile: {fileID: 8300000, guid: b3a9130c75255254a975c8e0b015a8cf, type: 3}
+  - SoundType: 18
+    AudioFile: {fileID: 8300000, guid: 105d6bba1b512ea40ae23ba905bbdcc8, type: 3}
   _bgmLibrary:
   - TrackType: 0
     AudioFile: {fileID: 8300000, guid: b38d30509673b7244948ee6586ff1d57, type: 3}
