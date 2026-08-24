@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CharacterStats : MonoBehaviour
 {
@@ -8,6 +9,16 @@ public class CharacterStats : MonoBehaviour
 
     [Header("UI Components")]
     [SerializeField] private HealthBarUI _healthBarUI;
+
+    // --- STATIC NAME POOL ---
+    private static List<string> _availableMinionNames = new List<string>();
+
+    private readonly string[] _minionNameRoster = new string[]
+    {
+        "Barnaby", "Cornelius", "Archibald", "Mortimer", 
+        "Reginald", "Bartholomew", "Thaddeus", "Horace", 
+        "Silas", "Percival", "Gideon", "Oswald"
+    };
 
     [Header("Runtime Stats")]
     private int _currentHealth;
@@ -50,6 +61,18 @@ public class CharacterStats : MonoBehaviour
 
         if (_enemyAI != null && _enemyAI.Profile != null)
         {
+            // --- NAME ASSIGNEMENT ---
+            if (_enemyAI.Profile.IsBoss)
+            {
+                // Boses use their fixed profile name
+                gameObject.name = _enemyAI.Profile.EnemyName;
+            }
+            else
+            {
+                // Minions draw a random, unique name
+                gameObject.name = GetUniqueMinionName();
+            }
+
             // Read the starting stats directly from their specific ScriptableObject profile
             _maxHealth = _enemyAI.Profile.MaxHealth;
             _currentParanoia = _enemyAI.Profile.BaseParanoiaLevel;
@@ -81,6 +104,27 @@ public class CharacterStats : MonoBehaviour
         
         // Ensure all icons start turned off
         UpdateStatusUI(); 
+    }
+
+    /// <summary>
+    /// Pulls a random name from the roster and ensures no duplicates are assigned
+    /// </summary>
+    private string GetUniqueMinionName()
+    {
+        // Refill the pool if it is empty
+        if (_availableMinionNames.Count == 0)
+        {
+            _availableMinionNames.AddRange(_minionNameRoster);
+        }
+
+        // Pick a random name
+        int randomIndex = Random.Range(0, _availableMinionNames.Count);
+        string chosenName = _availableMinionNames[randomIndex];
+
+        // Remove it so no other enemy can get it
+        _availableMinionNames.RemoveAt(randomIndex);
+
+        return chosenName;
     }
 
     /// <summary>
