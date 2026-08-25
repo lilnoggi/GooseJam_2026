@@ -18,6 +18,10 @@ public class StoryIntroManager : MonoBehaviour
     [SerializeField] private string[] _storyLines;
     [SerializeField] private float _typingSpeed = 0.04f; // Speed in which the text writes
 
+    [Header("Scene Transition")]
+    [Tooltip("The exact name of the scene to load when the cutscene finishes (e.g., 00d_Tutorial_Scene)")]
+    [SerializeField] private string _nextSceneToLoad;
+
     // State trackers
     private int _currentLineIndex = 0;
     private Coroutine _typingCoroutine;
@@ -30,9 +34,9 @@ public class StoryIntroManager : MonoBehaviour
         PlayLine(_currentLineIndex);
     }
 
-/// <summary>
-/// Prepares and executes the visual and text elements for a specific slide index
-/// </summary>
+    /// <summary>
+    /// Prepares and executes the visual and text elements for a specific slide index
+    /// </summary>
     private void PlayLine(int index)
     {
         // Clear the UI to prevent the player from skipping ahead before reading
@@ -76,7 +80,7 @@ public class StoryIntroManager : MonoBehaviour
 
     /// <summary>
     /// Triggered from the Button's OnClick event
-    /// Advances the slide index or transitions to the gameplay scene
+    /// Advances the slide index or transitions to the next scene
     /// </summary>
     public void OnActionButtonClicked()
     {
@@ -91,8 +95,8 @@ public class StoryIntroManager : MonoBehaviour
         }
         else
         {
-            // Transition to actual game
-            LevelLoader.Instance.LoadNextScene("00d_Tutorial_Scene");
+            // Transition to the scene specified in the Inspector
+            LevelLoader.Instance.LoadNextScene(_nextSceneToLoad);
         }
     }
 }

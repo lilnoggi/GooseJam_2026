@@ -801,20 +801,14 @@ MonoBehaviour:
   _actionButton: {fileID: 9080203283577978499}
   _buttonText: {fileID: 6465775429665612021}
   _storyLines:
-  - Centries ago, the High Council banished our flock of geese to the sunless, underground
-    depths beneath the kingdom.
-  - Our only crime?
-  - We were "too loud."
-  - Now, we rot in illicit gambling dens, watching the realm leaders hoard their
-    wealth while we starve underground.
-  - 'But the Council has a fatal weakness: a sick obsession with a game of deception.'
-  - If we want our place back in the Kingdom, we have to beat them at their own twisted
-    game of Cheat.
-  - 'The path to the Swan Queen''s Castle begins here, in the damp rot of the Swamp
-    where Freddy the Fox is waiting. '
-  - It is time to fight back.
+  - Wow.
+  - You made it this far...
+  - Thank you so much for playing! We hope you enjoyed Cheating Geese!
+  - Unfortunately, due to time constraints, the last two levels were not made.
+  - We may continue working on this project if people like and believe in this idea.
+  - Again, thank you so much for playing!
   _typingSpeed: 0.02
-  _nextSceneToLoad: 00d_Tutorial_Scene
+  _nextSceneToLoad: 00a_TitleScreen_Scene
 --- !u!4 &1459431472
 Transform:
   m_ObjectHideFlags: 0

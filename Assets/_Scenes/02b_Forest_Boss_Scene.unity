@@ -10912,6 +10912,7 @@ MonoBehaviour:
   _actionCardObserveTime: 2
   _endGameUIManager: {fileID: 0}
   _endGameDelay: 4
+  _isFinalBossFight: 1
   _discardShuffleAnimator: {fileID: 371647077}
   _playerHandManager: {fileID: 1222372961}
 --- !u!1 &2126858772

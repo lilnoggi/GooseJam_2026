@@ -6,6 +6,9 @@ using System.Collections;
 
 public class PlayerDecisionMenu : MonoBehaviour
 {
+    [Header("System References")]
+    [SerializeField] private TurnController _turnController;
+
     [Header("UI References")]
     [SerializeField] private GameObject _decisionMenuContainer;
     [SerializeField] private TextMeshProUGUI _claimText;
@@ -44,8 +47,19 @@ public class PlayerDecisionMenu : MonoBehaviour
             _cheatButton.gameObject.SetActive(!HideCheatButtonForTutorial);
         }
 
+        string displayName = enemyName;
+        if (_turnController != null)
+        {
+            CharacterStats activeStats = _turnController.GetStatsForTurn(_turnController.CurrentTurn);
+
+            if (activeStats != null)
+            {
+                displayName = activeStats.gameObject.name;
+            }
+        }
+
         // Display what the enemy is claiming
-        _claimText.text =$"{enemyName} claims they played {claim.TrueCards.Count} {claim.ClaimedSuit} cards.";
+        _claimText.text =$"{displayName} claims they played {claim.TrueCards.Count} {claim.ClaimedSuit} cards.";
 
         _decisionMenuContainer.SetActive(true);
 

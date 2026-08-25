@@ -42,6 +42,7 @@ public class TurnController : MonoBehaviour
     [Header("End Game UI")]
     [SerializeField] private EndGameManagerUI _endGameUIManager;
     [SerializeField] private float _endGameDelay = 4.0f;
+    [SerializeField] private bool _isFinalBossFight = false;
 
     [Header("Round Reshuffle")]
     [SerializeField] private DiscardShuffleAnimator _discardShuffleAnimator;
@@ -375,7 +376,16 @@ public class TurnController : MonoBehaviour
             yield return new WaitForSeconds(_endGameDelay);
         }
 
-        LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
+        if (isVictory && _isFinalBossFight)
+        {
+            // If they beat the final boss, send them to the credits
+            LevelLoader.Instance.LoadNextScene("03a_ThankYou_Scene");
+        }
+        else
+        {
+            // Otherwise, return to the map normally (or return to map if they died)
+            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
+        }
     }
 
     private IEnumerator EndRoundRoutine(TurnSeat nextSeat)
