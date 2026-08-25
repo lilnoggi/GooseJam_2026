@@ -23,6 +23,8 @@ public enum SFXType {
     DialogueBlip,
     VictoryJingle,
     TurnBell,
+    GameOverSting,
+    Cheat,
 }
 
 /// <summary>
@@ -123,6 +125,17 @@ public class AudioManager : MonoBehaviour
                 _bgmSource.Play();
                 return;
             }
+        }
+    }
+
+    /// <summary>
+    /// Stops the currently playing background music.
+    /// </summary>
+    public void StopBGM()
+    {
+        if (_bgmSource != null && _bgmSource.isPlaying)
+        {
+            _bgmSource.Stop();
         }
     }
 }

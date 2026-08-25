@@ -7,13 +7,13 @@ public class RottenAppleEffect : StatusEffect
     {
         if (turnsHeld < 3)
         {
-            owner.TakeDamage(2);
+            owner.TakeDamage(15);
             return false;
         }
         else
         {
             // Health the player after 3 successful turns
-            owner.Heal(25);
+            owner.Heal(75);
             return true;
         }
     }

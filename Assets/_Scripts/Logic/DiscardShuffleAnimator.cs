@@ -6,7 +6,6 @@ public class DiscardShuffleAnimator : MonoBehaviour
 {
     [Header("System References")]
     [SerializeField] private TableManager _tableManager;
-    [SerializeField] private DrawDeckVisual _drawDeckVisual;
     [SerializeField] private Transform _shuffleAreaCentre;
 
     [Header("Spread Settings")]
@@ -269,7 +268,7 @@ public class DiscardShuffleAnimator : MonoBehaviour
 
     public IEnumerator ReturnCardsToDrawDeck()
     {
-        if (_tableManager == null || _drawDeckVisual == null)
+        if (_tableManager == null || DrawDeckVisual.Instance == null)
         {
             yield break;
         }
@@ -335,7 +334,7 @@ public class DiscardShuffleAnimator : MonoBehaviour
             AudioManager.Instance.PlaySFX(SFXType.CardPlace);
 
             // add new layer to fake visual DrawDeck
-            _drawDeckVisual.AddVisualCard();
+            DrawDeckVisual.Instance.AddVisualCard();
 
             //remove real table card
             Destroy(card);

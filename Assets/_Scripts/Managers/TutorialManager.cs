@@ -55,7 +55,7 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitUntil(() => _playerHandManager.CardViews.Count > 0);
         yield return new WaitUntil(() => !_playerHandManager.IsDrawingCards);
 
-        yield return ShowPopup("Welcome to the table. Your goal is simple: eliminate the other goose before you are cooked.", 1, 2);
+        yield return ShowPopup("Welcome to the table. Your goal is simple: eliminate the enemy before you are cooked.", 1, 2);
         yield return ShowPopup("Blood cards deal direct damage. Select 3 Blood cards and hit 'Play'.", 2, 2);
 
         _playerHandManager.LockSelectionToSuit(CardSuit.Blood);
@@ -337,7 +337,7 @@ public class TutorialManager : MonoBehaviour
         // =========================================================
         // TURN 9: FREE PLAY TRANSITION
         // =========================================================
-        yield return ShowPopup("Did you see the Apple tick? It just passively dealt 2 damage to you!", 1, 2);
+        yield return ShowPopup("Did you see the Apple tick? It just passively dealt 15 damage to you!", 1, 2);
         yield return ShowPopup("You now know everything you need to survive. Defeat the enemy to complete the tutorial!", 2, 2);
 
         _playerStats.Heal(100);

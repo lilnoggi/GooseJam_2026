@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class MapNode : MonoBehaviour
 {
     [Header("Level Data")]
-    [SerializeField] private int _nodeIndex;  // 0 for Swamp_01, 1 for Swamp_02
+    [SerializeField] private int _nodeIndex;  // 0 for Tutorial, 1 for Swamp_01a
     [SerializeField] private string _sceneToLoad;
 
     [Header("Visuals")]
@@ -14,12 +14,21 @@ public class MapNode : MonoBehaviour
     private Image _nodeImage;
     private Button _nodeButton;
 
+    // GETTERS
+    public int NodeIndex => _nodeIndex;
+
     private void Awake()
     {
         _nodeImage = GetComponent<Image>();
         _nodeButton = GetComponent<Button>();
 
         _nodeButton.onClick.AddListener(OnNodeClicked);
+
+        if (_nodeIndex == 0)
+        {
+            // Is tutorial level
+            SetState(true, false);
+        }
     }
 
     /// <summary>
@@ -32,7 +41,7 @@ public class MapNode : MonoBehaviour
             _nodeImage.sprite = _unlockedSprite;
 
             // Only let the player press the button if it is the level they are currently on
-            _nodeButton.interactable = isCurrentLevel;
+            _nodeButton.interactable = true;
         }
         else
         {
@@ -43,7 +52,7 @@ public class MapNode : MonoBehaviour
 
     private void OnNodeClicked()
     {
-        // TODO: Add SFX here via AudioManager
+        AudioManager.Instance.PlaySFX(SFXType.Select);
 
         // LevelLoader transition to scene
         LevelLoader.Instance.LoadNextScene(_sceneToLoad);

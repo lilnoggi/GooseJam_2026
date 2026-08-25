@@ -20,7 +20,6 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     [Header("Status Card Visuals")]
     [SerializeField] private Image _statusImage;
-    [SerializeField] private TMP_Text _statusDescriptionText;
 
     [SerializeField] private float _hoverHight =25f; //height when hovered
     [SerializeField] private float _selectedHeight = 35f; //the height that the card will move upwards when it is selected
@@ -64,22 +63,12 @@ public class PlayerCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 _statusImage.gameObject.SetActive(true);
                 _statusImage.sprite = cardData.StatusSprite;
             }
-
-            // Show description text 
-            if (_statusDescriptionText != null)
-            {
-                _statusDescriptionText.gameObject.SetActive(true);
-
-                // Make the text bold and clear for prototypeing
-                _statusDescriptionText.text = $"<b>{cardData.StatusName}</b>\n\n{cardData.StatusDescription}";
-            }
         }
         else
         {
             // It is a normal card
-            if (_statusDescriptionText != null && _statusImage != null)
+            if (_statusImage != null)
             {
-                _statusDescriptionText.gameObject.SetActive(false);
                 _statusImage.gameObject.SetActive(false);
             }
             // Apply Data

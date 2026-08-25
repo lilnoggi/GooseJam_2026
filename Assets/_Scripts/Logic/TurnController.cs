@@ -40,9 +40,9 @@ public class TurnController : MonoBehaviour
     [SerializeField] private float _actionCardObserveTime = 2.0f;
 
     [Header("End Game UI")]
-    [SerializeField] private GameObject _gameOverPanel;
-    [SerializeField] private TextMeshProUGUI _gameOverText;
+    [SerializeField] private EndGameManagerUI _endGameUIManager;
     [SerializeField] private float _endGameDelay = 4.0f;
+    [SerializeField] private bool _isFinalBossFight = false;
 
     [Header("Round Reshuffle")]
     [SerializeField] private DiscardShuffleAnimator _discardShuffleAnimator;
@@ -246,6 +246,7 @@ public class TurnController : MonoBehaviour
 
             // Pause the turn and hand control to the player via UI prompt
             _isWaitingForPlayerDecision = true;
+            // TODO: Update name of enemy here
             _playerDecisionMenu.ShowMenu(enemyTurn.ToString(), enemyClaim, (bool calledCheat) =>
             {
                 _playerCalledCheat = calledCheat;
@@ -365,20 +366,27 @@ public class TurnController : MonoBehaviour
         // Wait a moment for the shock of the final blow to settle
         yield return new WaitForSeconds(1.0f);
 
-        if (_gameOverPanel != null)
+        if (_endGameUIManager != null)
         {
-            _gameOverPanel.SetActive(true);
-            
-            if (_gameOverText != null)
-            {
-                _gameOverText.text = isVictory ? "VICTORY!" : "GAME OVER";
-            }
+            // Send to UIManager
+            yield return StartCoroutine(_endGameUIManager.ShowEndScreenRoutine(isVictory, _endGameDelay));
         }
-        
-        // Give the player a few seconds to breathe and look at the screen
-        yield return new WaitForSeconds(_endGameDelay);
+        else
+        {
+            // Fallback just in case the UI isn't assigned
+            yield return new WaitForSeconds(_endGameDelay);
+        }
 
-        LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
+        if (isVictory && _isFinalBossFight)
+        {
+            // If they beat the final boss, send them to the credits
+            LevelLoader.Instance.LoadNextScene("03a_ThankYou_Scene");
+        }
+        else
+        {
+            // Otherwise, return to the map normally (or return to map if they died)
+            LevelLoader.Instance.LoadNextScene("00c_Map_LevelSelect_Scene");
+        }
     }
 
     private IEnumerator EndRoundRoutine(TurnSeat nextSeat)

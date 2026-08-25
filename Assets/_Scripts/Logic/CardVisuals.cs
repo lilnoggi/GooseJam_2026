@@ -14,7 +14,6 @@ public class CardVisuals : MonoBehaviour
 
     [Header("Status References")]
     [SerializeField] private Image _statusImage;
-    [SerializeField] private TMP_Text _statusText;
 
     /// <summary>
     /// Reads the CardData and updates the 3D text meshes on the prefab
@@ -51,18 +50,14 @@ public class CardVisuals : MonoBehaviour
                 _statusImage.gameObject.SetActive(true);
                 _statusImage.sprite = cardData.StatusSprite;
             }
-
-            // Show the status text
-            if (_statusText != null)
-            {
-                _statusText.gameObject.SetActive(true);
-
-                // On the table, just show the name
-                _statusText.text = cardData.StatusName;
-            }
         }
         else
         {
+            if (_statusImage != null)
+            {
+                _statusImage.gameObject.SetActive(false);
+            }
+            
             // Turn the normal card UI on
             // Update both the top-left and bottom-right rank numbers
             if (_rankTextUpper != null)
@@ -82,13 +77,6 @@ public class CardVisuals : MonoBehaviour
             {
                 _suitImage.gameObject.SetActive(true);
                 _suitImage.sprite = cardData.SuitSprite;
-            }
-
-            // Hide status text
-            if (_statusText != null && _statusImage != null)
-            {
-                _statusText.gameObject.SetActive(false);
-                _statusImage.gameObject.SetActive(false);
             }
         }
     }

@@ -19,16 +19,19 @@ EditorBuildSettings:
     guid: 7c4dfbd214a8c03458094cc85f690233
   - enabled: 1
     path: Assets/_Scenes/01a_Swamp_Minions_Scene.unity
-    guid: 9f37653995d537d4692f3562e4434260
+    guid: d9c1b0ea5fee5374f82f27dcbd33b98e
   - enabled: 1
     path: Assets/_Scenes/01b_Swamp_Boss_Scene.unity
-    guid: 3f3c48d44ec2c81489956e38eaa6ce15
+    guid: a2fd5e3107daba54c853c147268dda98
   - enabled: 1
     path: Assets/_Scenes/02a_Forest_Minions_Scene.unity
-    guid: 63f2e664b85150c45892e9578b379185
+    guid: 9b44e7119c5d31940b10986f4a2e37a5
   - enabled: 1
     path: Assets/_Scenes/02b_Forest_Boss_Scene.unity
-    guid: e692e0d47f1bc624888f7a9f537e4a7f
+    guid: d38e64149dbbb5a4fa26a1c06ca42fa8
+  - enabled: 1
+    path: Assets/_Scenes/03a_ThankYou_Scene.unity
+    guid: b533f19fe4daafc48a4ed8f8c044f607
   - enabled: 0
     path: Assets/_Scenes/03a_Castle_Minions_Scene.unity
     guid: 0868e610682a2da48a1f28aea49da994
