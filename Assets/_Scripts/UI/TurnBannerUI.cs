@@ -42,7 +42,21 @@ public class TurnBannerUI : MonoBehaviour
     {
         if (_turnBannerText != null)
         {
-            _turnBannerText.text = $"{currentTurn}'s Turn!";
+            if (currentTurn == TurnSeat.Player)
+            {
+                _turnBannerText.text = "Your Turn!";
+            }
+            else
+            {
+                // Grab the active stats for whoever is sitting in this seat
+                CharacterStats activeStats = _turnController.GetStatsForTurn(currentTurn);
+                
+                if (activeStats != null)
+                {
+                    // Use the name assigned in CharacterStats
+                    _turnBannerText.text = $"{activeStats.gameObject.name}'s Turn!";
+                }
+            }
 
             // Stop the current fade if a new turn starts before the old text finishes fading
             if (_bannerFadeRoutine != null)
