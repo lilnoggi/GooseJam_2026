@@ -53,6 +53,11 @@ public class CardVisuals : MonoBehaviour
         }
         else
         {
+            if (_statusImage != null)
+            {
+                _statusImage.gameObject.SetActive(false);
+            }
+            
             // Turn the normal card UI on
             // Update both the top-left and bottom-right rank numbers
             if (_rankTextUpper != null)
