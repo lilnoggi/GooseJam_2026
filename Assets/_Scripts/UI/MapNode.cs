@@ -14,6 +14,9 @@ public class MapNode : MonoBehaviour
     private Image _nodeImage;
     private Button _nodeButton;
 
+    // GETTERS
+    public int NodeIndex => _nodeIndex;
+
     private void Awake()
     {
         _nodeImage = GetComponent<Image>();

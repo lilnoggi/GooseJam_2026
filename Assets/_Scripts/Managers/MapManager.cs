@@ -23,16 +23,14 @@ public class MapManager : MonoBehaviour
         int currentIndex = _sessionData.CurrentLevelIndex;
 
         // Loop through every single node on the map
-        for (int i = 0; i < _mapNodes.Count; i++)
+        foreach (MapNode node in _mapNodes)
         {
-            // A node is UNLOCKED if its index is less than or equal to current progress
-            bool isUnlocked = i <= currentIndex;
+            bool isUnlocked = node.NodeIndex <= currentIndex;
 
-            // A node is the CURRENT LEVEL if its index exactly matches progess
-            bool isCurrentLevel = i == currentIndex;
+            bool isCurrentLevel = node.NodeIndex == currentIndex;
 
             // Tell the MapNode to update its sprite and button
-            _mapNodes[i].SetState(isUnlocked, isCurrentLevel);
+            node.SetState(isUnlocked, isCurrentLevel);
         }
 
         // TODO: Call path-drawing coroutine here later
