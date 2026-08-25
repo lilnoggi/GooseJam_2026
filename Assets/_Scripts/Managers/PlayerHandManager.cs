@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Collections;
+using System.Linq;
 
 /// <summary>
 /// Manages the player's physical hand UI, card selection rules, and passive status card timers.
@@ -354,25 +355,14 @@ public class PlayerHandManager : MonoBehaviour
     /// </summary>
     private void CleanUpTimers()
     {
-        // Extract keys to a seperate list to modify the dictoinary during iteration
         List<CardData> trackedCards = new List<CardData>(_passiveCardTimers.Keys);
         
         foreach (var card in trackedCards)
         {
-            // Verify if the deck's true hand still contains this specific card
-            bool isStillInHand = false;
-            for (int i = 0; i < _playerDeck.Hand.Count; i++)
+            // Simply check if the deck still contains the card
+            if (!_playerDeck.Hand.Contains(card))
             {
-                if (!_playerDeck.Hand[i] == (card))
-                {
-                    isStillInHand = true;
-                    break;
-                }   
-            }
-
-            // If the player bluffed it away or it dissolvedd, clear its memory cache
-            if (!isStillInHand)
-            {
+                // If it's gone from the hand, remove it from the timer memory
                 _passiveCardTimers.Remove(card);
             }
         }

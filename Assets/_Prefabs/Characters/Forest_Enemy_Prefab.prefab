@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6301aafd11093874a8e7bb1fefc153f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDialogue
+  _portraitIcon: {fileID: 21300000, guid: a3c5de5064df4f845967e692d5533b52, type: 3}
   _genericDialogue: {fileID: 11400000, guid: caee2ce71c3804b41bc7f0438639f5d6, type: 2}
   _uniqueDialogue: {fileID: 0}
 --- !u!114 &6403633158214082435
@@ -197,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1bdd851560ece40a9ff2b9586fe902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTarget
-  _enemySeat: 2
+  _enemySeat: 1
   _spotLight: {fileID: 0}
   _turnController: {fileID: 0}
   _hoverColour: {r: 0.972549, g: 0.9764706, b: 0.98039216, a: 0}

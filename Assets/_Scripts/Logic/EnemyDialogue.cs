@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class EnemyDialogue : MonoBehaviour
 {
+    [Header("Identity")]
+    [SerializeField] private Sprite _portraitIcon;
+
     [Header("Dialogue Data")]
     [SerializeField] private EnemyDialogueData _genericDialogue; // Generic pool of dialogue all enemies share
     [SerializeField] private EnemyDialogueData _uniqueDialogue; // Specific personality dialogue (Leave empty for minions)
@@ -21,7 +24,7 @@ public class EnemyDialogue : MonoBehaviour
         // Forward the line to the new global UI instead of a floating bubble!
         if (DialogueUIManager.Instance != null)
         {
-            DialogueUIManager.Instance.ShowDialogue(gameObject.name, selectedLine, duration);
+            DialogueUIManager.Instance.ShowDialogue(gameObject.name, selectedLine, duration, _portraitIcon);
         }
     }
 

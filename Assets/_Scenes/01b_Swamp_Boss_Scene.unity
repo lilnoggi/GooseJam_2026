@@ -2313,7 +2313,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DiscardShuffleAnimator
   _tableManager: {fileID: 1320209577}
-  _drawDeckVisual: {fileID: 8621270651386657780, guid: 4427ca45fe118724095a00c55c8de40e, type: 3}
   _shuffleAreaCentre: {fileID: 263385346}
   _spreadDistance: 0.3
   _spreadDuration: 0.4
@@ -10836,6 +10835,7 @@ MonoBehaviour:
   _titleText: {fileID: 222535159}
   _gooseImage: {fileID: 222535161}
   _gooseAnimator: {fileID: 222535163}
+  _canvasGroup: {fileID: 222535162}
   _victorySprite: {fileID: 21300000, guid: 064710cb02cddb948a8652fe3be15739, type: 3}
   _failSprite: {fileID: 21300000, guid: 7cebc346478001d48918c03a00eff238, type: 3}
   _fadeDuration: 1

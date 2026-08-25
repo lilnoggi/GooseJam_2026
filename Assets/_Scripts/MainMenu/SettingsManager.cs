@@ -23,6 +23,10 @@ public class SettingsManager : MonoBehaviour
     [Header("Game Data")]
     [SerializeField] private SessionData _sessionData;
 
+    [Header("Save Data UI")]
+    [SerializeField] private GameObject _dataDeletedPopup;
+    [SerializeField] private Button _mainMenuContinueButton;
+
     private Resolution[] _resolutions;
     private List<Resolution> _filteredResolutions;
 
@@ -34,6 +38,12 @@ public class SettingsManager : MonoBehaviour
 
     private void Start()
     {
+        // Ensure popup is hidden
+        if (_dataDeletedPopup != null)
+        {
+            _dataDeletedPopup.SetActive(false);
+        }
+
         // --- SCREEN SETTINGS ---
         // Get the monitors support resolutions
         _resolutions = Screen.resolutions;
@@ -229,7 +239,30 @@ public class SettingsManager : MonoBehaviour
             _sessionData.ResetRun();
         }
 
-        // Audio feedback
+        // Show confirmation popup
+        if (_dataDeletedPopup != null)
+        {
+            _dataDeletedPopup.SetActive(true);
+        }
+
+        // Make the continue button un-clickable
+        if (_mainMenuContinueButton != null)
+        {
+            _mainMenuContinueButton.interactable = false;
+        }
+
         AudioManager.Instance.PlaySFX(SFXType.Select);
+    }
+
+    /// <summary>
+    /// Attahced to OK button
+    /// </summary>
+    public void CloseDataDeletedPopup()
+    {
+        if (_dataDeletedPopup != null)
+        {
+            _dataDeletedPopup.SetActive(false);
+            AudioManager.Instance.PlaySFX(SFXType.Back);
+        }
     }
 }

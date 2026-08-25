@@ -24,19 +24,25 @@ public class DialogueUIManager : MonoBehaviour
         _dialoguePanel.SetActive(false);
     }
 
-    public void ShowDialogue(string speakerName, string text, float duration)
+    public void ShowDialogue(string speakerName, string text, float duration, Sprite portrait)
     {
         if (_currentRoutine != null) StopCoroutine(_currentRoutine);
-        _currentRoutine = StartCoroutine(TypewriterRoutine(speakerName, text, duration));
+        _currentRoutine = StartCoroutine(TypewriterRoutine(speakerName, text, duration, portrait));
     }
 
-    private IEnumerator TypewriterRoutine(string speakerName, string text, float duration)
+    private IEnumerator TypewriterRoutine(string speakerName, string text, float duration, Sprite portrait)
     {
         _dialoguePanel.SetActive(true);
         
         // Update name, removing "(Clone)" just in case they are instantiated prefabs
         if (_nameText != null) _nameText.text = speakerName.Replace("(Clone)", ""); 
         
+        // Update portrait image
+        if (_portraitImage != null && portrait != null)
+        {
+            _portraitImage.sprite = portrait;
+        }
+
         _dialogueText.text = "";
 
         foreach (char letter in text.ToCharArray())

@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6301aafd11093874a8e7bb1fefc153f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDialogue
+  _portraitIcon: {fileID: 21300000, guid: 55070464970162c44bd427c280a0acb7, type: 3}
   _genericDialogue: {fileID: 0}
   _uniqueDialogue: {fileID: 11400000, guid: 6344c8ce6c554904d86f0658807ca7d0, type: 2}
 --- !u!114 &2432527075737658584

@@ -10965,6 +10965,7 @@ MonoBehaviour:
   _titleText: {fileID: 1694766497}
   _gooseImage: {fileID: 1694766499}
   _gooseAnimator: {fileID: 1694766501}
+  _canvasGroup: {fileID: 1694766500}
   _victorySprite: {fileID: 21300000, guid: 064710cb02cddb948a8652fe3be15739, type: 3}
   _failSprite: {fileID: 21300000, guid: 7cebc346478001d48918c03a00eff238, type: 3}
   _fadeDuration: 1
